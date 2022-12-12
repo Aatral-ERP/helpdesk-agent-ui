@@ -1,0 +1,293 @@
+<h4 class="indigo-text pl-4" mat-dialog-title>View Ticket #{{ticket.ticketId}}</h4>
+<mat-dialog-content class="mat-typography">
+    <div class="p-4">
+        <div *ngIf="loading" class="text-center m-5">
+            <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="ticket.ticketId > 0">
+            <div class="col-4 col-lg-4 col-md-6 col-sm-12">
+                <div class="card p-1">
+                    <div class="card-header">
+                        <i class="fa fa-ticket" aria-hidden="true"></i>&nbsp; Ticket Info
+                        <a *ngIf="ticket.status == 'Raised'" (click)="editTicket()"
+                            class="float-right text-primary">Edit&nbsp;
+                            <i class="fa fa-edit" aria-hidden="true"></i></a>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush font-size-14">
+                            <!-- <li class="list-group-item list-group-item-action">Ticket Id : #{{ticket.ticketId}}</li> -->
+                            <li class="p-1 list-group-item list-group-item-action">
+                                <span class="text-muted">Product : </span>{{ticket.product}}
+                            </li>
+                            <li class="p-1 list-group-item list-group-item-action">
+                                <span class="text-muted">Category : </span>{{ticket.serviceType}}
+                            </li>
+                            <li class="p-1 list-group-item list-group-item-action">
+                                <span class="text-muted">Priority : </span>{{ticket.priority}}
+                            </li>
+                            <li class="p-1 list-group-item list-group-item-action">
+                                <span title="{{ticket.createddatetime | date:'MMM dd, yyyy hh:mm a'}}"
+                                    class="text-muted">Created on : </span>
+                                {{ticket.createddatetime | amTimeAgo}}
+                            </li>
+                            <li class="p-1 list-group-item list-group-item-action">
+                                <span title="{{ticket.lastupdatedatetime | date:'MMM dd, yyyy hh:mm a'}}"
+                                    class="text-muted">Last Update :
+                                </span>
+                                {{ticket.lastupdatedatetime | amTimeAgo}}
+                                <br>
+                                <small *ngIf="ticket.status != 'Raised'" class="text-muted"> Last Update by :
+                                    {{ticket.lastUpdatedBy}}</small>
+                            </li>
+                            <li class="p-1 list-group-item list-group-item-action">
+                                <span class="text-muted">Service Under : </span>
+                                <span class="m-1 badge badge-info">{{ticket.serviceUnder}}</span>
+                                <br>
+                                <span class="text-muted">Status : </span>
+                                <span class="badge badge-info">{{ticket.status}}</span>
+                                <br>
+                                <small class="text-muted"> Created By :
+                                    {{ticket.createdBy}}
+                                </small>
+                                <br>
+                                <small class="text-muted"> Reporter :
+                                    {{ticket.assignedBy}}
+                                </small>
+                                <br>
+                                <small *ngIf="ticket.status != 'Raised'" class="text-muted"> Assigned to :
+                                    {{ticket.assignedTo}}
+                                </small>
+                                <br>
+                                <small title="{{ticket.dueDateTime | date:'MMM dd, yyyy hh:mm a'}}"
+                                    *ngIf="ticket.status != 'Raised'" class="text-muted"> Due Date :
+                                    {{ticket.dueDateTime | amTimeAgo}}
+                                </small>
+                            </li>
+                        </ul>
+                        <p class="text-info" [hidden]="modifyAccess">You have no privilege to modify this ticket</p>
+                        <div [hidden]="!modifyAccess">
+
+                            <button (click)="markAsCompleted()"
+                                *ngIf="ticket.assignedTo == auth.getLoginEmailId() && ticket.status == 'Assigned'"
+                                class="btn btn-sm m-1 btn-primary btn-block">&nbsp;Mark as Completed </button>
+
+                            <button (click)="closeTicket()"
+                                *ngIf="(ticket.createdBy == auth.getLoginEmailId() || ticket.assignedBy == auth.getLoginEmailId()) && ticket.status != 'Raised' && ticket.status != 'Closed' && ticket.status != 'Rejected'"
+                                class="btn btn-sm m-1 btn-primary btn-block"><i class="fa fa-times"
+                                    aria-hidden="true"></i>&nbsp;Close this ticket</button>
+
+                            <button (click)="reopenTicket()"
+                                *ngIf="ticket.status != 'Raised' && (ticket.status == 'Closed' || ticket.status == 'Rejected')"
+                                class="btn btn-sm m-1 btn-primary btn-block">&nbsp;Re-Open this ticket</button>
+
+                            <button (click)="picker.open()"
+                                [ngClass]="(ticket.assignedTo != null && ticket.assignedTo != '') ? 'btn-outline-primary' : 'btn-primary'"
+                                *ngIf="(role.tickets == 'Full Access' || ticket.createdBy == auth.getLoginEmailId() || ticket.assignedBy == auth.getLoginEmailId()) && role.ticketsAdmin && ticket.status != 'Closed' && ticket.status != 'Rejected'"
+                                class="btn btn-sm m-1 btn-block">&nbsp;Assign this Ticket to Agent</button>
+
+                            <button (click)="markAsWaitingForClientReply()" *ngIf="ticket.status == 'Assigned'"
+                                class="btn btn-sm m-1 btn-primary btn-block">&nbsp;Mark as Waiting For Client
+                                Reply</button>
+
+                            <button (click)="holdTicket()" *ngIf="ticket.status == 'Assigned'"
+                                class="btn btn-sm m-1 btn-primary btn-block">&nbsp;Put this ticket in Hold</button>
+
+                            <button (click)="assignBackTicket()"
+                                *ngIf="(role.tickets == 'Full Access' || ticket.createdBy == auth.getLoginEmailId() || ticket.assignedBy == auth.getLoginEmailId() ) && (ticket.status == 'Hold' || ticket.status == 'Waiting_For_Client_Reply')"
+                                class="btn btn-sm m-1 btn-primary btn-block">&nbsp;Assign Back to
+                                {{ticket.assignedTo}}</button>
+
+                            <button (click)="rejectTicket()"
+                                *ngIf="(role.tickets == 'Full Access' || ticket.createdBy == auth.getLoginEmailId() || ticket.assignedBy == auth.getLoginEmailId() ) && role.ticketsAdmin && ticket.status != 'Closed' && ticket.status != 'Rejected'"
+                                class="btn btn-sm m-1 btn-primary btn-block">&nbsp;Reject this ticket</button>
+
+                            <button (click)="cancelAssignedTicket()"
+                                *ngIf="ticket.status != 'Closed' && ticket.assignedTo == auth.getLoginEmailId()"
+                                class="btn btn-sm m-1 btn-primary btn-block">&nbsp;Cancel this ticket</button>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card p-1 mt-2">
+                    <div class="card-header">
+                        <i class="fa fa-paperclip" aria-hidden="true"></i>
+                        &nbsp; Attachments
+                        <!-- <div class="float-right"><i class="fa fa-chevron-up" aria-hidden="true"></i></div> -->
+                    </div>
+                    <div class="card-body">
+                        <span class="text-muted small" *ngIf="ticketAttachments.length == 0">No Attachments</span>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item list-group-item-action"
+                                *ngFor="let attachments of ticketAttachments">
+                                <span>{{attachments.fileName}}</span>
+                                <br>
+                                <small class="small float-left text-muted">{{attachments.createddatetime |
+                                    date:'medium'}}</small>
+                                <small class="float-right badge badge-light text-muted">{{attachments.fileSize |
+                                    filesize}}
+                                    <i (click)="downloadTicketAttachmnet(attachments)"
+                                        class="fa fa-download pointer"></i>
+                                </small>
+                            </li>
+                        </ul>
+                        <div *ngIf="ticket.status != 'Closed' && ticket.status != 'Rejected' && ticket.status != 'Hold'"
+                            class="row justify-content-center">
+                            <div class="col-10" [hidden]="!modifyAccess">
+                                <label class="btn btn-sm btn-light">Add Attachment &nbsp;&nbsp;
+                                    <input #attachment type="file" id="myFile" name="filename"
+                                        (change)="fileChange($event)" multiple hidden>
+                                </label> &nbsp;
+                            </div>
+                            <small class="text-muted float-left">Maximum per file size is 5mb</small>
+                            <div *ngIf="attachmentsInProgress"
+                                class="spinner-border spinner-border-sm text-secondary small" role="status">
+                                <span class="sr-only">Uploading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-8 col-lg-8 col-md-6 col-sm-12">
+                <div class="row">
+                    <div class="col">
+                        <h4 class="text-indigo">
+                            {{ticket.institute.instituteName}}
+                        </h4>
+                        <span class="text-muted">{{ticket.institute.city}}, {{ticket.institute.state}} -
+                            {{ticket.institute.zipcode}}</span>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col">
+                        <p class="text-muted">Ticket id #{{ticket.ticketId}}</p>
+                        <h4 class="text-primary font-weight-light" [innerHTML]="ticket.subject | base64HTML"> </h4>
+                        <p [innerHTML]="ticket.summary | base64HTML"></p>
+
+                        <p class="small text-muted float-right">raised by {{ticket.emailId}}</p>
+                        <span class="small text-muted" *ngIf="ticket.emailUpdates != ''">sending updates to
+                            {{ticket.emailUpdates}}</span>
+                    </div>
+                </div>
+                <hr>
+                <!-- <div class="row" [hidden]="!modifyAccess">
+                    <div class="col">
+                        <p *ngIf="showAddTicketServiceInvoice" class="text-center text-primary">Send Invoice</p>
+                        <br>
+                        <p>
+                            <span class="float-right text-primary pr-5 pointer" *ngIf="!showAddTicketServiceInvoice"
+                                (click)="showAddTicketServiceInvoice = !showAddTicketServiceInvoice">Service Call
+                                Invoice</span>
+                            <span class="float-right text-primary pr-5 pointer" *ngIf="showAddTicketServiceInvoice"
+                                (click)="showAddTicketServiceInvoice = !showAddTicketServiceInvoice">cancel</span>
+                        </p>
+                        <br>
+                        <app-add-ticket-service-invoice [hidden]="!showAddTicketServiceInvoice"
+                            [ticketServiceInvoice]="ticketServiceInvoice"
+                            (emitter)="AddTicketServiceInvoiceEmitted($event)">
+                        </app-add-ticket-service-invoice>
+                    </div>
+                </div>
+                <hr> -->
+                <div class="row" [hidden]="!modifyAccess"
+                    *ngIf="ticket.status != 'Closed' && ticket.status != 'Rejected'">
+                    <div class="col">
+                        <p>
+                            <span class="float-right text-primary pr-5 pointer" *ngIf="!showReply"
+                                (click)="showReply = !showReply">Add Comment</span>
+                            <span class="float-right text-primary pr-5 pointer" *ngIf="showReply"
+                                (click)="showReply = !showReply">Close</span>
+                        </p>
+                        <div [hidden]="!showReply">
+                            <textarea class="form-control" maxlength="3500" name="reply" id="reply" rows="10"
+                                [(ngModel)]="reply" placeholder="Enter something to send"></textarea>
+                            <button (click)="sendReply()" class="btn btn-sm btn-primary float-right"
+                                [disabled]="reply.length == 0 || replyInProgress">
+                                <div *ngIf="replyInProgress" class="spinner-border spinner-border-sm text-white small"
+                                    role="status">
+                                    <span class="sr-only">sending...</span>
+                                </div>
+                                Send
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 p-2" *ngFor="let reply of ticketReplies">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fa fa-user" aria-hidden="true"></i>&nbsp; {{reply.replyBy}}
+                                <div title="{{reply.createddatetime | date:'MMM dd, yyyy hh:mm a'}}"
+                                    class="float-right small">{{reply.createddatetime | amTimeAgo}}
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <p [innerHTML]="reply.reply"> </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Section: Live preview-->
+
+    <!--Modal: modal-->
+    <div class="modal fade right" id="agentaddmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true" data-backdrop="true">
+        <div class="modal-dialog modal-frame modal-right modal-full-height modal-notify modal-primary" role="document">
+            <!--Content-->
+            <div class="modal-content">
+                <!--Body-->
+                <div class="modal-body">
+
+                    <div class="row p-1 mb-1">
+                        <div class="col-12">
+                            <mat-form-field class="d-block">
+                                <input matInput placeholder="Enter Agent Name to filter" name="agentName"
+                                    [(ngModel)]="agentName">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-12">
+                            <span class="text-primary font-bold-weight">
+                                Due Date : {{ticket.dueDateTime | date:'MMM dd, yyyy hh:mm a'}}
+                            </span>
+                            <input hidden (ngModelChange)="dateChange($event)" matInput [ngxMatDatetimePicker]="picker"
+                                placeholder="Choose a date" [(ngModel)]="ticket.dueDateTime">
+                            <mat-datepicker-toggle hidden matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <ngx-mat-datetime-picker [defaultTime]="defaultTime" [enableMeridian]="true"
+                                [touchUi]="true" #picker>
+                            </ngx-mat-datetime-picker>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 m-2">
+                            <div [hidden]="agent.workingStatus == 'releived' || agent.isBlocked"
+                                *ngFor="let agent of _agents">
+                                <div class="pointer" (click)="assignTicketToAgent(agent)" *ngIf="agentName == '' 
+                                || agent.firstName.toLowerCase().includes(agentName.toLowerCase())
+                                || agent.lastName.toLowerCase().includes(agentName.toLowerCase())
+                                || agent.emailId.toLowerCase().includes(agentName.toLowerCase())">
+                                    <p class="text-dark">{{agent.firstName}} {{agent.lastName}}</p>
+                                    <small class="text-muted">{{agent.emailId}}</small>
+                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!--/.Content-->
+        </div>
+    </div>
+    <!--Modal: modal-->
+
+    <!--Section: Live preview-->
+
+</mat-dialog-content>

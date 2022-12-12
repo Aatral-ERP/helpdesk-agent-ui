@@ -1,0 +1,17 @@
+<div class="progressbar-wrapper border border-light">
+    <div class="row">
+        <div class="col-1">
+            <i title="View {{att.filename}}" (click)="viewAttachment()" class="p-1 fas fa-eye text-primary pointer"></i>
+
+            <i title="Download {{att.filename}}" (click)="downloadNoteAttachment()"
+                class="p-1 text-primary fas fa-download text-primary pointer"></i>
+        </div>
+        <div class="col">
+            <span class="text-muted">{{att.filename}}</span>
+            <br>
+            <small class="text-muted">{{att.size | filesize}}</small>
+            <br>
+        </div>
+    </div>
+    <div class="progressbar" *ngIf="downloading" [style.width.%]="downloadingPercent"></div>
+</div>

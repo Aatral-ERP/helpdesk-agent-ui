@@ -1,0 +1,146 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate">
+</mat-progress-bar>
+
+<div class="container-fluid">
+
+    <div class="container">
+        <div class="row pointer filterdiv mt-0 pt-0 bg-primary text-white justify-content-center"
+            (click)="showFilterScreen = !showFilterScreen">
+            <div class="col text-center">
+                <span> <span class="small"> Mail Sent Status Filters &nbsp;&nbsp;</span>
+                    <i [hidden]="showFilterScreen" class="fa fa-angle-up"></i>
+                    <i [hidden]="!showFilterScreen" class="fa fa-angle-down"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container pt-2" [hidden]="!showFilterScreen">
+        <div class="row">
+            <div class="col-12">
+                <p class="indigo-text h4 text-center"> Mail Sent Status Filter
+                </p>
+                <hr style="width:100%;text-align:left;margin-left:0">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <mat-form-field class="w-100">
+                    <mat-label>Lead Title</mat-label>
+                    <input type="text" matInput [(ngModel)]="_filters.leadTitle">
+                </mat-form-field>
+            </div>
+            <div class="col-6">
+                <mat-form-field class="w-100">
+                    <mat-label>Company</mat-label>
+                    <input type="text" matInput [(ngModel)]="_filters.leadCompany">
+                </mat-form-field>
+            </div>
+            <div class="col-6">
+                <mat-form-field class="w-100">
+                    <mat-label>Mail Subject</mat-label>
+                    <input type="text" matInput [(ngModel)]="_filters.leadSubject">
+                </mat-form-field>
+            </div>
+            <div class="col-6">
+                <mat-form-field class="w-100">
+                    <mat-label>Mail Message</mat-label>
+                    <input type="text" matInput [(ngModel)]="_filters.leadMessage">
+                </mat-form-field>
+            </div>
+            <div class="col-3">
+                <mat-form-field>
+                    <mat-label>Lead Stages</mat-label>
+                    <mat-select [(ngModel)]="_filters.leadStatus" multiple>
+                        <mat-option value="New Lead">New Lead</mat-option>
+                        <mat-option value="Attempted to Contact">Attempted to Contact</mat-option>
+                        <mat-option value="Already Purchased">Already Purchased</mat-option>
+                        <mat-option value="Not Required">Not Required</mat-option>
+                        <mat-option value="Contact In Future">Contact In Future</mat-option>
+                        <mat-option value="Intrested">Intrested</mat-option>
+                        <mat-option value="Under Processing">Under Processing</mat-option>
+                        <mat-option value="Imediate Requirement">Imediate Requirement</mat-option>
+                        <mat-option value="Converted to Sales">Converted to Sales</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-3">
+                <mat-form-field>
+                    <mat-label>Lead Sources</mat-label>
+                    <mat-select [(ngModel)]="_filters.leadSources" multiple>
+                        <mat-option *ngFor="let element of _lead_sources" [value]="element">
+                            {{element}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-3">
+                <mat-form-field>
+                    <mat-label>Catogories</mat-label>
+                    <mat-select [(ngModel)]="_filters.leadCatogories" multiple>
+                        <mat-option *ngFor="let element of _lead_categorys" [value]="element">
+                            {{element}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-3">
+                <mat-form-field>
+                    <mat-label>States</mat-label>
+                    <mat-select [(ngModel)]="_filters.leadStates" multiple>
+                        <mat-option *ngFor="let element of _lead_states" [value]="element">
+                            {{element}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-3">
+                <mat-form-field>
+                    <mat-label>Industry Types</mat-label>
+                    <mat-select [(ngModel)]="_filters.industryTypes" multiple>
+                        <mat-option *ngFor="let element of _lead_industry_type" [value]="element">
+                            {{element}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="col-sm-6 col-md-6 col-lg-3">
+                <mat-form-field class="w-100">
+                    <mat-label for="sendDateObject" style="margin-bottom: 5px;"> Sent Date </mat-label>
+                    <input matInput (focus)="LDdp.toggleCalendar()" angular-mydatepicker name="sendDateObject"
+                        [(ngModel)]="_filters.sendDateObject" [options]="myDatePickerOptions"
+                        (dateChanged)="_filters.sendDateFrom = $event.dateRange.beginJsDate;_filters.sendDateTo = $event.dateRange.endJsDate;"
+                        #LDdp="angular-mydatepicker" autocomplete="off" />
+                    <mat-icon matSuffix>today</mat-icon>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center mt-2">
+                <button class="btn btn-md btn-primary" (click)="searchLeadMailSentStatus()">Submit</button>
+                <button class="btn btn-sm btn-outline-primary" (click)="clearFilters()">Clear</button>
+            </div>
+        </div>
+
+    </div>
+
+    <p class="h4 text-center mt-4"> Mail Sent Status Report </p>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <ag-grid-angular enableCellTextSelection="true" *ngIf="!loading" [rowData]="status"
+                    style="width: 100%; height: 500px;" class="ag-theme-balham p-2" [columnDefs]="columnDefs"
+                    [frameworkComponents]="frameworkComponents" [paginationAutoPageSize]="true" [pagination]="true">
+                </ag-grid-angular>
+
+                <div class="item" *ngIf="loading">
+                    <ngx-skeleton-loader count="8"></ngx-skeleton-loader>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

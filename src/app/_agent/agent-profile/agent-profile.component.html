@@ -1,0 +1,89 @@
+<div class="container mt-3"
+    [hidden]="agent.employeeId == '' || agent.employeeId == null || agent.employeeId === undefined">
+    <div class="row">
+
+        <div class="col-lg-4 col-md-4 col-sm-12 logo text-center">
+            <div class="view">
+                <img *ngIf="agent.photo == null || agent.photo === undefined || agent.photo == ''"
+                    (click)="photoUpload.click()" src="assets/images/No-image.png" alt="User Photo"
+                    class="z-depth-1 mb-3 mx-auto pointer" height="250px;" width="240px;">
+
+                <img *ngIf="agent.photo != null && agent.photo !== undefined && agent.photo != ''"
+                    (click)="photoUpload.click()" src="{{'data:image/png;base64,' + agent.photo}}" alt="User Photo"
+                    class="z-depth-1 mb-3 mx-auto pointer" height="250px;" width="250px;">
+
+                <input type="file" #photoUpload accept="image/x-png,image/jpeg" id="photo" name="photo"
+                    (change)="fileChange($event)" hidden>
+
+                <div *ngIf="photoLoading" class="mask flex-center waves-effect waves-light rgba-teal-super-light">
+                    <mat-chip>
+                        updating...
+                    </mat-chip>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8 col-md-8 col-sm-12">
+            <div class="row">
+                <div class="col">
+                    <h5 class="text-primary float-left d-block">{{agent.firstName}}&nbsp;{{agent.lastName}}</h5>
+                    <small>
+                        &nbsp;({{agent.employeeId}})
+                    </small>
+                </div>
+            </div>
+
+            <p class="text-dark">{{agent.designation}}</p>
+            <p class="text-muted mt-0">{{agent.fullAddress}}</p>
+
+            <mat-chip-list>
+                <mat-chip [hidden]="agent.phone == null || agent.phone == ''" color="primary"><i
+                        class="fas fa-phone pr-2"> </i>
+                    {{agent.phone}}
+                </mat-chip>
+                <mat-chip [hidden]="agent.emailId == null || agent.emailId==''" color="warn"><i
+                        class="far fa-envelope-open pr-2">
+                    </i>{{agent.emailId}}
+                </mat-chip>
+            </mat-chip-list>
+
+            <mat-chip-list>
+                <mat-chip [hidden]="agent.phone == null || agent.phone == ''" color="primary">
+                    <i class="fas fa-user-tie"></i> &nbsp;
+                    Previous Experience : {{agent.experienceYear}} year {{agent.experienceMonth}} months
+                </mat-chip>
+                <mat-chip [hidden]="agent.emailId == null || agent.emailId==''" color="warn">
+                    Date Of Joining : {{agent.dateOfJoining | date:'MMM dd, yyyy'}}
+                </mat-chip>
+            </mat-chip-list>
+
+            <label [hidden]="agent.accountDetails==null || agent.accountDetails==''" for=" accountDetails">Account
+                Details :</label>
+            <p class="pl-3 text-dark">{{agent.accountDetails}}</p>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col logo">
+            <div class="view">
+                <img *ngIf="agent.signature == null || agent.signature === undefined || agent.signature == ''"
+                    (click)="signatureUpload.click()" src="assets/images/No-image.png" alt="signature"
+                    class="rounded img-thumbnail float-left pointer" height="250px;" width="240px;">
+
+                <img *ngIf="agent.signature != null && agent.signature !== undefined && agent.signature != ''"
+                    (click)="signatureUpload.click()" src="{{'data:image/png;base64,' + agent.signature}}"
+                    alt="signature" class="rounded img-thumbnail float-left pointer" height="250px;" width="250px;">
+
+                <input type="file" #signatureUpload accept="image/x-png,image/jpeg" id="photo" name="signature"
+                    (change)="fileChangeSignature($event)" hidden>
+
+                <div *ngIf="signatureLoading" class="mask flex-center waves-effect waves-light rgba-teal-super-light">
+                    <mat-chip>
+                        updating...
+                    </mat-chip>
+                </div>
+            </div>
+            <p class="small text-muted">Upload your signature to attach in Quotations or Invoices</p>
+        </div>
+    </div>
+</div>

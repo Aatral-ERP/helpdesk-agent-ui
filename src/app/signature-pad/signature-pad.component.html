@@ -1,0 +1,14 @@
+<h4>{{ title }}</h4>
+<div class="signature-container">
+  <signature-pad [options]="signaturePadOptions" (onBeginEvent)="drawStart()" (onEndEvent)="drawComplete()"></signature-pad>
+</div>
+
+<div class="buttons">
+  <button (click)="clearSignature()">Clear signature pad</button>
+  <button (click)="savePad()">Save signature</button>
+</div>
+
+<div class="signature-image" *ngIf="signatureImg">
+  <img src='{{ signatureImg }}' />
+</div>
+<router-outlet></router-outlet>

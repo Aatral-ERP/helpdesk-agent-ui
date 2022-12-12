@@ -1,0 +1,281 @@
+<div class="row m-2">
+    <div class="col-12 p-1">
+        <div class="card">
+            <div class="card-header">
+                <span class="h5 font-weight-bold">Client Details</span>
+                &nbsp;&nbsp;
+                <mat-chip>
+                    {{deal.dealType}}
+                    <span
+                        *ngIf="deal.dealType == 'AMC' && deal.amcFromDate != null && deal.amcToDate != null">&nbsp;&nbsp;{{deal.amcFromDate
+                        | date:'MMM d, yyyy'}}
+                        to {{deal.amcToDate | date:'MMM d, yyyy'}}</span>
+                </mat-chip>
+                <span class="text-primary pointer pl-4" (click)="EditDeal()"><u>Edit</u>
+                    &nbsp;<i class='fas fa-edit'></i> </span>
+
+                <span class="text-primary pointer pl-4" (click)="convertAsInvoice()"><u>Convert as Invoice</u>
+                    &nbsp;<i class="fas fa-file-invoice"></i> </span>
+
+                <span class="text-primary pointer pl-4" (click)="copyDeal()"><u>Copy Deal</u>
+                    &nbsp;<i class="far fa-clone"></i> </span>
+
+                <span class="text-danger pointer text-right float-right" (click)="deleteDeal()"><u>Delete this
+                        Deal</u>
+                    &nbsp;<i class='fas fa-trash-alt'></i> </span>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div *ngIf="loading">
+                            <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
+                            <ngx-skeleton-loader count="1" appearance="line" [theme]="{ height: '50px'}">
+                            </ngx-skeleton-loader>
+                            <div class="row" *ngFor="let i of [].constructor(2)">
+                                <div class="col">
+                                    <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
+                                </div>
+                                <div class="col">
+                                    <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="!loading">
+                            <h5 class="pt-1 text-primary font-weight-light">{{deal.institute.instituteName}}
+
+                                <i (click)="routeToInstitutionDetail()"
+                                    class='fas fa-external-link-alt pointer pl-2'></i>
+
+                            </h5>
+
+                            <p class="text-muted pt-3">
+                                {{deal.institute.street1}},{{deal.institute.street2}},{{deal.institute.city}},
+                                {{deal.institute.state}},{{deal.institute.Country}} -
+                                {{deal.institute.zipcode}}.
+                            </p>
+                            <mat-chip-list>
+                                <mat-chip [hidden]="deal.institute.phone==null || deal.institute.phone==''"
+                                    color="primary" selected><i class="fas fa-phone pr-2"> </i>
+                                    {{deal.institute.phone}}
+                                </mat-chip>
+                                <mat-chip
+                                    [hidden]="deal.institute.alternatePhone==null || deal.institute.alternatePhone==''"
+                                    color="primary" selected><i class="fas fa-phone pr-2"> </i>
+                                    {{deal.institute.alternatePhone}}
+                                </mat-chip>
+
+                                <mat-chip [hidden]="deal.institute.emailId==null || deal.institute.emailId==''"
+                                    color="warn" selected><i class="far fa-envelope-open pr-2">
+                                    </i>{{deal.institute.emailId}}
+                                </mat-chip>
+                                <mat-chip
+                                    [hidden]="deal.institute.alternateEmailId==null || deal.institute.alternateEmailId==''"
+                                    color="warn" selected><i
+                                        class="far fa-envelope-open pr-2"></i>{{deal.institute.alternateEmailId}}
+                                </mat-chip>
+                            </mat-chip-list>
+                        </div>
+                    </div>
+                    <h6 *ngIf="deal.instituteContacts.length > 0" class="font-weight-bold pt-4 pb-1">
+                        Contacts</h6>
+                    <div class="col-12" *ngFor="let contact of deal.instituteContacts">
+                        <p class="text-dark">{{contact.firstName}} {{contact.lastName}}</p>
+                        <mat-chip-list>
+                            <mat-chip [hidden]="contact.phone==null || contact.phone==''" color="primary" selected>
+                                <i class="fas fa-phone pr-2"> </i>
+                                {{contact.phone}}
+                            </mat-chip>
+                            <mat-chip [hidden]="contact.alternatePhone==null || contact.alternatePhone==''"
+                                color="primary" selected><i class="fas fa-phone pr-2"> </i>
+                                {{contact.alternatePhone}}
+                            </mat-chip>
+
+                            <mat-chip [hidden]="contact.emailId==null || contact.emailId==''" color="warn" selected>
+                                <i class="far fa-envelope-open pr-2">
+                                </i>{{contact.emailId}}
+                            </mat-chip>
+                            <mat-chip [hidden]="contact.alternateEmailId==null || contact.alternateEmailId==''"
+                                color="warn" selected><i
+                                    class="far fa-envelope-open pr-2"></i>{{contact.alternateEmailId}}
+                            </mat-chip>
+                        </mat-chip-list>
+
+                        Created By : {{deal.createdBy}} at {{deal.createddatetime | date:'dd/MM/yyyy' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 p-1">
+        <div class="card">
+            <div class="card-header">
+                <span class="h5 font-weight-bold">Address Info</span>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <h6 class="font-weight-bold">Billing Address</h6>
+
+                        <div *ngIf="loading">
+                            <ngx-skeleton-loader count="1" appearance="line" [theme]="{ height: '100px'}">
+                            </ngx-skeleton-loader>
+                        </div>
+
+                        <p class="text-muted">
+                            {{deal.billingTo}}<br>
+                            {{deal.billingStreet1}}<br>
+                            {{deal.billingStreet2}}<br>
+                            {{deal.billingCity}}<br>
+                            {{deal.billingState}}<br>
+                            {{deal.billingCountry}} - {{deal.billingZIPCode}}<br>
+                        </p>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <h6 class="font-weight-bold">Shipping Address</h6>
+
+                        <div *ngIf="loading">
+                            <ngx-skeleton-loader count="1" appearance="line" [theme]="{ height: '100px'}">
+                            </ngx-skeleton-loader>
+                        </div>
+
+                        <p class="text-muted">
+                            {{deal.shippingTo}}<br>
+                            {{deal.shippingStreet1}}<br>
+                            {{deal.shippingStreet2}}<br>
+                            {{deal.shippingCity}}<br>
+                            {{deal.shippingState}}<br>
+                            {{deal.shippingCountry}} - {{deal.shippingZIPCode}}<br>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 p-1">
+        <div class="card">
+            <div class="card-header">
+                <span class="h5 font-weight-bold">Product Details</span>
+            </div>
+            <div class="card-body">
+
+                <div *ngIf="loading">
+                    <ngx-skeleton-loader *ngFor="let i of [].constructor(2)" count="1" appearance="line"
+                        [theme]="{ height: '100px'}">
+                    </ngx-skeleton-loader>
+                </div>
+                <div *ngIf="!loading">
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered" *ngIf="deal.products.length > 0">
+                            <thead>
+                                <tr>
+                                    <th style="width: 5%" scope="col"># </th>
+                                    <th style="width: 30%" scope="col">Product</th>
+                                    <th style="width: 8%" scope="col">Price(&#8377;)</th>
+                                    <th style="width: 8%" scope="col">Discount(&#8377;)</th>
+                                    <th style="width: 5%" scope="col">Quantity</th>
+                                    <th style="width: 14%" scope="col">GST
+                                    </th>
+                                    <th style="width: 10%" scope="col">Total(&#8377;)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let prod of deal.products;let i = index;">
+                                    <td>{{i+1}}
+                                    </td>
+                                    <td>{{prod.name}}
+                                        <br>
+                                        <span [innerHTML]="prod.description"></span>
+                                    </td>
+                                    <td>
+                                        {{prod.price | currency:'INR'}}
+                                    </td>
+                                    <td>
+                                        {{prod.discount | currency:'INR'}}
+                                    </td>
+                                    <td>
+                                        {{prod.quantity}}
+                                        <br>
+                                        <span *ngIf="prod.uom">({{prod.uom}})</span>
+                                    </td>
+                                    <td>
+                                        <span *ngIf="deal.gstType == 'CGST/SGST'">
+                                            CGST -
+                                            {{su.getGSTAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage)
+                                            / 2 | currency:'INR'}}
+                                            ({{prod.gstPercentage / 2}}%)
+                                            <br>
+                                            SGST -
+                                            {{su.getGSTAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage)
+                                            / 2 | currency:'INR'}}
+                                            ({{prod.gstPercentage / 2}}%)
+                                        </span>
+                                        <span *ngIf="deal.gstType == 'IGST'">
+                                            IGST -
+                                            {{su.getGSTAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage)
+                                            | currency:'INR'}}
+                                            ({{prod.gstPercentage}})%
+                                        </span>
+                                    </td>
+                                    <td align="right">
+                                        {{su.getTotalAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage) |
+                                        currency:'INR'}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" class="borderless"></td>
+                                    <td colspan="2">
+                                        <table class="table table-sm table-borderless text-dark">
+                                            <tr>
+                                                <td>
+                                                    Sub Total
+                                                </td>
+                                                <td align="right">
+                                                    {{su.getSubTotal(deal.products) | currency:'INR'}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Discount
+                                                </td>
+                                                <td align="right">
+                                                    {{su.getDiscount(deal.products) | currency:'INR'}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Tax
+                                                </td>
+                                                <td align="right">
+                                                    {{su.getTaxAmount(deal.products) | currency:'INR'}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Adjustment
+                                                </td>
+                                                <td align="right">
+                                                    {{su.getAdjustment(deal.products) | currency:'INR'}}
+                                                </td>
+                                            </tr>
+                                            <tr class="border-light border-top border-bottom">
+                                                <td class="font-weight-bold">
+                                                    Grand Total
+                                                </td>
+                                                <td class="font-weight-bold" align="right">
+                                                    {{su.getGrandTotal(deal.products) | currency:'INR'}}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

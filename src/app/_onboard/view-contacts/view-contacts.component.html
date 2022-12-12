@@ -1,0 +1,35 @@
+<div class="card m-3">
+        <div class="card-body">
+                <div class="row">
+                        <div class="col">
+                                <span
+                                        class="text-primary small text-indigo">{{viewContact.firstName}}&nbsp;{{viewContact.lastName}}</span>
+                        </div>
+                </div>
+
+                <p class="m-0">Email-Id : {{viewContact.emailId}}</p>
+                <p class="m-0">Phone.No : {{viewContact.phone}}</p>
+                <p class="m-0">Street1 : {{viewContact.street1}}</p>
+                <p class="m-0">Street2 : {{viewContact.street2}}</p>
+                <p class="text-success" *ngIf="viewContact.isBlocked == 0"> Login Access <i
+                                class="fas fa-user-alt">&nbsp;</i> </p>
+                <p class="text-danger" *ngIf="viewContact.isBlocked > 0"> Login Access Blocked <i
+                                class="fas fa-user-alt-slash">&nbsp;</i> </p>
+        </div>
+        <div class="row">
+                <div class="col-md-2">
+                        <button class="btn btn-sm btn-primary"
+                                (click)="editContact(viewContact.id)">
+                                <i class="fas fa-edit" style="font-size:17px;color:#ffffff"
+                                        aria-hidden="true"></i>&nbsp;<span>Edit</span>
+                        </button>
+                </div>
+                <div class="col-md-2">
+                        <button class="btn btn-sm btn-primary"
+                                (click)="deleteContact(viewContact.id,viewContact.emailId)">
+                                <i class="fa fa-trash" style="font-size:17px;color:#ffffff"
+                                        aria-hidden="true"></i>&nbsp;<span>Delete</span>
+                        </button>
+                </div>
+        </div>
+</div>

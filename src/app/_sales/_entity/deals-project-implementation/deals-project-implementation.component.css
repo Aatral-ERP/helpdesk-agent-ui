@@ -1,0 +1,6 @@
+.noQuoteSpan {
+    min-height: 150px;
+    border: 0.5px dotted rgb(104, 219, 240);
+    text-align: center;
+    background: rgb(240, 240, 240);
+}

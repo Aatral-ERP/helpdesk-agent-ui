@@ -1,0 +1,449 @@
+<div class="container-fluid">
+    <div class="row border-bottom border-light pb-0 mb-0">
+        <div class="col">
+            <a routerLink="create" class="btn btn-md btn-primary float-right">
+                <i class="fa fa-plus"> Create Deal </i>
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row pointer filterdiv mt-0 pt-0 bg-primary text-white justify-content-center"
+            (click)="showFilterScreen = !showFilterScreen">
+            <div class="col text-center">
+                <span> <span class="small"> Deals Filters &nbsp;&nbsp;</span>
+                    <i [hidden]="showFilterScreen" class="fa fa-angle-up"></i>
+                    <i [hidden]="!showFilterScreen" class="fa fa-angle-down"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container pt-2" [hidden]="!showFilterScreen">
+
+        <div class="row">
+            <div class="col-12">
+                <p class="indigo-text h4 text-center"> Deals Filter
+                </p>
+                <hr style="width:100%;text-align:left;margin-left:0">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <label>Institute</label>
+                <ng-multiselect-dropdown [placeholder]="'Select Institutes'" [data]="_institutes"
+                    [(ngModel)]="_search_filters.institutes" [settings]="_instituteDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <label>Products</label>
+                <ng-multiselect-dropdown [placeholder]="'Select Products'" [data]="_products"
+                    [(ngModel)]="_search_filters.dealProducts" [settings]="_ProductsDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <label>Create By</label>
+                <ng-multiselect-dropdown [placeholder]="'Created By'" [data]="_agents"
+                    [disabled]="!this.role.salesAdmin" [(ngModel)]="_search_filters.agents"
+                    [settings]="_AgentsDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+
+            <div class="col-sm-12 col-md-12 col-lg-3">
+                <label>Deal Type</label>
+                <select class="form-control" name="dealType" id="dealType" [(ngModel)]="_search_filters.dealType">
+                    <option value="">--select--</option>
+                    <option value="Sales">Sales</option>
+                    <option value="AMC">AMC</option>
+                    <option value="Service">Service</option>
+                    <option value="Others">Others</option>
+                </select>
+            </div>
+
+            <div class="col-sm-12 col-md-12 col-lg-3">
+                <label>Last Modified Date</label>
+                <div class="input-group">
+                    <input class="form-control" (focus)="datesdp.toggleCalendar()"
+                        placeholder="Select From - To Date range" angular-mydatepicker name="dates"
+                        (dateChanged)="dateChanged($event);_search_filters.dealModifiedDateFrom = $event.dateRange.beginJsDate;_search_filters.dealModifiedDateTo = $event.dateRange.endJsDate;"
+                        [(ngModel)]="_search_filters.dealModifiedDateObject" [options]="myDatePickerOptions"
+                        #datesdp="angular-mydatepicker" autocomplete="off" />
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i (click)="datesdp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="m-1 p-1 border border-light">
+            <h6 (click)="showQuoteFilterScreen = !showQuoteFilterScreen" class="pointer text-dark font-weight-bold">
+                Quotation Filter's &nbsp;
+                <i [hidden]="showQuoteFilterScreen" class="fas fa-caret-right"></i>
+                <i [hidden]="!showQuoteFilterScreen" class="fas fa-caret-down"></i>
+            </h6>
+            <div [hidden]="!showQuoteFilterScreen" class="row">
+                <div class="col-sm-12 col-md-12 col-lg-6">
+                    <label for="quoteSubject">Quote Subject</label>
+                    <input class="form-control" type="text" id="quoteSubject" placeHolder="Enter Quote Subject"
+                        name="quoteSubject" [(ngModel)]="_search_filters.quoteSubject" />
+                </div>
+
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <label for="dob" style="margin-bottom: 5px;"> Quote Date </label>
+                    <div class="input-group">
+                        <input class="form-control" (focus)="quoteDatedp.toggleCalendar()"
+                            placeholder="choose Quote Date" angular-mydatepicker name="quoteDateObject"
+                            [(ngModel)]="_search_filters.quoteDateObject"
+                            (dateChanged)="_search_filters.quoteDateFrom = $event.dateRange.beginJsDate;_search_filters.quoteDateTo = $event.dateRange.endJsDate;"
+                            [options]="myDatePickerOptions" #quoteDatedp="angular-mydatepicker" autocomplete="off" />
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i (click)="quoteDatedp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <label for="dob" style="margin-bottom: 5px;"> Valid Until </label>
+                    <div class="input-group">
+                        <input class="form-control" (focus)="quoteValidDatedp.toggleCalendar()"
+                            placeholder="choose valid date" angular-mydatepicker name="quoteValidDateObject"
+                            [(ngModel)]="_search_filters.quoteValidDateObject" [options]="myDatePickerOptions"
+                            (dateChanged)="_search_filters.quoteValidDateFrom = $event.dateRange.beginJsDate;_search_filters.quoteValidDateTo = $event.dateRange.endJsDate;"
+                            #quoteValidDatedp="angular-mydatepicker" autocomplete="off" />
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i (click)="quoteValidDatedp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12 col-md-8 col-lg-6">
+                    <label for="quoteNo">Quotation No</label>
+                    <input class="form-control" type="text" id="quoteNo" placeHolder="Enter Quotation No "
+                        name="quoteNo" [(ngModel)]="_search_filters.quoteNo" />
+                </div>
+
+                <div class="col-sm-12 col-md-4 col-lg-6">
+                    <label>Quote Stage</label>
+                    <select name="quoteStage" [(ngModel)]="_search_filters.quoteStage" class="form-control">
+                        <option value="">--select--</option>
+                        <option value="Draft">Draft</option>
+                        <option value="Negotiation">Negotiation</option>
+                        <option value="On Hold">On Hold</option>
+                        <option value="Delivered">Delivered</option>
+                        <option value="Confirmed">Confirmed</option>
+                        <option value="Closed Won">Closed Won</option>
+                        <option value="Closed Lost">Closed Lost</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="m-1 p-1 border border-light">
+            <h6 (click)="showPOFilterScreen = !showPOFilterScreen" class="pointer text-dark font-weight-bold">
+                Purchase Order Filter's &nbsp;
+                <i [hidden]="showPOFilterScreen" class="fas fa-caret-right"></i>
+                <i [hidden]="!showPOFilterScreen" class="fas fa-caret-down"></i>
+            </h6>
+            <div [hidden]="!showPOFilterScreen" class="row">
+
+                <div class="col-sm-12 col-md-12 col-lg-6">
+                    <label for="poSubject">Purchase Order Subject</label>
+                    <input class="form-control" type="text" id="poSubject" placeHolder="Enter Purchase Order Subject"
+                        name="poSubject" [(ngModel)]="_search_filters.poSubject" />
+                </div>
+
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <label for="dob" style="margin-bottom: 5px;"> PO Date </label>
+                    <div class="input-group">
+                        <input class="form-control" (focus)="poDateObjectdp.toggleCalendar()"
+                            placeholder="choose PO Date" angular-mydatepicker name="poDateObject"
+                            [(ngModel)]="_search_filters.poDateObject"
+                            (dateChanged)="_search_filters.poDateFrom = $event.dateRange.beginJsDate;_search_filters.poDateTo = $event.dateRange.endJsDate;"
+                            [options]="myDatePickerOptions" #poDateObjectdp="angular-mydatepicker" autocomplete="off" />
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i (click)="poDateObjectdp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <label for="poDueDateObject" style="margin-bottom: 5px;"> PO Due Date </label>
+                    <div class="input-group">
+                        <input class="form-control" (focus)="poDueDateFromdp.toggleCalendar()"
+                            placeholder="choose valid date" angular-mydatepicker name="poDueDateObject"
+                            [(ngModel)]="_search_filters.poDueDateObject" [options]="myDatePickerOptions"
+                            (dateChanged)="_search_filters.poDueDateFrom = $event.dateRange.beginJsDate;_search_filters.poDueDateTo = $event.dateRange.endJsDate;"
+                            #poDueDateFromdp="angular-mydatepicker" autocomplete="off" />
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i (click)="poDueDateFromdp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12 col-md-8 col-lg-3">
+                    <label for="poNo">Purchase Order No</label>
+                    <input class="form-control" type="text" id="poNo" placeHolder="Enter Purchase Order No " name="poNo"
+                        [(ngModel)]="_search_filters.poNo" />
+                </div>
+
+                <div class="col-sm-12 col-md-8 col-lg-3">
+                    <label for="poTrackingNo">Purchase Tracking No</label>
+                    <input class="form-control" type="text" id="poTrackingNo" placeHolder="Enter Purchase Tracking No "
+                        name="poTrackingNo" [(ngModel)]="_search_filters.poTrackingNo" />
+                </div>
+
+                <div class="col-sm-12 col-md-8 col-lg-3">
+                    <label for="poRequisitionNo">Purchase Requisition No</label>
+                    <input class="form-control" type="text" id="poRequisitionNo"
+                        placeHolder="Enter Purchase Requisition No " name="poRequisitionNo"
+                        [(ngModel)]="_search_filters.poRequisitionNo" />
+                </div>
+
+                <div class="col-sm-12 col-md-4 col-lg-3">
+                    <label>PO Stage</label>
+                    <select name="poStatus" [(ngModel)]="_search_filters.poStatus" class="form-control">
+                        <option value="">--select--</option>
+                        <option value="created">Created</option>
+                        <option value="approved">Approved</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="m-1 p-1 border border-light">
+            <h6 (click)="showSOFilterScreen = !showSOFilterScreen" class="pointer text-dark font-weight-bold">
+                Sales Order Filter's &nbsp;
+                <i [hidden]="showSOFilterScreen" class="fas fa-caret-right"></i>
+                <i [hidden]="!showSOFilterScreen" class="fas fa-caret-down"></i>
+            </h6>
+            <div [hidden]="!showSOFilterScreen" class="row">
+
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                    <label for="soSubject">Sales Order Subject</label>
+                    <input class="form-control" type="text" id="soSubject" placeHolder="Enter Sales Order Subject"
+                        name="soSubject" [(ngModel)]="_search_filters.soSubject" />
+                </div>
+
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                    <label for="soNo">Sales Order No</label>
+                    <input class="form-control" type="text" id="soNo" placeHolder="Enter Sales Order No " name="soNo"
+                        [(ngModel)]="_search_filters.soNo" />
+                </div>
+
+                <div class="col-sm-6 col-md-6 col-lg-3">
+                    <label for="soDueDateObject" style="margin-bottom: 5px;"> SO Due Date </label>
+                    <div class="input-group">
+                        <input class="form-control" (focus)="soDueDatedp.toggleCalendar()"
+                            placeholder="choose valid date" angular-mydatepicker name="soDueDateObject"
+                            [(ngModel)]="_search_filters.soDueDateObject" [options]="myDatePickerOptions"
+                            (dateChanged)="_search_filters.soDueDateFrom = $event.dateRange.beginJsDate;_search_filters.soDueDateTo = $event.dateRange.endJsDate;"
+                            #soDueDatedp="angular-mydatepicker" autocomplete="off" />
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i (click)="soDueDatedp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                    <label>Sales Order Status</label>
+                    <select name="soStatus" [(ngModel)]="_search_filters.soStatus" class="form-control">
+                        <option value="">--select--</option>
+                        <option value="created">Created</option>
+                        <option value="approved">Approved</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="m-1 p-1 border border-light">
+            <h6 (click)="showProInvFilterScreen = !showProInvFilterScreen" class="pointer text-dark font-weight-bold">
+                Proforma Invoice Filter's &nbsp;
+                <i [hidden]="showProInvFilterScreen" class="fas fa-caret-right"></i>
+                <i [hidden]="!showProInvFilterScreen" class="fas fa-caret-down"></i>
+            </h6>
+            <div [hidden]="!showProInvFilterScreen" class="row">
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                    <label for="proInvoiceSubject">Proforma Invoice Subject</label>
+                    <input class="form-control" type="text" id="proInvoiceSubject"
+                        placeHolder="Enter Proforma Invoice Subject" name="proInvoiceSubject"
+                        [(ngModel)]="_search_filters.proInvoiceSubject" />
+                </div>
+
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                    <label for="proInvoiceNo">Proforma Invoice No</label>
+                    <input class="form-control" type="text" id="proInvoiceNo" placeHolder="Enter Proforma Invoice No "
+                        name="proInvoiceNo" [(ngModel)]="_search_filters.proInvoiceNo" />
+                </div>
+
+                <div class="col-sm-6 col-md-6 col-lg-3">
+                    <label for="proInvoiceDateObject" style="margin-bottom: 5px;">Proforma Invoice Date </label>
+                    <div class="input-group">
+                        <input class="form-control" (focus)="proInvoiceDatedp.toggleCalendar()"
+                            placeholder="choose valid date" angular-mydatepicker name="proInvoiceDateObject"
+                            [(ngModel)]="_search_filters.proInvoiceDateObject" [options]="myDatePickerOptions"
+                            (dateChanged)="_search_filters.proInvoiceDateFrom = $event.dateRange.beginJsDate;_search_filters.proInvoiceDateTo = $event.dateRange.endJsDate;"
+                            #proInvoiceDatedp="angular-mydatepicker" autocomplete="off" />
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i (click)="proInvoiceDatedp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-md-6 col-lg-3">
+                    <label for="proInvoiceDueDateObject" style="margin-bottom: 5px;">Proforma Invoice Due Date </label>
+                    <div class="input-group">
+                        <input class="form-control" (focus)="proInvoiceDueDatedp.toggleCalendar()"
+                            placeholder="choose valid date" angular-mydatepicker name="proInvoiceDueDateObject"
+                            [(ngModel)]="_search_filters.proInvoiceDueDateObject" [options]="myDatePickerOptions"
+                            (dateChanged)="_search_filters.proInvoiceDueDateFrom = $event.dateRange.beginJsDate;_search_filters.proInvoiceDueDateTo = $event.dateRange.endJsDate;"
+                            #proInvoiceDueDatedp="angular-mydatepicker" autocomplete="off" />
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i (click)="proInvoiceDueDatedp.toggleCalendar()"
+                                    class="fas fa-calendar-alt pointer"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="m-1 p-1 border border-light">
+            <h6 (click)="showInvFilterScreen = !showInvFilterScreen" class="pointer text-dark font-weight-bold">
+                Invoice Filter's &nbsp;
+                <i [hidden]="showInvFilterScreen" class="fas fa-caret-right"></i>
+                <i [hidden]="!showInvFilterScreen" class="fas fa-caret-down"></i>
+            </h6>
+            <div [hidden]="!showInvFilterScreen" class="row">
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                    <label for="invoiceSubject">Invoice Subject</label>
+                    <input class="form-control" type="text" id="invoiceSubject" placeHolder="Enter Invoice Subject"
+                        name="invoiceSubject" [(ngModel)]="_search_filters.invoiceSubject" />
+                </div>
+
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                    <label for="invoiceNo">Invoice No</label>
+                    <input class="form-control" type="text" id="invoiceNo" placeHolder="Enter Invoice No "
+                        name="invoiceNo" [(ngModel)]="_search_filters.invoiceNo" />
+                </div>
+
+                <div class="col-sm-6 col-md-6 col-lg-3">
+                    <label for="invoiceDateObject" style="margin-bottom: 5px;"> Invoice Date </label>
+                    <div class="input-group">
+                        <input class="form-control" (focus)="invoiceDatedp.toggleCalendar()"
+                            placeholder="choose valid date" angular-mydatepicker name="invoiceDateObject"
+                            [(ngModel)]="_search_filters.invoiceDateObject" [options]="myDatePickerOptions"
+                            (dateChanged)="_search_filters.invoiceDateFrom = $event.dateRange.beginJsDate;_search_filters.invoiceDateTo = $event.dateRange.endJsDate;"
+                            #invoiceDatedp="angular-mydatepicker" autocomplete="off" />
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i (click)="invoiceDatedp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-md-6 col-lg-3">
+                    <label for="invoiceDueDateObject" style="margin-bottom: 5px;">Invoice Due Date </label>
+                    <div class="input-group">
+                        <input class="form-control" (focus)="invoiceDueDatedp.toggleCalendar()"
+                            placeholder="choose valid date" angular-mydatepicker name="invoiceDueDateObject"
+                            [(ngModel)]="_search_filters.invoiceDueDateObject" [options]="myDatePickerOptions"
+                            (dateChanged)="_search_filters.invoiceDueDateFrom = $event.dateRange.beginJsDate;_search_filters.invoiceDueDateTo = $event.dateRange.endJsDate;"
+                            #invoiceDueDatedp="angular-mydatepicker" autocomplete="off" />
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i (click)="invoiceDueDatedp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                    <label>Invoice Status</label>
+                    <select name="invoiceStatus" [(ngModel)]="_search_filters.invoiceStatus" class="form-control">
+                        <option value="">--select--</option>
+                        <option value="created">Created</option>
+                        <option value="approved">Approved</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+
+
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <label>GST Month</label>
+                    <select name="gstMonth" [(ngModel)]="_search_filters.gstMonth" class="form-control">
+                        <option disabled value="">--select--</option>
+                        <option value="January">January</option>
+                        <option value="February">February</option>
+                        <option value="March">March</option>
+                        <option value="April">April</option>
+                        <option value="May">May</option>
+                        <option value="June">June</option>
+                        <option value="July">July</option>
+                        <option value="August">August</option>
+                        <option value="September">September</option>
+                        <option value="October">October</option>
+                        <option value="November">November</option>
+                        <option value="December">December</option>
+                    </select>
+                </div>
+
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <label>GST Year</label>
+                    <input type="number" class="form-control" name="gstYear" [(ngModel)]="_search_filters.gstYear">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-12 text-center mt-2">
+                <button class="btn btn-md btn-primary" (click)="loadDeals()">Submit</button>
+                <button class="btn btn-sm btn-outline-primary" (click)="clearFilters()">Clear</button>
+            </div>
+        </div>
+    </div>
+    <p class="h4 text-center mt-4"> Deals Report
+    </p>
+    <div>
+        <div class="row">
+            <div class="col">
+                <ag-grid-angular enableCellTextSelection="true" *ngIf="!loading" [rowData]="rowData"
+                    style="width: 100%; height: 500px;" class="ag-theme-balham p-2" [columnDefs]="columnDefs"
+                    [rowSelection]="'single'" [paginationAutoPageSize]="true" [pagination]="true">
+                </ag-grid-angular>
+
+                <div class="item" *ngIf="loading">
+                    <ngx-skeleton-loader count="8"></ngx-skeleton-loader>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>

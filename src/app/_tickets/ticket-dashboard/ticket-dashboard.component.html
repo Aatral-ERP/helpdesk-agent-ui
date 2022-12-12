@@ -1,0 +1,27 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+
+<div class="container p-2 mb-2">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-md-12 col-sm-12">
+            <label>Agent</label>
+            <ng-multiselect-dropdown [placeholder]="'Select Agents'" [data]="_agents" (onSelect)="onAgentSelect($event)"
+                (onDeSelect)="onAgentDeSelect($event)" [(ngModel)]="_search_filters.agents"
+                [settings]="_agentsDropdownSettings">
+            </ng-multiselect-dropdown>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid" *ngIf="this._agents.length > 0">
+
+    <div class="row flex-nowrap pl-2 pr-2">
+        <div class="workflows-cols m-1" *ngFor="let _agent of _selected_agents">
+            <div class="">
+                <app-agent-performance [agent]="getMemberFullDetail(_agent)">
+                </app-agent-performance>
+            </div>
+        </div>
+    </div>
+
+</div>
+<p class="m-2">&nbsp;</p>

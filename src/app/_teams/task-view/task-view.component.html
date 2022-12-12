@@ -1,0 +1,508 @@
+<h6 mat-dialog-title class="indigo-text">#{{task.taskId}} - {{task.subject}}
+    <span *ngIf="canModifyTask" (click)="deleteTask()" class="float-right text-danger pointer">
+        <u>Delete this task</u> <i class="fas fa-trash-alt pl-1"></i></span>
+</h6>
+
+<mat-progress-bar *ngIf="loading" mode="indeterminate">
+</mat-progress-bar>
+
+<mat-dialog-content class="mat-typography">
+    <div class="row">
+        <div class="col-8 scrollable">
+            <h5 class="text-muted font-weight-bold">Description</h5>
+            <p class="d-block text-muted" [innerHTML]="task.description"></p>
+
+            <hr>
+
+            <div class="row">
+                <div class="col">
+                    <span class="text-muted font-weight-bold h6 pr-3">More : </span>
+                    <span class="p-1 pl-2 pr-2 m-1 pointer" (click)="showFooter = 'Attachments'"
+                        [ngClass]="showFooter == 'Attachments' ? 'text-light bg-dark' : 'text-muted bg-light'">Attachments
+                        ({{attachments.length}})</span>
+                    <span class="p-1 pl-2 pr-2 m-1 pointer" (click)="showFooter = 'Comments'"
+                        [ngClass]="showFooter == 'Comments' ? 'text-light bg-dark' : 'text-muted bg-light'">Comments</span>
+                    <span class="p-1 pl-2 pr-2 m-1 pointer" (click)="showFooter = 'History'"
+                        [ngClass]="showFooter == 'History' ? 'text-light bg-dark' : 'text-muted bg-light'">History</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col pt-2" *ngIf="showFooter == 'Attachments'">
+
+                    <h5 class="text-muted font-weight-bold">Attachments ({{attachments.length}} attachments)
+                        <small *ngIf="canManageAttachments" class="float-right text-muted pointer"
+                            (click)="showAttachmentBtn = !showAttachmentBtn">
+                            <u>
+                                <span [hidden]="!showAttachmentBtn">Close</span>
+                                <span [hidden]="showAttachmentBtn">Add Attachment</span>
+                                <i class="fas fa-paperclip pl-2"></i>
+                            </u>
+                        </small>
+                    </h5>
+
+                    <ngx-file-drop [hidden]="!showAttachmentBtn" multiple="true" [showBrowseBtn]="false"
+                        dropZoneLabel="Drop files here." (onFileDrop)="dropped($event)">
+                        <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                            Drop files here
+                            or&nbsp;&nbsp;
+                            <span class="pointer" (click)="openFileSelector()"><u>Browse Files</u></span>
+                        </ng-template>
+                    </ngx-file-drop>
+
+                    <p class="text-muted small" *ngIf="attachments.length == 0">No Attachments</p>
+
+                    <div class="row m-1 border border-light" *ngFor="let file of files;let i = index;">
+                        <div class="col p-0 m-0">
+                            <mat-progress-bar style="height: 3px;" mode="determinate" [value]="file.progress">
+                            </mat-progress-bar>
+                            <div class="row">
+                                <div class="col">
+                                    <span class="text-dark pl-2 text-nowrap-2">{{file.file.name}}</span>
+                                    <br>
+                                    <span class="text-muted small pl-2">{{file.status}} - {{file.file.size | filesize}}
+                                        -
+                                        {{file.progress}}%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item list-group-item-action" *ngFor="let attach of attachments">
+                                    <small class="badge badge-light text-muted mr-2">
+                                        <i (click)="downloadTaskAttachmnet(attach)" class="fa fa-download pointer"></i>
+                                    </small>
+                                    <small>{{attach}}</small>
+                                    <small *ngIf="canManageAttachments" class="float-right"><i
+                                            (click)="removeAttachment(attach)"
+                                            class="fas fa-trash-alt text-danger pointer"></i></small>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" *ngIf="showFooter == 'Comments'">
+                    <app-task-comments [allAgents]="agents" [task]="task" [canCommentTask]="canCommentTask">
+                    </app-task-comments>
+                </div>
+                <div class="col" *ngIf="showFooter == 'History'">
+                    <app-task-history [allAgents]="agents" [task]="task"></app-task-history>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-4">
+
+            <div class="row pt-2">
+                <div class="col float-right">
+
+                    <button mat-flat-button class="m-1 pl-0 pr-0" [matMenuTriggerFor]="watchersMenu"
+                        [ngClass]="(watchers.length > 0) ? 'bg-primary text-white' : 'bg-light text-dark'">
+                        <i class="far fa-eye"></i> &nbsp;
+                        <span [hidden]="watchers.length == 0">{{watchers.length}}</span>
+                    </button>
+
+                    <button mat-flat-button class="m-1 pl-0 pr-0 bg-light" [matMenuTriggerFor]="priorityMenu">
+                        <i *ngIf="task.priority == 'Not Preferred'" class="fas fa-arrows-alt-h text-muted p-1"></i>
+                        <i *ngIf="task.priority == 'High'" class="fas fa-arrow-up text-danger p-1"></i>
+                        <i *ngIf="task.priority == 'Medium'" class="fas fa-arrow-up text-warning p-1"></i>
+                        <i *ngIf="task.priority == 'Low'" class="fas fa-arrow-down text-info p-1"></i>
+                    </button>
+
+                    <button (click)="openShareWhatsAppModal()" mat-flat-button class="bg-light m-1 pl-0 pr-0">
+                        <i class="fab fa-whatsapp"></i>
+                    </button>
+                    <!-- 
+                    <button mat-flat-button mat-dialog-close class="bg-light m-1 pl-0 pr-0">
+                        <i class="fas fa-times text-muted fa-lg"></i>
+                    </button> -->
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row">
+                <div class="col">
+                    <mat-label class="text-muted small">Status</mat-label>
+
+                    <button [disabled]="!canChangeStatus" *ngIf="task.status == 'To Do'"
+                        [matMenuTriggerFor]="workflowStatusMenu" mat-flat-button
+                        class="d-block bg-light">{{task.status}}<i class="fas fa-chevron-down pl-2"></i></button>
+                    <button [disabled]="!canChangeStatus" *ngIf="task.status != 'To Do' && task.status != 'Done'"
+                        [matMenuTriggerFor]="workflowStatusMenu" mat-flat-button
+                        class="d-block bg-primary text-white">{{task.status}}<i
+                            class="fas fa-chevron-down pl-2"></i></button>
+                    <button [disabled]="!canChangeStatus" *ngIf="task.status == 'Done'"
+                        [matMenuTriggerFor]="workflowStatusMenu" mat-flat-button
+                        class="d-block bg-success text-white">{{task.status}} <i
+                            class="fas fa-check-double pl-2"></i></button>
+
+                </div>
+            </div>
+
+            <div class="row pt-2">
+                <div class="col">
+                    <input hidden matInput [ngxMatDatetimePicker]="picker" (dateChange)="changeDueDate($event)">
+
+                    <span title="{{task.dueDateTime | date:'MMM dd, yyyy hh:mm a'}}" class="chip-pk pointer"
+                        *ngIf="task.dueDateTime != null" (click)="picker.open()"> Due
+                        {{task.dueDateTime | amTimeAgo}}</span>
+                    <span class="chip-pk pointer" *ngIf="task.dueDateTime == null" (click)="picker.open()">Due - </span>
+
+                    <mat-datepicker-toggle hidden matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <ngx-mat-datetime-picker [enableMeridian]="true" [touchUi]="true" #picker>
+                    </ngx-mat-datetime-picker>
+                </div>
+            </div>
+
+            <div class="row pt-2">
+                <div class="col-12">
+                    <mat-label class="text-muted small">Feature {{allFeatures.length}}</mat-label>
+                </div>
+                <div class="col">
+                    <span (click)="openFeaturesModal()" class="chip-pk pointer">
+                        {{getFeatureName(task.featureId)}}
+                    </span>
+                    <i (click)="removeFeature()" *ngIf="task.featureId > 0" class="fas fa-times ml-2 pointer"></i>
+                </div>
+            </div>
+
+            <div class="row pt-2">
+                <div class="col-12">
+                    <mat-label class="text-muted small">Label/Category</mat-label>
+                </div>
+                <div class="col">
+                    <span class="chip-pk" *ngIf="task.label != null && task.label != ''">
+                        {{ (task.label.length > 40)? (task.label | slice:0:40)+'..':(task.label) }}</span>
+                    <span class="chip-pk" *ngIf="task.label == null || task.label == ''"> - </span>
+                </div>
+            </div>
+
+            <div class="row pt-2">
+                <div class="col-12">
+                    <mat-label class="text-muted small">Institute</mat-label>
+                </div>
+                <div class="col">
+                    <span class="chip-pk" title="{{getInstituteName(task.instituteId)}}">
+                        {{ (getInstituteName(task.instituteId).length > 40)? (getInstituteName(task.instituteId) |
+                        slice:0:40)+'..':(getInstituteName(task.instituteId)) }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="row pt-2">
+                <div class="col-12">
+                    <mat-label class="text-muted small">Assignee</mat-label>
+                </div>
+                <div class="col">
+                    <img title="{{getMemberImageURL(task.assignee)}}" class="pointer avator-thumb"
+                        src="{{getMemberImageURL(task.assignee)}}">
+                    &nbsp;&nbsp;
+                    {{getMemberName(task.assignee)}}
+                </div>
+                <div class="col-1" *ngIf="canModifyTask">
+                    <i [matMenuTriggerFor]="UpdateAssigneeMenu" class="fas fa-user-edit text-muted pointer pt-2"></i>
+
+                </div>
+            </div>
+
+            <div class="row pt-2">
+                <div class="col-12">
+                    <mat-label class="text-muted small">Reporter</mat-label>
+                </div>
+                <div class="col">
+                    <img title="{{getMemberImageURL(task.reporter)}}" class="pointer avator-thumb"
+                        src="{{getMemberImageURL(task.reporter)}}">
+                    &nbsp;&nbsp;
+                    {{getMemberName(task.reporter)}}
+                </div>
+                <div class="col-1" *ngIf="canModifyTask">
+                    <i [matMenuTriggerFor]="UpdateReporterMenu" class="fas fa-user-edit text-muted pointer pt-2"></i>
+
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row">
+                <div class="col-12">
+                    <mat-label class="text-muted small">Created By</mat-label>
+                </div>
+                <div class="col">
+                    <img title="{{getMemberImageURL(task.createdBy)}}" class="pointer avator-thumb"
+                        src="{{getMemberImageURL(task.createdBy)}}">
+                    &nbsp;&nbsp;
+                    {{getMemberName(task.createdBy)}}
+                </div>
+            </div>
+
+            <p class="d-block text-muted small">Created {{task.createddatetime | date:'MMM dd, yyyy hh:mm a'}}</p>
+
+            <p class="d-block text-muted small">Last Updated {{task.lastupdatedatetime | date:'MMM dd, yyyy hh:mm a'}}
+            </p>
+
+        </div>
+    </div>
+
+</mat-dialog-content>
+
+
+<mat-dialog-actions align="end">
+    <a (click)="closeDialog()"><u>close</u></a>
+</mat-dialog-actions>
+
+<!--Section: Live preview-->
+
+<!--Modal: modal-->
+<div class="modal fade right" id="featuresModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true" data-backdrop="true">
+    <div class="modal-dialog modal-frame modal-right modal-full-height modal-notify modal-primary" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <!--Body-->
+            <div class="modal-body">
+
+                <div class="row p-1 mb-1">
+                    <div class="col-12 pt-2">
+                        <label for="">Enter Feature Name to filter</label>
+                        <input class="form-control" placeholder="Enter Feature Name to filter"
+                            [(ngModel)]="searchFeatureSTR">
+                    </div>
+                </div>
+
+                <div class="row" (click)="closeFeaturesModal(feature)" *ngFor="let feature of allFeatures">
+                    <div class="col-12 m-2">
+                        <div class="row" *ngIf="searchFeatureSTR == '' 
+                            || feature.name.toLowerCase().includes(searchFeatureSTR.toLowerCase())
+                            || feature.name.toLowerCase().includes(searchFeatureSTR.toLowerCase())
+                            || feature.name.toLowerCase().includes(searchFeatureSTR.toLowerCase())">
+                            <div class="col">
+                                <div class="pointer">
+                                    <p class="text-dark">{{feature.name}} <br>
+                                        <small class="text-muted">Reporter: {{getMemberName(feature.reporter)}}</small>
+                                        <hr class="m-0 p-0">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/.Content-->
+    </div>
+</div>
+<!--Modal: modal-->
+
+<!--Section: Live preview-->
+
+
+<!--Section: Live preview-->
+
+<!--Modal: modal-->
+<div class="modal fade right" id="watchersaddmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true" data-backdrop="true">
+    <div class="modal-dialog modal-frame modal-right modal-full-height modal-notify modal-primary" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <!--Body-->
+            <div class="modal-body">
+
+
+                <div class="row p-1 mb-1">
+                    <div class="col-12 pt-2">
+                        <label for="">Enter Name to filter</label>
+                        <input class="form-control" placeholder="Enter Agent Name to filter" name="agentName"
+                            [(ngModel)]="searchwatchersSTR">
+                    </div>
+                </div>
+
+                <!-- (click)="addNewMember(agent)" -->
+
+                <div class="row" (click)="addWatcher(agent.emailId)" *ngFor="let agent of agents_show"
+                    [hidden]="agent.workingStatus == 'releived' || agent.isBlocked">
+                    <div class="col-12 m-2">
+                        <div class="row" *ngIf="searchwatchersSTR == '' 
+                            || agent.firstName.toLowerCase().includes(searchwatchersSTR.toLowerCase())
+                            || agent.lastName.toLowerCase().includes(searchwatchersSTR.toLowerCase())
+                            || agent.emailId.toLowerCase().includes(searchwatchersSTR.toLowerCase())">
+                            <div class="col">
+                                <div class="pointer">
+                                    <p class="text-dark">{{agent.firstName}} {{agent.lastName}}
+                                        <br>
+                                        <small class="text-muted">{{agent.emailId}}</small>
+                                        <hr class="m-0 p-0">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <img class="pointer avator-thumb" src="{{getMemberImageURL(agent.emailId)}}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="validateEmail(searchwatchersSTR)" (click)="addWatcher(searchwatchersSTR)" class="row">
+                    <div class="col pointer">
+                        Add &lt;{{searchwatchersSTR}}&gt; to watch list
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <!--/.Content-->
+    </div>
+</div>
+<!--Modal: modal-->
+
+<!--Section: Live preview-->
+
+
+<!--Section: Live preview-->
+
+<!--Modal: modal-->
+<div class="modal fade bottom" id="whatsappShareModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true" data-backdrop="true">
+    <div class="modal-dialog modal-frame modal-bottom modal-full-height modal-notify modal-primary" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <!--Body-->
+            <div class="modal-body">
+
+                <h4 class="text-dark">WhatsApp share</h4>
+
+                <form class="example-form">
+                    <mat-form-field class="example-full-width w-100">
+                        <mat-label>To</mat-label>
+                        <input matInput class="w-100" placeholder="Enter a WhatsApp number" name="shareWhatsappTo"
+                            [(ngModel)]="shareWhatsappTo">
+                    </mat-form-field>
+
+                    <mat-form-field class="example-full-width w-100">
+                        <mat-label>Leave a comment</mat-label>
+                        <textarea matInput class="w-100" rows="6" placeholder="Enter Something" name="shareWhatsappText"
+                            [(ngModel)]="shareWhatsappText"></textarea>
+                    </mat-form-field>
+                </form>
+
+                <button mat-stroked-button color="primary" (click)="shareWhatsApp()">
+                    Sent
+                </button>
+
+            </div>
+        </div>
+        <!--/.Content-->
+    </div>
+</div>
+<!--Modal: modal-->
+
+<!--Section: Live preview-->
+
+<mat-menu #watchersMenu="matMenu">
+    <p class="d-block text-muted small">&nbsp;&nbsp;WATCHING THIS ISSUE</p>
+    <div class="row m-1 w-100" *ngFor="let watcher of watchers">
+        <div class="col">
+            <img title="{{getMemberImageURL(watcher)}}" class="pointer avator-thumb"
+                src="{{getMemberImageURL(watcher)}}">
+            &nbsp;&nbsp;
+            <span class="text-nowrap-2">
+                {{getMemberName(watcher)}}
+            </span>
+        </div>
+        <div class="col-1" *ngIf="canModifyTask">
+            <i (click)="removeWatcher(watcher)" class="fas fa-times pt-2 pointer"></i>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col">
+            <button [disabled]="!canModifyTask" (click)="addingWatchers = true;openAddWatcherModal();"
+                class="menu-button mt-0 text-center text-muted" mat-menu-item>
+                Add watchers
+            </button>
+        </div>
+    </div>
+</mat-menu>
+
+<mat-menu #priorityMenu="matMenu">
+    <button [disabled]="!canModifyTask" class="menu-button mt-0" (click)="ChangePriority('Not Preferred')"
+        mat-menu-item>
+        <i class="fas fa-arrows-alt-h text-muted p-1"></i> Not Preferred
+    </button>
+
+    <button [disabled]="!canModifyTask" class="menu-button mt-0" (click)="ChangePriority('High')" mat-menu-item>
+        <i class="fas fa-arrow-up text-danger p-1"></i> High
+    </button>
+
+    <button [disabled]="!canModifyTask" class="menu-button mt-0" (click)="ChangePriority('Medium')" mat-menu-item>
+        <i class="fas fa-arrow-up text-warning p-1"></i> Medium
+    </button>
+
+    <button [disabled]="!canModifyTask" class="menu-button mt-0" (click)="ChangePriority('Low')" mat-menu-item>
+        <i class="fas fa-arrow-down text-info p-1"></i> Low
+    </button>
+</mat-menu>
+
+<mat-menu #workflowStatusMenu="matMenu">
+    <button class="menu-button mt-0" (click)="ChangeStatus('To Do')" mat-menu-item>
+        <span class="badge badge-light text-muted m-0">To Do</span>
+    </button>
+    <hr class="m-0 p-0">
+    <button class="menu-button mt-0" (click)="ChangeStatus(status)" mat-menu-item *ngFor="let status of workflows">
+        <span class="badge badge-primary text-primary m-0">{{status}}</span>
+    </button>
+    <hr class="m-0 p-0">
+    <button [disabled]="!canCloseTask" class="menu-button mt-0" (click)="ChangeStatus('Done')" mat-menu-item>
+        <span class="badge badge-success text-success m-0">Done</span>
+    </button>
+</mat-menu>
+
+<mat-menu xPosition="before" #UpdateAssigneeMenu="matMenu">
+    <div class="row p-1" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+        <div class="col">
+            <mat-label>Enter Name to filter</mat-label>
+            <input type="text" class="form-control" name="changeAssigneeSTR" [(ngModel)]="changeAssigneeSTR">
+        </div>
+    </div>
+    <hr>
+    <div class="scrollable-small">
+        <div class="row" *ngFor="let mem of allTeamMembers">
+            <div class="col-12 m-2" *ngIf="changeAssigneeSTR == '' 
+    || getMemberName(mem.memberEmailId).toLowerCase().includes(changeAssigneeSTR.toLowerCase())
+    || mem.memberEmailId.toLowerCase().includes(changeAssigneeSTR.toLowerCase())">
+                <div (click)="changeAssignee(mem.memberEmailId)" class="pointer">
+                    <img title="{{getMemberName(mem.memberEmailId)}}" class="pointer avator-thumb"
+                        src="{{getMemberImageURL(mem.memberEmailId)}}">
+                    &nbsp;&nbsp;
+                    {{getMemberName(mem.memberEmailId)}}
+                </div>
+            </div>
+        </div>
+    </div>
+</mat-menu>
+
+<mat-menu xPosition="before" #UpdateReporterMenu="matMenu">
+    <div class="row p-1" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+        <div class="col">
+            <mat-label>Enter Name to filter</mat-label>
+            <input type="text" class="form-control" name="changeReporterSTR" [(ngModel)]="changeReporterSTR">
+        </div>
+    </div>
+    <hr>
+    <div class="scrollable-small">
+        <div class="row" *ngFor="let mem of allTeamMembers">
+            <div class="col-12 m-2" *ngIf="changeReporterSTR == '' 
+    || getMemberName(mem.memberEmailId).toLowerCase().includes(changeReporterSTR.toLowerCase())
+    || mem.memberEmailId.toLowerCase().includes(changeReporterSTR.toLowerCase())">
+                <div (click)="changeReporter(mem.memberEmailId)" class="pointer">
+                    <img title="{{getMemberName(mem.memberEmailId)}}" class="pointer avator-thumb"
+                        src="{{getMemberImageURL(mem.memberEmailId)}}">
+                    &nbsp;&nbsp;
+                    {{getMemberName(mem.memberEmailId)}}
+                </div>
+            </div>
+        </div>
+    </div>
+</mat-menu>

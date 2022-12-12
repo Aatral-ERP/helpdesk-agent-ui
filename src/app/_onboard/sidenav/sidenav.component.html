@@ -1,0 +1,136 @@
+<div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
+    <mat-toolbar class="theme-black example-toolbar white-text-light" *ngIf="shouldRun">
+        <span class="fill-remaining-space">
+
+            <button mat-icon-button *ngIf="isLoggedIn" class="white-text-light pr-2"
+                style="background-color: transparent;outline: none;" (click)="snav.toggle()">
+                <mat-icon>menu</mat-icon>
+            </button>
+
+            <img routerLink="" src="{{logourl}}" width="50" height="40" class="d-inline-block align-top pointer"
+                alt="logo"> <span class="pr-2"></span>
+
+        </span>
+        <span class="fill-remaining-space h5">{{title}}</span>
+
+        <span *ngIf="isLoggedIn">
+
+            <mat-icon class="text-light pointer pr-4" [matMenuTriggerFor]="reminderMenu">notification_add
+            </mat-icon>
+
+            <mat-menu #reminderMenu="matMenu" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+                <app-view-reminders-notification></app-view-reminders-notification>
+            </mat-menu>
+
+            <mat-icon class="text-light pointer pr-4" [matMenuTriggerFor]="quickLinkMenu">add_circle_outline
+            </mat-icon>
+
+            <mat-menu #quickLinkMenu="matMenu">
+                <a *ngIf="role.product == 'Full Access'" routerLink="/product/add-product" mat-menu-item>
+                    <mat-icon>inventory_2</mat-icon>
+                    Add Product
+                </a>
+                <a *ngIf="role.institute == 'Full Access'" routerLink="/institute/register" mat-menu-item>
+                    <mat-icon>business</mat-icon>
+                    Register Institute
+                </a>
+                <a *ngIf="role.leadManagement == 'Full Access'" mat-menu-item routerLink="/lead-management/create">
+                    <mat-icon>filter_alt</mat-icon>
+                    Create Lead
+                </a>
+                <a *ngIf="role.sales == 'Full Access'" mat-menu-item routerLink="/sales/deals/create">
+                    <mat-icon>text_snippet</mat-icon>
+                    Create Deal
+                </a>
+                <a *ngIf="role.purchaseInput == 'Full Access'" mat-menu-item
+                    routerLink="/purchase-inputs/orders/create">
+                    <mat-icon>shopping_cart</mat-icon>
+                    Create Purchase Input Order
+                </a>
+                <a *ngIf="role.purchaseInput == 'Full Access'" mat-menu-item routerLink="/purchase-inputs/bills/create">
+                    <mat-icon>shopping_cart</mat-icon>
+                    Create Purchase Input Bill
+                </a>
+                <a *ngIf="role.hr == 'Full Access'" mat-menu-item routerLink="/hr/agent/agent-register">
+                    <mat-icon>person_add</mat-icon>
+                    Add Agent
+                </a>
+                <a *ngIf="role.tickets == 'Full Access' && role.ticketsAdmin" mat-menu-item routerLink="/add-ticket">
+                    <mat-icon>confirmation_number</mat-icon>
+                    Create Ticket
+                </a>
+                <a *ngIf="role.tickets == 'Full Access' && role.ticketsAdmin" mat-menu-item (click)="openSimpleToDo()">
+                    <mat-icon>confirmation_number</mat-icon>
+                    Create Simple Self Ticket
+                </a>
+            </mat-menu>
+
+            <span class="pointer pr-4"><a href="./chat/chatpage">
+                    <mat-icon class="text-light pointer">forum</mat-icon><span class="badge badge-danger"
+                        *ngIf="unreadTexts !='0'">{{unreadTexts}}</span>
+                </a></span>
+            <span class="pointer pr-4" (click)="logout()">logout
+                <i class="fas fa-sign-out-alt"></i>
+            </span>
+        </span>
+
+    </mat-toolbar>
+
+    <mat-sidenav-container [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+        <mat-sidenav class="theme-black pr-3" #snav [mode]="mobileQuery.matches ? 'over' : 'side'"
+            [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+            <mat-nav-list *ngIf="isLoggedIn">
+                <div class="row">
+                    <div class="col-md-10 col-sm-8 sidebar2">
+                        <div *ngIf="AgentDetails && AgentDetails != null && AgentDetails !== undefined"
+                            class="logo text-center">
+                            <img *ngIf="auth.getAgentPhoto() === undefined || auth.getAgentPhoto() == null || auth.getAgentPhoto() == '' || auth.getAgentPhoto() == 'null'"
+                                src="./assets/images/No-image.png" width="70px" height="70px"
+                                class="img-responsive center-block pointer" alt="Logo"
+                                (click)="editAgentDetails(AgentDetails.employeeId)">
+
+                            <img *ngIf="auth.getAgentPhoto() != null && auth.getAgentPhoto() !== undefined && auth.getAgentPhoto() != '' && auth.getAgentPhoto() != 'null'"
+                                src="{{'data:image/png;base64,' + auth.getAgentPhoto()}}" alt="User Photo"
+                                class="z-depth-1 mb-3 mx-auto" height="70px;" width="70px;"
+                                (click)="editAgentDetails(AgentDetails.employeeId)">
+                            <h6>{{AgentDetails.firstName}} {{AgentDetails.lastName}}<br><small
+                                    title="{{AgentDetails.designation}}">{{(AgentDetails.designation.length>20) ?
+                                    (AgentDetails.designation | slice:0:300)+'...':(AgentDetails.designation)}}</small>
+                            </h6>
+                        </div>
+                    </div>
+                </div>
+
+                <mat-tree class="theme-black white-text-light" [dataSource]="dataSource" [treeControl]="treeControl">
+
+                    <mat-tree-node class="pointer" [routerLink]="node.url" style="line-height: 10px;"
+                        [hidden]="node.hide" *matTreeNodeDef="let node" matTreeNodePadding
+                        matTreeNodePaddingIndent="20">
+
+                        <a [routerLink]="node.url">
+                            <span class="pl-2" [innerHTML]="node.icon"></span>
+                            <span class="white-text-light">&nbsp;&nbsp;{{node.name}}</span>
+                        </a>
+                    </mat-tree-node>
+
+                    <mat-tree-node class="pointer" matTreeNodeToggle style="line-height: 10px;" [hidden]="node.hide"
+                        *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding matTreeNodePaddingIndent="20">
+                        <span class="pl-2 white-text-light"> <span [innerHTML]="node.icon"></span> {{node.name}}</span>
+                        <button mat-icon-button [attr.aria-label]="'toggle ' + node.name">
+                            <mat-icon class="mat-icon-rtl-mirror m-0 p-0 white-text-light">
+                                {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                            </mat-icon>
+                        </button>
+                    </mat-tree-node>
+                </mat-tree>
+
+            </mat-nav-list>
+        </mat-sidenav>
+
+        <mat-sidenav-content>
+            <router-outlet (activate)="onActivate($event)"></router-outlet>
+        </mat-sidenav-content>
+
+    </mat-sidenav-container>
+
+</div>

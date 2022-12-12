@@ -1,0 +1,103 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "~ag-grid-community/dist/styles/ag-grid.css";
+@import "~ag-grid-community/dist/styles/ag-theme-balham.css";
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+@import "~ng-pick-datetime/assets/style/picker.min.css";
+
+* {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+}
+
+
+/* width */
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+
+/* Track */
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+
+/* Handle */
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+
+/* Handle on hover */
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.md-form label {
+    font-size: 0.8rem;
+    transform: translateY(-50%);
+}
+
+.btn {
+    text-transform: unset !important;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.font-size-12 {
+    font-size: 12px;
+}
+
+.font-size-14 {
+    font-size: 14px;
+}
+
+.font-size-22 {
+    font-size: 22px;
+}
+
+label {
+    font-size: small;
+    color: gray;
+    line-height: 16px;
+}
+
+.form-control {
+    font-size: 14px;
+    width: 100%;
+    padding: 0 15px;
+    border-radius: 4px;
+    border: 1px solid #adadad;
+}
+
+.required-label:after {
+    content: " *";
+    color: red;
+}
+
+.chip-pk {
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    transform: translateZ(0);
+    color: rgba(0, 0, 0, .87);
+    transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1);
+    background-color: #e0e0e0;
+    display: inline-flex;
+    padding: 7px 12px;
+    border-radius: 16px;
+    align-items: center;
+    cursor: default;
+    min-height: 20px;
+    height: 1px;
+    margin: 1px 1px 1px 1px;
+}

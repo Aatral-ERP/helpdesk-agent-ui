@@ -1,0 +1,11 @@
+.signature-container {
+    border-style: dashed;
+    border-width: 1px;
+    margin-bottom: 20px;
+    background-color: coral;
+}
+
+.buttons {
+    float: right;
+    
+}

@@ -1,0 +1,397 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate">
+</mat-progress-bar>
+
+<div class="row p-2 mb-3">
+    <div class="col">
+        <span class="indigo-text h5">Welcome {{AgentDetails.firstName}} {{AgentDetails.lastName}}</span>
+    </div>
+</div>
+
+<div class="row w-100 p-2">
+    <div class="col-md-3" *ngIf="role.ticketsAdmin">
+        <div routerLink="/reports/ticket-report" [queryParams]="{status: 'Raised'}"
+            class="card border-info mx-sm-1 p-3 pointer">
+            <div class="card border-info shadow text-info p-3 my-card"><span class="fas fa-ticket-alt fa-2x"
+                    aria-hidden="true"></span></div>
+            <br>
+            <div class="text-info text-center mt-2">
+                <h1>{{Stats.unassginedCount}}</h1>
+            </div>
+            <div class="text-info text-center mt-3">
+                <h5>Unassigned Tickets</h5>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div routerLink="/reports/ticket-report" [queryParams]="{status: 'Closed'}"
+            class="card border-success mx-sm-1 p-3 pointer">
+            <div class="card border-success shadow text-success p-3 my-card"><span class="fas fa-check-circle fa-2x"
+                    aria-hidden="true"></span></div>
+            <br>
+            <div class="text-success text-center mt-2">
+                <h1>{{Stats.closedCount}}</h1>
+            </div>
+            <div class="text-success text-center mt-3">
+                <h5>Closed Tickets</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div routerLink="/reports/ticket-report" [queryParams]="{status: 'Assigned'}"
+            class="card border-danger mx-sm-1 p-3 pointer">
+            <div class="card border-danger shadow text-danger p-3 my-card"><span class="fas fa-exclamation-circle fa-2x"
+                    aria-hidden="true"></span></div>
+            <br>
+            <div class="text-danger text-center mt-2">
+                <h1>{{Stats.pendingCount}}</h1>
+            </div>
+            <div class="text-danger text-center mt-3">
+                <h5>Pending Tickets</h5>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div routerLink="/reports/ticket-report" [queryParams]="{status: 'Marked_As_Completed'}"
+            class="card border-dark mx-sm-1 p-3 pointer">
+            <div class="card border-dark shadow text-dark p-3 my-card"><span
+                    class="fas fa-clipboard-check fa-2x pl-1 pr-1" aria-hidden="true"></span></div>
+            <br>
+            <div class="text-daek text-center mt-2">
+                <h1>{{Stats.markedAsCompleted}}</h1>
+            </div>
+            <div class="text-dark text-center mt-3">
+                <h5>Marked as Completed</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+
+<section class="row m-0 p-2" *ngIf="attendance != null && attendance !== undefined"
+    [ngClass]="{'bg-success' : attendance.workingStatus == 'W', 'bg-info' : attendance.workingStatus == 'L','bg-warning' : attendance.workingStatus == 'NONE'}">
+    <div class="container" *ngIf="attendance.workingStatus == 'NONE'">
+        <h2 class="display-4">Are You Working Today ?</h2>
+        <p class="lead">Mark Your Attendance from Mobile App..</p>
+        <!-- <div class="mb-2" *ngIf="attendance.geoCoordinates != ''">
+            <div (click)="markAttendance('W')" class="button-7">
+                <div class="eff-7"></div>
+                <a> Yes </a>
+            </div>
+            <div (click)="markAttendance('L')" class="button-7">
+                <div class="eff-7"></div>
+                <a> No </a>
+            </div>
+        </div> -->
+    </div>
+    <div class="container" *ngIf="attendance.workingStatus == 'W'">
+        <h2 class="display-4">Attendance Marked</h2>
+        <p class="lead">Working today
+            <span>
+                <a (click)="tabToGmap(attendance.geoCoordinates)" target="_blank">
+                    Geo-Location : {{attendance.geoCoordinates}}
+                    &nbsp;&nbsp;<i class="fas fa-external-link-alt text-primary"></i>
+                </a>
+            </span>
+        </p>
+    </div>
+    <div class="container" *ngIf="attendance.workingStatus == 'L'">
+        <h2 class="display-4">Attendance Marked</h2>
+        <p class="lead">Not Working today</p>
+    </div>
+</section>
+
+<app-deals-invoice-reminder *ngIf="role.sales == 'Full Access' && role.salesAdmin"></app-deals-invoice-reminder>
+
+<h4 class="pl-0 ml-0 mt-3">
+    <span class=" p-2 pl-5 pr-2 text-white font-size-14 sideTitle">
+        <i class="fa fa-ticket">&nbsp;</i>Assigned To Me&nbsp;({{AssignedToMeTickets.length}} tickets)&nbsp;&nbsp;
+    </span>
+</h4>
+
+<div class="p-2 pl-5 pr-5">
+    <div id="accordion">
+        <div class="card p-0 m-1" *ngFor="let ticket of AssignedToMeTickets">
+            <div class="card-header pointer" id="headingOne" (click)="openViewTicketModal(ticket)">
+                <h5 class="mb-0">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded=" false">
+                        <span class="float-left text-dark small text-nowrap-2">
+                            #{{ticket.ticketId}} -
+                            <span [innerHTML]="ticket.subject | base64HTML"></span>
+                        </span>
+                        <span class="text-muted float-right">
+                            <small data-toggle="tooltip" data-html="true" title="{{ticket.institute.instituteName}}"
+                                class="chip-pk">
+                                {{ (ticket.institute.instituteName.length>20)? (ticket.institute.instituteName |
+                                slice:0:20)+'..':(ticket.institute.instituteName) }}
+                            </small>
+
+                            <small title="{{ticket.lastupdatedatetime | date:'MMM dd, yyyy hh:mm a'}}"
+                                class="chip-pk">updated
+                                {{ticket.lastupdatedatetime | amTimeAgo}}</small>
+                            <small title="{{ticket.dueDateTime | date:'MMM dd, yyyy hh:mm a'}}"
+                                *ngIf="ticket.dueDateTime != null" class="chip-pk"
+                                [ngClass]="isCrossedDueDate(ticket.dueDateTime) ? 'bg-warning' : 'bg-danger text-white'">due
+                                {{ticket.dueDateTime | amTimeAgo}} </small>
+                            <i *ngIf="ticket.priority == 'NotPreferred'" class="fas fa-arrows-alt-h text-muted p-1"></i>
+                            <i *ngIf="ticket.priority == 'High'" class="fas fa-arrow-up text-danger p-1"></i>
+                            <i *ngIf="ticket.priority == 'Medium'" class="fas fa-arrow-up text-warning p-1"></i>
+                            <i *ngIf="ticket.priority == 'Low'" class="fas fa-arrow-down text-info p-1"></i>
+
+
+                            <span class="badge badge-success mr-2"
+                                *ngIf="ticket.status == 'Closed'">{{ticket.status}}</span>
+                            <span class="badge badge-warning mr-2"
+                                *ngIf="ticket.status == 'Hold'">{{ticket.status}}</span>
+                            <span class="badge badge-primary mr-2"
+                                *ngIf="ticket.status == 'Assigned'">{{ticket.status}}</span>
+                            <span class="chip-pk small"
+                                *ngIf="ticket.status != 'Closed' && ticket.status != 'Hold' && ticket.status != 'Assigned'">{{ticket.status}}</span>
+
+                            <!-- <small class="badge badge-primary  badge-pill">
+                                <i class="fas fa-chevron-down"></i>
+                            </small> -->
+                        </span>
+                    </a>
+                </h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="p-2 pl-5 pr-5" *ngIf="AssignedToMeClosedTickets.length > 0">
+    <h6 class="text-muted font-weight-bold">Recently Closed</h6>
+    <div id="accordion">
+        <div class="card p-0 m-1" *ngFor="let ticket of AssignedToMeClosedTickets">
+            <div class="card-header pointer" id="AssignedToMeClosedTickets" (click)="openViewTicketModal(ticket)">
+                <h5 class="mb-0">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded=" false">
+                        <span class="float-left text-dark small text-nowrap-2">
+                            #{{ticket.ticketId}} -
+                            <span [innerHTML]="ticket.subject | base64HTML"></span>
+                        </span>
+                        <span class="text-muted float-right">
+                            <small data-toggle="tooltip" data-html="true" title="{{ticket.institute.instituteName}}"
+                                class="chip-pk">
+                                {{ (ticket.institute.instituteName.length>20)? (ticket.institute.instituteName |
+                                slice:0:20)+'..':(ticket.institute.instituteName) }}
+                            </small>
+
+                            <small title="{{ticket.lastupdatedatetime | date:'MMM dd, yyyy hh:mm a'}}"
+                                class="chip-pk">updated
+                                {{ticket.lastupdatedatetime | amTimeAgo}}</small>
+                            <small title="{{ticket.closedDateTime | date:'MMM dd, yyyy hh:mm a'}}"
+                                *ngIf="ticket.dueDateTime != null" class="chip-pk bg-success">closed
+                                {{ticket.closedDateTime | amTimeAgo}}</small>
+
+                            <i *ngIf="ticket.priority == 'NotPreferred'" class="fas fa-arrows-alt text-muted p-1"></i>
+                            <i *ngIf="ticket.priority == 'High'" class="fas fa-arrow-up text-danger p-1"></i>
+                            <i *ngIf="ticket.priority == 'Medium'" class="fas fa-arrow-up text-warning p-1"></i>
+                            <i *ngIf="ticket.priority == 'Low'" class="fas fa-arrow-down text-info p-1"></i>
+
+
+                            <span class="badge badge-success mr-2"
+                                *ngIf="ticket.status == 'Closed'">{{ticket.status}}</span>
+                            <!-- <small class="badge badge-primary  badge-pill">
+                                <i class="fas fa-chevron-down"></i>
+                            </small> -->
+                        </span>
+                    </a>
+                </h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ===== Reporting to Me ======= -->
+
+<h4 class="pl-0 ml-0 mt-3">
+    <span class=" p-2 pl-5 pr-2 text-white font-size-14 sideTitle">
+        <i class="fa fa-ticket">&nbsp;</i>Reporting To Me&nbsp;({{AssignedByMeTickets.length}} tickets)&nbsp;&nbsp;
+    </span>
+</h4>
+
+<div class="p-2 pl-5 pr-5">
+    <div id="accordion">
+        <div class="card p-0 m-1" *ngFor="let ticket of AssignedByMeTickets">
+            <div class="card-header pointer" id="headingTwo" (click)="openViewTicketModal(ticket)">
+                <h5 class="mb-0">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded=" false">
+                        <span class="float-left text-dark small text-nowrap-2">
+                            #{{ticket.ticketId}} -
+                            <span [innerHTML]="ticket.subject | base64HTML"></span>
+                        </span>
+                        <span class="text-muted float-right">
+                            <small data-toggle="tooltip" data-html="true" title="{{ticket.institute.instituteName}}"
+                                class="chip-pk bg-light">
+                                {{ (ticket.institute.instituteName.length>20)? (ticket.institute.instituteName |
+                                slice:0:20)+'..':(ticket.institute.instituteName) }}
+                            </small>
+                            <small *ngIf="ticket.assignedTo != null" data-toggle="tooltip" data-html="true"
+                                title="{{ticket.assignedTo}}" class="chip-pk bg-light">
+                                {{ (ticket.assignedTo.length>20)? (ticket.assignedTo |
+                                slice:0:20)+'..':(ticket.assignedTo) }}
+                            </small>
+                            <small title="{{ticket.lastupdatedatetime | date:'MMM dd, yyyy hh:mm a'}}"
+                                class="chip-pk">updated
+                                {{ticket.lastupdatedatetime | amTimeAgo}}</small>
+                            <small title="{{ticket.dueDateTime | date:'MMM dd, yyyy hh:mm a'}}"
+                                *ngIf="ticket.dueDateTime != null" class="chip-pk"
+                                [ngClass]="isCrossedDueDate(ticket.dueDateTime) ? 'bg-warning' : 'bg-danger text-white'">due
+                                {{ticket.dueDateTime | amTimeAgo}} </small>
+
+                            <i *ngIf="ticket.priority == 'NotPreferred'" class="fas fa-arrows-alt text-muted p-1"></i>
+                            <i *ngIf="ticket.priority == 'High'" class="fas fa-arrow-up text-danger p-1"></i>
+                            <i *ngIf="ticket.priority == 'Medium'" class="fas fa-arrow-up text-warning p-1"></i>
+                            <i *ngIf="ticket.priority == 'Low'" class="fas fa-arrow-down text-info p-1"></i>
+
+                            <span class="badge badge-success mr-2"
+                                *ngIf="ticket.status == 'Closed'">{{ticket.status}}</span>
+                            <span class="badge badge-warning mr-2"
+                                *ngIf="ticket.status == 'Hold'">{{ticket.status}}</span>
+                            <span class="badge badge-primary mr-2"
+                                *ngIf="ticket.status == 'Assigned'">{{ticket.status}}</span>
+                            <span class="chip-pk small"
+                                *ngIf="ticket.status != 'Closed' && ticket.status != 'Hold' && ticket.status != 'Assigned'">{{ticket.status}}</span>
+
+                            <!-- <small class="badge badge-primary  badge-pill">
+                                <i class="fas fa-chevron-down"></i>
+                            </small> -->
+                        </span>
+                    </a>
+                </h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="p-2 pl-5 pr-5" *ngIf="AssignedByMeClosedTickets.length > 0">
+    <h6 class="text-muted font-weight-bold">Recently Closed</h6>
+    <div id="accordion">
+        <div class="card p-0 m-1" *ngFor="let ticket of AssignedByMeClosedTickets">
+            <div class="card-header pointer" id="AssignedByMeClosedTickets" (click)="openViewTicketModal(ticket)">
+                <h5 class="mb-0">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded=" false">
+                        <span class="float-left text-dark small text-nowrap-2">
+                            #{{ticket.ticketId}} -
+                            <span [innerHTML]="ticket.subject | base64HTML"></span>
+                        </span>
+                        <span class="text-muted float-right">
+
+                            <small *ngIf="ticket.institute != null" data-toggle="tooltip" data-html="true"
+                                title="{{ticket.institute.instituteName}}" class="chip-pk">
+                                {{ (ticket.institute.instituteName.length>20)? (ticket.institute.instituteName |
+                                slice:0:20)+'..':(ticket.institute.instituteName) }}
+                            </small>
+
+                            <small title="{{ticket.lastupdatedatetime | date:'MMM dd, yyyy hh:mm a'}}"
+                                class="chip-pk">updated
+                                {{ticket.lastupdatedatetime | amTimeAgo}}</small>
+                            <small title="{{ticket.lastupdatedatetime | date:'MMM dd, yyyy hh:mm a'}}"
+                                *ngIf="ticket.closedDateTime != null" class="chip-pk bg-success">closed
+                                {{ticket.closedDateTime | amTimeAgo}}</small>
+
+                            <i *ngIf="ticket.priority == 'NotPreferred'" class="fas fa-arrows-alt text-muted p-1"></i>
+                            <i *ngIf="ticket.priority == 'High'" class="fas fa-arrow-up text-danger p-1"></i>
+                            <i *ngIf="ticket.priority == 'Medium'" class="fas fa-arrow-up text-warning p-1"></i>
+                            <i *ngIf="ticket.priority == 'Low'" class="fas fa-arrow-down text-info p-1"></i>
+
+                            <span class="badge badge-success mr-2"
+                                *ngIf="ticket.status == 'Closed'">{{ticket.status}}</span>
+                            <!-- <small class="badge badge-primary  badge-pill">
+                                <i class="fas fa-chevron-down"></i>
+                            </small> -->
+                        </span>
+                    </a>
+                </h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== UnAssigned ======= -->
+
+<h4 class="pl-0 ml-0 mt-3" *ngIf="role.ticketsAdmin">
+    <span class=" p-2 pl-5 pr-2 text-white font-size-14 sideTitle">
+        <i class="fa fa-ticket">&nbsp;</i>Unassigned Tickets&nbsp;({{UnAssignedTickets.length}} tickets)&nbsp;&nbsp;
+    </span>
+</h4>
+
+<div class="p-2 pl-5 pr-5" *ngIf="role.ticketsAdmin">
+    <div id="accordion">
+        <div class="card p-0 m-1" *ngFor="let ticket of UnAssignedTickets">
+            <div class="card-header pointer" id="headingThree" (click)="openViewTicketModal(ticket)">
+                <h5 class="mb-0">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded=" false">
+                        <span class="float-left text-dark small text-nowrap-2">
+                            #{{ticket.ticketId}} -
+                            <span [innerHTML]="ticket.subject | base64HTML"></span>
+                        </span>
+                        <span class="text-muted float-right">
+                            <small data-toggle="tooltip" data-html="true" title="{{ticket.institute.instituteName}}"
+                                class="chip-pk bg-light">
+                                {{ (ticket.institute.instituteName.length>20)? (ticket.institute.instituteName |
+                                slice:0:20)+'..':(ticket.institute.instituteName) }}
+                            </small>
+                            <small title="{{ticket.lastupdatedatetime | date:'MMM dd, yyyy hh:mm a'}}"
+                                class="chip-pk">updated
+                                {{ticket.lastupdatedatetime | amTimeAgo}}</small>
+                            <small title="{{ticket.dueDateTime | date:'MMM dd, yyyy hh:mm a'}}"
+                                *ngIf="ticket.dueDateTime != null" class="chip-pk"
+                                [ngClass]="isCrossedDueDate(ticket.dueDateTime) ? 'bg-warning' : 'bg-danger text-white'">due
+                                {{ticket.dueDateTime | amTimeAgo}} </small>
+
+                            <i *ngIf="ticket.priority == 'NotPreferred'" class="fas fa-arrows-alt text-muted p-1"></i>
+                            <i *ngIf="ticket.priority == 'High'" class="fas fa-arrow-up text-danger p-1"></i>
+                            <i *ngIf="ticket.priority == 'Medium'" class="fas fa-arrow-up text-warning p-1"></i>
+                            <i *ngIf="ticket.priority == 'Low'" class="fas fa-arrow-down text-info p-1"></i>
+
+                            <span class="badge badge-success mr-2"
+                                *ngIf="ticket.status == 'Closed'">{{ticket.status}}</span>
+                            <span class="badge badge-warning mr-2"
+                                *ngIf="ticket.status == 'Hold'">{{ticket.status}}</span>
+                            <span class="badge badge-primary mr-2"
+                                *ngIf="ticket.status == 'Assigned'">{{ticket.status}}</span>
+                            <span class="chip-pk small"
+                                *ngIf="ticket.status != 'Closed' && ticket.status != 'Hold' && ticket.status != 'Assigned'">{{ticket.status}}</span>
+
+                        </span>
+                    </a>
+                </h5>
+            </div>
+
+            <div id="{{'ticket-detail-3-'+ticket.ticketId}}" class="collapse" aria-labelledby="headingThree"
+                data-parent="#accordion">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <p class="d-block text-muted float-left" [innerHTML]="ticket.summary | base64HTML"></p>
+                        </div>
+                    </div>
+
+
+                    <p class="text-muted float-left">
+                        <span class="chip-pk small"
+                            *ngIf="ticket.assignedTo != '' && ticket.assignedTo != null">Assigned To :
+                            {{ticket.assignedTo}}</span>
+                        <span class="chip-pk small" *ngIf="ticket.emailUpdates != ''">Updates to :
+                            {{ticket.emailUpdates}}</span>
+                        <span class="chip-pk small">Raised by : {{ticket.emailId}}</span>
+
+                        <span class="chip-pk small" *ngIf="ticket.product != null && ticket.product != ''">
+                            {{ticket.product}} </span>
+                        <span class="chip-pk small"> {{ticket.serviceType}}</span>
+                        <span class="chip-pk small">{{ticket.serviceUnder}}</span>
+                    </p>
+                    <a class="btn btn-primary btn-sm float-right" href="/view-ticket/{{ticket.ticketId}}"
+                        target="_blank"> View Ticket <i class="fas fa-external-link-alt"></i> </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,33 @@
+<div class="row p-2">
+    <div class="col-12">
+        <p class="indigo-text h4 text-center">Upload Lead Details
+        </p>
+        <hr style="width:100%;text-align:left;margin-left:0">
+    </div>
+    <div class="col-12 text-center">
+        <div class="custom-file mb-3">
+            <input type="file" id="customFile" name="filename" accept="application/vnd.ms-excel"
+                (change)="fileUpload($event)">
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <span (click)="downloadPDF()">
+                Download Lead Template
+            </span>
+            &nbsp;&nbsp;&nbsp;
+            <i class="fas fa-download" (click)="downloadPDF()"></i>
+        </div>
+    </div>
+
+    <div class="row border-bottom mt-2" *ngFor="let uploadErrorKeys of objectKeys(uploadErrors)">
+        <div class="col-12">
+            <h5>{{uploadErrorKeys}}</h5>
+            <span class="d-block text-danger" *ngFor="let errorValueKey of objectKeys(uploadErrors[uploadErrorKeys])">
+                Row {{errorValueKey}} : {{uploadErrors[uploadErrorKeys][errorValueKey]}} </span>
+        </div>
+    </div>
+</div>

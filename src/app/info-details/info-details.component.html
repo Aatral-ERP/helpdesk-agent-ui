@@ -1,0 +1,315 @@
+<div class="container-fluid">
+
+  <mat-progress-bar *ngIf="loading" mode="indeterminate">
+  </mat-progress-bar>
+
+  <mat-tab-group>
+    <mat-tab label="Company Info Details">
+      <div class="row">
+        <div class="col-lg-3 mb-4">
+          <div class="narrower">
+
+            <div class="card-body card-body-cascade text-center">
+              <img *ngIf="infoDetails.cmpLogo == null || infoDetails.cmpLogo === undefined || infoDetails.cmpLogo == ''"
+                src="assets/images/No-image.png" alt="User Photo" class="z-depth-1 mb-3 mx-auto" height="250px;"
+                width="240px;">
+
+              <img *ngIf="infoDetails.cmpLogo != null && infoDetails.cmpLogo !== undefined && infoDetails.cmpLogo != ''"
+                src="{{'data:image/png;base64,' + infoDetails.cmpLogo}}" alt="User Photo" class="z-depth-1 mb-3 mx-auto"
+                height="250px;" width="250px;">
+
+              <div *ngIf="logoLoading">
+                <button class="btn btn-md btn-primary" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  Updating...
+                </button>
+              </div>
+              <div [hidden]="logoLoading==true">
+                <label class="btn btn-sm btn-secondary">Upload Company Logo &nbsp;&nbsp;
+                  <input type="file" accept="image/x-png,image/gif,image/jpeg" id="photo" name="photo"
+                    (change)="fileChange($event)" hidden>
+                </label> &nbsp;
+                <br>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-9 mb-4">
+          <div class="row">
+            <div class="col">
+              <div class="row">
+                <div class="col-12">
+                  <label for="cmpName">Company Name</label>
+                  <input class="form-control input-lg" type="text" id="cmpName" placeHolder="Enter Company Name"
+                    name="cmpName" [(ngModel)]="infoDetails.cmpName" />
+                </div>
+
+              </div>
+              <br>
+              <div class="row">
+                <div class="col-6">
+                  <label for="cmpAddress">Company Address</label>
+                  <textarea rows="5" class="form-control input-lg" id="cmpAddress" maxlength=3000
+                    placeHolder="Enter Company Address" name="cmpAddress"
+                    [(ngModel)]="infoDetails.cmpAddress"></textarea>
+                </div>
+                <div class="col-6">
+                  <label for="bankDetails">Bank Details</label>
+                  <textarea rows="5" class="form-control input-lg" id="bankDetails" maxlength=3000
+                    placeHolder="Add Bank Details" name="bankDetails" [(ngModel)]="infoDetails.bankDetails"></textarea>
+                </div>
+                <div class="col-6">
+                  <label for="cmpPhone">Company Phone</label>
+                  <input class="form-control input-lg" type="number" id="cmpPhone" placeHolder="Enter Company Phone"
+                    name="cmpPhone" [(ngModel)]="infoDetails.cmpPhone" (keyup)="preventMobile($event)" />
+                  <small *ngIf="showNumberError" class="text-danger help-text">Invalid
+                    Phone Number<i class="fas fa-exclamation-triangle"></i></small>
+                </div>
+                <div class="col-6">
+                  <label for="cmpLandLine">LandLine</label>
+                  <input class="form-control input-lg" type="number" id="cmpLandLine" placeHolder="Enter LandLine"
+                    name="cmpLandLine" [(ngModel)]="infoDetails.cmpLandLine" />
+                  <small *ngIf="showLandNumberError" class="text-danger help-text">Invalid
+                    LandLine Number<i class="fas fa-exclamation-triangle"></i></small>
+                </div>
+                <div class="col-6">
+                  <label for="cmpEmail">Company Email</label>
+                  <input class="form-control input-lg" type="text" id="cmpEmail" placeHolder="Enter Company Email"
+                    name="cmpEmail" [(ngModel)]="infoDetails.cmpEmail" />
+                  <small *ngIf="showEmailError" class="text-danger help-text">Invalid
+                    Email ID<i class="fas fa-exclamation-triangle"></i></small>
+                </div>
+                <div class="col-6">
+                  <label for="cmpGst">Gst No</label>
+                  <input class="form-control input-lg" type="text" id="cmpGst" placeHolder="Enter Gst No" name="cmpGst"
+                    [(ngModel)]="infoDetails.gstNo" />
+                  <small *ngIf="showGstError" class="text-danger help-text">Invalid
+                    GST Number <i class="fas fa-exclamation-triangle"></i></small>
+                </div>
+                <div class="col-6">
+                  <label for="cmpWebsiteUrl">Website</label>
+                  <input class="form-control input-lg" type="text" id="cmpWebsiteUrl" placeHolder="Enter Website"
+                    name="cmpWebsiteUrl" [(ngModel)]="infoDetails.cmpWebsiteUrl" />
+                </div>
+                <div class="col-6">
+                  <label for="zipcode">Pincode</label>
+                  <input class="form-control input-lg" type="text" id="zipcode" placeHolder="Enter Zip Code"
+                    name="zipcode" [(ngModel)]="infoDetails.zipcode" />
+                </div>
+              </div>
+
+              <div class="row text-center" *ngIf="loading">
+                <div class="col">
+                  <button class="btn btn-md btn-primary" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Updating...
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr>
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="Company Seal">
+      <div class="row">
+        <div class="col-6 logo">
+          <h5>Round Seal</h5>
+          <p class="small text-muted">Best Fit with 1280 height * 1280 weight</p>
+          <div class="view">
+            <img
+              *ngIf="infoDetails.roundSeal == null || infoDetails.roundSeal === undefined || infoDetails.roundSeal == ''"
+              (click)="roundSealUpload.click()" src="assets/images/No-image.png" alt="roundSeal"
+              class="rounded img-thumbnail float-left pointer" height="250px;" width="240px;">
+
+            <img
+              *ngIf="infoDetails.roundSeal != null && infoDetails.roundSeal !== undefined && infoDetails.roundSeal != ''"
+              (click)="roundSealUpload.click()" src="{{'data:image/png;base64,' + infoDetails.roundSeal}}"
+              alt="roundSeal" class="rounded img-thumbnail float-left pointer" height="250px;" width="250px;">
+
+            <input type="file" #roundSealUpload accept="image/x-png,image/jpeg" id="roundSeal" name="roundSealUpload"
+              (change)="saveRoundSeal($event)" hidden>
+
+            <div *ngIf="roundSealLoading" class="mask flex-center waves-effect waves-light rgba-teal-super-light">
+              <mat-chip>
+                updating...
+              </mat-chip>
+            </div>
+          </div>
+          <p class="small text-muted">Upload your Round Seal to attach in Quotations, Invoices, etc...</p>
+        </div>
+        <div class="col-6 logo">
+          <h5>Full Seal with Address</h5>
+          <p class="small text-muted">Best Fit with 1280 height * 580 weight</p>
+          <div class="view">
+            <img
+              *ngIf="infoDetails.fullSeal == null || infoDetails.fullSeal === undefined || infoDetails.fullSeal == ''"
+              (click)="fullSealUpload.click()" src="assets/images/No-image.png" alt="fullSeal"
+              class="rounded img-thumbnail float-left pointer" height="250px;" width="240px;">
+
+            <img
+              *ngIf="infoDetails.fullSeal != null && infoDetails.fullSeal !== undefined && infoDetails.fullSeal != ''"
+              (click)="fullSealUpload.click()" src="{{'data:image/png;base64,' + infoDetails.fullSeal}}" alt="fullSeal"
+              class="rounded img-thumbnail float-left pointer" height="250px;" width="250px;">
+
+            <input type="file" #fullSealUpload accept="image/x-png,image/jpeg" id="photo" name="fullSeal"
+              (change)="saveFullSeal($event)" hidden>
+
+            <div *ngIf="fullSealLoading" class="mask flex-center waves-effect waves-light rgba-teal-super-light">
+              <mat-chip>
+                updating...
+              </mat-chip>
+            </div>
+          </div>
+          <p class="small text-muted">Upload your Full Seal with Address to attach in Quotations, Invoices, etc...</p>
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="AMC Reminder Settings">
+
+      <div class="row p-3">
+
+        <div class="col-12">
+          <section>
+            <mat-checkbox [color]="'primary'" [(ngModel)]="infoDetails.sendEmail">Send AMC Reminder Email
+            </mat-checkbox>
+          </section>
+        </div>
+
+        <div *ngIf="infoDetails.sendEmail">
+
+          <div class="col-12 pb-2">
+            <h6>Select Proforma Invoice Template</h6>
+            <mat-button-toggle-group #group="matButtonToggleGroup" [value]="infoDetails.reminderTemplate"
+              (change)="infoDetails.reminderTemplate = group.value">
+              <mat-button-toggle value="Proforma_Invoice_Template_1">Proforma Invoice Template 1</mat-button-toggle>
+              <mat-button-toggle value="Proforma_Invoice_Template_2">Proforma Invoice Template 2</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+
+          <div class="col-12 pb-2">
+            <h6 for="_email_cc">Email</h6>
+            <input class="form-control input-lg" type="text" id="_email_cc" placeHolder="Enter Email" name="_email_cc"
+              [(ngModel)]="infoDetails.reminderEmailCC" />
+            <small class="text-muted">This mail id will be notified at each Institutional AMC Reminder</small>
+          </div>
+
+          <div class="col-12 pb-2">
+            <h6 for="_email_cc">Select Default Signature</h6>
+            <ng-multiselect-dropdown [placeholder]="'Select Invoice Signature'" [data]="_agents"
+              [(ngModel)]="_selected_agent" [settings]="_AgentsDropdownSettings">
+            </ng-multiselect-dropdown>
+          </div>
+
+          <div class="col-12 pb-2">
+
+            <h6>Send AMC Reminder Before Expiry</h6>
+            <section>
+              <ul>
+                <li>
+                  <mat-checkbox [(ngModel)]="infoDetails.daysBefore30">
+                    One Month Before AMC Expires
+                  </mat-checkbox>
+                </li>
+                <li>
+                  <mat-checkbox [(ngModel)]="infoDetails.daysBefore15">
+                    Fifteen Days Before AMC Expires
+                  </mat-checkbox>
+                </li>
+                <li>
+                  <mat-checkbox [(ngModel)]="infoDetails.daysBefore7">
+                    One Week Before AMC Expires
+                  </mat-checkbox>
+                </li>
+                <li>
+                  <mat-checkbox [(ngModel)]="infoDetails.daysBefore1">
+                    One Day Before AMC Expires
+                  </mat-checkbox>
+                </li>
+                <li>
+                  <mat-checkbox [(ngModel)]="infoDetails.daysBefore0">
+                    The Day AMC Expires
+                  </mat-checkbox>
+                </li>
+              </ul>
+            </section>
+          </div>
+
+          <div class="col-12 pb-2">
+            <h6>Send AMC Reminder After Expiry</h6>
+            <section>
+              <ul>
+                <li>
+                  <mat-checkbox [(ngModel)]="infoDetails.daysAfter1">
+                    One Day After AMC Expires
+                  </mat-checkbox>
+                </li>
+                <li>
+                  <mat-checkbox [(ngModel)]="infoDetails.daysAfter7">
+                    One week After AMC Expires
+                  </mat-checkbox>
+                </li>
+                <li>
+                  <mat-checkbox [(ngModel)]="infoDetails.daysAfter15">
+                    Fifteen Days After AMC Expires
+                  </mat-checkbox>
+                </li>
+                <li>
+                  <mat-checkbox [(ngModel)]="infoDetails.daysAfter30">
+                    One Month After AMC Expires
+                  </mat-checkbox>
+                </li>
+              </ul>
+            </section>
+          </div>
+
+        </div>
+
+      </div>
+    </mat-tab>
+    <mat-tab label="Instamojo Online Payment Gateway">
+      <div class="row justify-content-center p-2">
+        <div class="col">
+          <label for="instamojoApiKey">Instamojo Api Key</label>
+          <input class="form-control input-lg" type="text" id="instamojoApiKey" placeHolder="Enter Instamojo Api Key"
+            name="instamojoApiKey" [(ngModel)]="infoDetails.instamojoApiKey" />
+        </div>
+        <div class="col">
+          <label for="instamojoAuthToken">Instamojo Auth Token</label>
+          <input class="form-control input-lg" type="text" id="instamojoAuthToken"
+            placeHolder="Enter Instamojo Auth Token" name="instamojoAuthToken"
+            [(ngModel)]="infoDetails.instamojoAuthToken" />
+        </div>
+        <div class="col-12">
+          <label for="instamojoPaymentURL">Online Instamojo Pay Link</label>
+          <input class="form-control input-lg" type="text" id="instamojoPaymentURL"
+            placeHolder="Enter Instamojo Pay Link" name="instamojoPaymentURL"
+            [(ngModel)]="infoDetails.instamojoPaymentURL" />
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="Mail Settings">
+      <div class="row justify-content-center">
+        <div class="col-11">
+          <label for="mailContent">Welcoming Mail Content</label>
+          <textarea rows="15 " class="form-control input-lg" id="mailContent" maxlength=5000
+            placeHolder="Add Mail Content" name="bankDetails" [(ngModel)]="infoDetails.mailContent"></textarea>
+          <small>This is a static content for Welcoming New Client by Adding Contact.</small>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
+  <br>
+  <div class="row text-center">
+    <div class="col">
+      <button [disabled]="loading" class="btn btn-md btn-primary" (click)="saveInfo()">
+        Update
+      </button>&nbsp;&nbsp;
+    </div>
+  </div>
+
+</div>
+
+<p class="m-5 p-5">&nbsp;</p>

@@ -1,0 +1,170 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate">
+</mat-progress-bar>
+
+<div class="container" *ngIf="property !== undefined">
+
+    <div class="row">
+        <div class="col">
+            <mat-checkbox color="primary" [(ngModel)]="property.active">
+                Send Emails ({{property.configFor}})
+            </mat-checkbox>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="property.active">
+        <div class="col-12">
+            <label class="required-label">Email Id</label>
+            <input type="text" name="username" class="form-control" placeholder="Eg., someone@gmail.com"
+                [(ngModel)]="property.username">
+        </div>
+        <div class="col-12">
+            <label class="required-label">Password</label>
+            <input rows="10" name="password" class="form-control" [(ngModel)]="property.password">
+        </div>
+        <div class="col-12">
+            <label class="required-label">Host</label>
+            <input rows="10" name="host" class="form-control" placeholder="Eg., smtp.gmail.com"
+                [(ngModel)]="property.host">
+        </div>
+        <div class="col-12">
+            <label class="required-label">Port</label>
+            <input type="number" rows="10" class="form-control" name="port" placeholder="Eg., 25 or 587"
+                [(ngModel)]="property.port">
+        </div>
+        <div class="col-12">
+            <label class="required-label">protocol</label>
+            <input rows="10" name="protocol" class="form-control" placeholder="Eg., smtp..."
+                [(ngModel)]="property.protocol">
+        </div>
+    </div>
+
+    <div class="row text-center">
+        <div class="col-12">
+            <button [disabled]="loading" class="btn btn-md btn-primary" (click)="saveSettings()">
+                Update
+                <div *ngIf="saving_update" class="spinner-border spinner-border-sm" role="status">
+                    <span class="sr-only"> Updating...</span>
+                </div>
+            </button>&nbsp;&nbsp;
+            <button class="btn btn-md btn-primary" (click)="openMailSenderDialog(property.configName)"
+                *ngIf="property.id > 0" [disabled]="loading"> Send Test Mail
+            </button>&nbsp;&nbsp;
+        </div>
+    </div>
+
+    <p class="text-danger m-2" [innerHTML]="error_msg"></p>
+
+</div>
+
+<hr>
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-12 text-left">
+        <h3>Additional Mail Settings</h3>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12 text-right">
+        <button [disabled]="loading" class="btn btn-md btn-primary" (click)="addLeadMailSettingModalOpen()">
+            Add Additional Lead Mail Setting
+        </button>&nbsp;&nbsp;
+    </div>
+</div>
+
+<div class="container" class="border m-2 p-2" [hidden]="prop.configName == 'Leads'" *ngFor="let prop of leadProperties">
+    <div class="row">
+        <div class="col-12">
+            <h5 class="text-primary">{{prop.configName}}</h5>
+        </div>
+    </div>
+    <p>
+        <span class="text-left">
+            <mat-checkbox disabled color="primary" [(ngModel)]="prop.active">
+                Send Emails ({{prop.configName}})
+            </mat-checkbox>
+        </span>
+        <span class="float-right">
+            <i class="fa fa-envelope text-primary p-1 pointer" (click)="openMailSenderDialog(prop.configName)">
+                Send Test Mail</i>
+            <i class="fa fa-trash text-danger p-1" (click)="deleteMailProperties(prop)"></i>
+            <i class="fa fa-edit text-primary p-1" (click)="addLeadMailSettingModalOpen(prop)"></i>
+        </span>
+
+    </p>
+    <p class="m-0 p-0">Username : {{prop.username}}</p>
+    <p class="m-0 p-0">Password : {{prop.password}}</p>
+    <p class="m-0 p-0">Host : {{prop.host}}</p>
+    <p class="m-0 p-0">Port : {{prop.port}}</p>
+    <p class="m-0 p-0">Protocol : {{prop.protocol}}</p>
+</div>
+
+<p class="m-5 p-5">&nbsp;</p>
+
+<!--Section: Live preview-->
+
+<!--Modal: modal-->
+<div class="modal fade right" id="add_lead_mail_setting_modal" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="true">
+    <div class="modal-dialog modal-frame modal-bottom modal-full-height modal-notify modal-primary" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <!--Body-->
+            <div class="modal-body" *ngIf="addProperty !== undefined">
+                <div class="row p-1 mb-1">
+                    <div class="col-12">
+                        <mat-checkbox color="primary" [(ngModel)]="addProperty.active">
+                            Send Emails
+                        </mat-checkbox>
+                    </div>
+                    <div class="col-12">
+                        <label class="required-label">Mail Setting Name</label>
+                        <div class="input-group mb-2 mr-sm-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">Lead_</div>
+                            </div>
+                            <input type="text" name="configName" class="form-control" placeholder="Mail Setting Name"
+                                [(ngModel)]="addProperty.configName">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label class="required-label">Email Id</label>
+                        <input type="text" name="username" class="form-control" placeholder="Eg., someone@gmail.com"
+                            [(ngModel)]="addProperty.username">
+                    </div>
+                    <div class="col-12">
+                        <label class="required-label">Password</label>
+                        <input rows="10" name="password" class="form-control" [(ngModel)]="addProperty.password">
+                    </div>
+                    <div class="col-12">
+                        <label class="required-label">Host</label>
+                        <input rows="10" name="host" class="form-control" placeholder="Eg., smtp.gmail.com"
+                            [(ngModel)]="addProperty.host">
+                    </div>
+                    <div class="col-12">
+                        <label class="required-label">Port</label>
+                        <input type="number" rows="10" class="form-control" name="port" placeholder="Eg., 25 or 587"
+                            [(ngModel)]="addProperty.port">
+                    </div>
+                    <div class="col-12">
+                        <label class="required-label">protocol</label>
+                        <input rows="10" name="protocol" class="form-control" placeholder="Eg., smtp..."
+                            [(ngModel)]="addProperty.protocol">
+                    </div>
+                    <div class="col-12">
+                        <button [disabled]="loading" class="btn btn-md btn-primary"
+                            (click)="saveLeadAdditionalmailSettings()">
+                            Update
+                            <div *ngIf="saving_update" class="spinner-border spinner-border-sm" role="status">
+                                <span class="sr-only"> Updating...</span>
+                            </div>
+                        </button>&nbsp;&nbsp;
+                        <button class="btn btn-md btn-primary" (click)="openMailSenderDialog(property.configName)"
+                            *ngIf="property.id > 0" [disabled]="loading"> Send Test Mail
+                        </button>&nbsp;&nbsp;
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/.Content-->
+    </div>
+</div>
+<!--Modal: modal-->
+
+<!--Section: Live preview-->

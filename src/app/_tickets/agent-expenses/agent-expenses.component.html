@@ -1,0 +1,47 @@
+<div class="container-fluid">
+    <h5 class="text-primary text-center">My Office Expenses</h5>
+    <div class="alert alert-info text-center p-2" role="alert" [hidden]="expenses.length > 0">
+
+        <span *ngIf="!loading" class="pl-2">No Expenses Found...</span>
+        <span *ngIf="loading" class="pl-2">loading...</span>
+
+    </div>
+
+    <div class="row p-2">
+        <div class="col">
+            <mat-accordion>
+                <mat-expansion-panel *ngFor="let expense of expenses">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <h6 class="text-primary">{{expense.subject}}
+                            </h6>
+                        </mat-panel-title>
+                        <mat-panel-description class="text-right">
+                            {{expense.amount | currency:'INR'}} - paid on {{expense.paymentDate | date:'MMM d, y'}}
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <div class="row">
+                        <div class="col">
+                            <tr>
+                                <td>Reference No</td>
+                                <td>&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+                                <td>{{expense.referenceno}}</td>
+                            </tr>
+                            <tr>
+                                <td>Drawn on</td>
+                                <td>&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+                                <td>{{expense.drawnon}}</td>
+                            </tr>
+                            <tr>
+                                <td>Mode Of Payment</td>
+                                <td>&nbsp;&nbsp;:&nbsp;&nbsp;</td>
+                                <td>{{expense.modeOfPayment}}</td>
+                            </tr>
+                        </div>
+                    </div>
+
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+    </div>
+</div>

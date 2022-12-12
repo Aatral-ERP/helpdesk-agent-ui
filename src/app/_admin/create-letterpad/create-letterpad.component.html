@@ -1,0 +1,273 @@
+<div class="container-fluid">
+
+    <div class="row p-2">
+        <div class="col">
+
+            <p class="indigo-text h4 text-center">LetterPad
+            </p>
+
+            <hr style="width:100%;text-align:left;margin-left:0">
+
+        </div>
+    </div>
+
+    <h5 class="font-weight-bold">Letterpad Info</h5>
+
+    <div class="row justify-content-center">
+        <div class="col-sm-12 col-md-10 col-lg-10">
+            <div class="p-2 border border-light-1">
+
+                <!-- <span class="font-weight-bold h6">Address</span>
+                <span *ngIf="letterpad.institute.instituteId" class="text-primary pointer float-right"
+                    (click)="copyBillingAddressFromInstitute()">
+                    <u>Copy Address from Selected Institute</u>
+                </span> -->
+                <span class="text-primary pointer pl-4" *ngIf="showDelete" (click)="copyLetterpad(letterpad.id)"><u>Copy
+                        Letterpad</u>
+                    &nbsp;<i class="far fa-clone"></i> </span>
+
+                <span class="text-danger pointer text-right float-right" *ngIf="showDelete"
+                    (click)="deleteLetterpad(letterpad.id)"><u>Delete this
+                        Letterpad</u>
+                    &nbsp;<i class='fas fa-trash-alt'></i> </span>
+                <div class="row">
+
+                    <!-- <div class="col-sm-12 col-md-8 col-lg-8">
+                        <label>Institute</label>
+                        <ng-multiselect-dropdown [placeholder]="'Select Institute'" [data]="_institutes"
+                            [(ngModel)]="_selectedInstitute" [settings]="_instituteDropdownSettings"
+                            (onSelect)="letterpad.institute = $event;loadAllInstituteContacts($event);copyBillingAddressFromInstitute();">
+                        </ng-multiselect-dropdown>
+                    </div> -->
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <label>Institute</label>
+                        <ng-multiselect-dropdown [placeholder]="'Select Institute'" [data]="_institutes"
+                            [(ngModel)]="_selectedInstitute" [settings]="_instituteDropdownSettings"
+                            (onSelect)="letterpad.institute = $event;loadAllInstituteContacts($event);copyBillingAddressFromInstitute();copyShippingAddressFromBillingAddress();decideGSTType();">
+
+                        </ng-multiselect-dropdown>
+                    </div>
+
+                    <!-- <div class="col-12">
+                        <label for="letterPadNo">Reference No:</label>
+                        <input class="form-control" type="text" id="letterPadNo" placeHolder="Enter LetterPadNo"
+                            name="letterPadNo" [(ngModel)]="letterpad.letterPadNo" />
+                    </div> -->
+
+
+                    <div class="col-12">
+                        <label for="billingTo">To</label>
+                        <input class="form-control" type="text" id="billingTo" placeHolder="i.e. The Principal"
+                            name="billingTo" [(ngModel)]="letterpad.billingTo" />
+                    </div>
+                    <div class="col-12">
+                        <label for="billingStreet">Street</label>
+                        <input class="form-control" type="text" id="billingStreet" placeHolder="Enter Street"
+                            name="billingStreet" [(ngModel)]="letterpad.billingStreet1" />
+                    </div>
+                    <div class="col-12">
+                        <label for="billingStreet">Street2</label>
+                        <input class="form-control" type="text" id="billingStreet2" placeHolder="Enter Street2"
+                            name="billingStreet" [(ngModel)]="letterpad.billingStreet2" />
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <label for="billingCity">City</label>
+                        <input class="form-control" type="text" id="billingCity" placeHolder="Enter City"
+                            name="billingCity" [(ngModel)]="letterpad.billingCity" />
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <label for="billingState">State</label>
+                        <input class="form-control" type="text" id="billingState" placeHolder="Enter State"
+                            name="billingState" [(ngModel)]="letterpad.billingState" />
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <label for="billingCountry">Country</label>
+                        <input class="form-control" type="text" id="billingCountry" placeHolder="Enter Country"
+                            name="billingCountry" [(ngModel)]="letterpad.billingCountry" />
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <label for="billingZIPCode">ZIP Code</label>
+                        <input class="form-control" type="text" id="billingZIPCode" placeHolder="Enter ZIP Code"
+                            name="billingZIPCode" [(ngModel)]="letterpad.billingZIPCode" />
+                    </div>
+
+
+
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label for="dob" style="margin-bottom: 5px;"> Date </label>
+                        <div class="input-group">
+                            <input class="form-control" (focus)="letterDatedp.toggleCalendar()"
+                                placeholder="choose Date" angular-mydatepicker name="letterpadTimeDateObject"
+                                [(ngModel)]="letterpad.letterpadTimeDateObject"
+                                (dateChanged)="letterpad.letterPadDate = $event.singleDate.jsDate"
+                                [options]="myDatePickerOptions" #letterDatedp="angular-mydatepicker"
+                                autocomplete="off" />
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <i (click)="letterDatedp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                                </span>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-8">
+                        <label for="subject">Subject</label>
+                        <input class="form-control" type="text" id="subject" placeHolder="Enter Subject" name="subject"
+                            [(ngModel)]="letterpad.subject" />
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <label for="terms">Content</label>
+                        <textarea class="form-control" name="content" id="content" rows="15"
+                            [(ngModel)]="letterpad.content"></textarea>
+                    </div>
+
+                    <div class="col-12 text-center">
+
+                        <button [disabled]="saving" class="btn btn-md btn-primary" (click)="saveLetterpad()">
+                            Save
+                            <span [hidden]="!saving" class="spinner-border spinner-border-sm" role="status"
+                                aria-hidden="true"></span>
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary" (click)="clearFilters()">Clear</button>
+                        <div *ngIf="generatingLetterpadPDF || showDelete" class="row mt-5 justify-content-center">
+
+                            <div class="col-12 p-3 m-1">
+                                <h6 class="text-primary pointer">
+
+                                    <span *ngIf="letterpad.fileName !=''"
+                                        (click)="viewPDF(letterpad.id,letterpad.fileName)">
+                                        {{letterpad.fileName}}
+                                    </span>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <i class="fas fa-download"
+                                        *ngIf="letterpad.fileName != null && letterpad.fileName != ''"
+                                        (click)="downloadPDF(letterpad.id,letterpad.fileName)"></i>
+
+                                </h6><br>
+
+                                <span *ngIf="letterpad.fileName == ''" (click)="generateLetterpad(letterpad)"
+                                    class="pointer text-primary">Generate
+                                    Latterpad PDF &nbsp;
+                                    <i class="fas fa-file-pdf"></i></span><br>
+
+                                <span (click)="showAddNewEmail = !showAddNewEmail" class="pointer text-primary">Send
+                                    Email &nbsp;
+                                    <i class="far fa-envelope-open"></i></span><br>
+
+                                <span *ngIf="letterpad.fileName != ''" (click)="openShareWhatsAppModal()"
+                                    class="pointer text-success">Share
+                                    on WhatsApp &nbsp;
+                                    <i class="fab fa-whatsapp"></i></span><br>
+                                <span (click)="generateLetterpad(letterpad)" class="pointer text-primary"
+                                    *ngIf="letterpad.fileName !=''">Re-Generate
+                                    Letterpad PDF &nbsp;
+                                    <i class="fas fa-file-pdf"></i></span><br>
+
+                                <span (click)="letterpadFileUploadChange.click()" class="pointer text-primary">Upload
+                                    Generated Letterpad PDF
+                                    &nbsp;
+                                    <i class="fas fa-upload"></i></span>
+
+                                <input hidden type="file" #letterpadFileUploadChange
+                                    (change)="letterpadFileUploadChange($event.target.files[0])">
+
+                            </div>
+
+                            <div class="col-12">
+
+                                <div class="row justify-content-center">
+                                    <div class="col-12">
+                                        <mat-checkbox [(ngModel)]="addLetterHead">Add LeaderHead</mat-checkbox>
+                                        &nbsp;&nbsp;
+
+                                        <mat-checkbox [(ngModel)]="addLogo">Add Logo</mat-checkbox>
+                                        &nbsp;&nbsp;
+                                        <!-- <mat-checkbox [(ngModel)]="addRoundSeal">Add Round Seal</mat-checkbox>
+                                        &nbsp;&nbsp; -->
+                                        <mat-checkbox [(ngModel)]="addFullSeal">Add Full Seal</mat-checkbox>
+                                        &nbsp;&nbsp;
+                                        <mat-checkbox [(ngModel)]="addSign">Add Signature</mat-checkbox>
+                                        &nbsp;&nbsp;
+
+                                        <input type="text" size="25" class="designationinput" name="designation"
+                                            [(ngModel)]="designation" />
+                                    </div>
+
+                                    <!-- <div class="col-12">
+
+                                        <button class="text-center m-1" (click)="generateLetterpad('Letterpad_Template_1')" mat-flat-button
+                                            color="primary">Letterpad_Template_1</button>
+                                        <button class="text-center m-1" (click)="generateLetterpad('Letterpad_Template_2')" mat-flat-button
+                                            color="warn">Letterpad_Template_2</button>
+                                       
+                    
+                                    </div> -->
+
+
+                                </div>
+                                <!-- <small (click)="showPDFTemplateOptions = !showPDFTemplateOptions"
+                              class="text-muted text-center pointer">Close</small> -->
+                            </div>
+
+                            <mat-progress-bar *ngIf="generatingLetterpadPDF1" mode="indeterminate">
+                            </mat-progress-bar>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <br><br><br>
+
+    <!-- <app-deals-email-sender class="m-1" [deal]="deal" *ngIf="showAddNewEmail" [subject]="letterpad.subject" [message]=""
+    [filename]="letterpad.fileName" [tab]="'LETTERPAD'" [dealId]="letterpad.id" (resp)="resp($event)">
+   </app-deals-email-sender> -->
+
+
+    <app-letterpad-email-sender *ngIf="showAddNewEmail" [subject]="letterpad.subject" [message]=""
+        [filename]="letterpad.fileName" [tab]="'LETTERPAD'" [dealId]="letterpad.id" (resp)="resp($event)"
+        [deal]="letterpad">
+    </app-letterpad-email-sender>
+
+
+    <p class="m-5 p-5">&nbsp;</p>
+
+    <div class="modal fade bottom" id="whatsappShareModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true" data-backdrop="true">
+        <div class="modal-dialog modal-frame modal-bottom modal-full-height modal-notify modal-primary" role="document">
+            <!--Content-->
+            <div class="modal-content">
+                <!--Body-->
+                <div class="modal-body">
+
+                    <h4 class="text-dark">WhatsApp share</h4>
+
+                    <form class="example-form">
+                        <mat-form-field class="=====example-full-width w-100">
+                            <mat-label>To</mat-label>
+                            <input matInput class="w-100" placeholder="Enter a WhatsApp number" name="shareWhatsappTo"
+                                [(ngModel)]="shareWhatsappTo">
+                        </mat-form-field>
+
+                        <mat-form-field class="example-full-width w-100">
+                            <mat-label>Leave a comment</mat-label>
+                            <textarea matInput class="w-100" rows="6" placeholder="Enter Something"
+                                name="shareWhatsappText" [(ngModel)]="shareWhatsappText"></textarea>
+                        </mat-form-field>
+                    </form>
+
+                    <button mat-stroked-button color="success" (click)="shareWhatsApp()">
+                        Send
+                    </button>
+
+                </div>
+            </div>
+            <!--/.Content-->
+        </div>
+    </div>
+
+</div>

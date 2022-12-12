@@ -1,0 +1,46 @@
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-sm-9 col-md-9 col-lg-4">
+            <label for="dob"> Dates </label>
+            <div class="input-group">
+                <input class="form-control" (focus)="datesdp.toggleCalendar()" placeholder="Select a date"
+                    angular-mydatepicker name="dates" [(ngModel)]="dates" [options]="myDatePickerOptions"
+                    #datesdp="angular-mydatepicker" autocomplete="off" />
+                <div class="input-group-append">
+                    <i *ngIf="datesdp.isDateValid()" (click)="datesdp.clearDate()" class="far fa-times-circle"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3 col-md-3 col-lg-2">
+            <label for=""></label>
+            <button class="btn btn-sm btn-primary" style="margin-top: 25px;" (click)="addWorkingDays()">Add Woking
+                Days</button>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" name="excludeSaturday" [(ngModel)]="excludeSaturday" class="custom-control-input"
+                    id="excludeSaturdays">
+                <label class="custom-control-label" for="excludeSaturdays">Exclude Saturdays</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" name="excludeSunday" [(ngModel)]="excludeSunday" class="custom-control-input"
+                    id="excludeSundays">
+                <label class="custom-control-label" for="excludeSundays">Exclude Sundays</label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container p-2" *ngIf="WorkingDays.length > 0">
+
+    <ag-grid-angular #agGrid style="width: 100%; height: 350px;" id="myGrid" class="ag-theme-balham"
+        [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true"
+        [rowSelection]="rowSelection" [rowData]="WorkingDays" (gridReady)="onGridReady($event)"></ag-grid-angular>
+
+    <button class="btn btn-primary text-center" (click)="selectedRows() ">
+        Generate Working Days
+    </button>
+</div>

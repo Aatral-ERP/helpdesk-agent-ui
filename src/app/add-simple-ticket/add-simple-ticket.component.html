@@ -1,0 +1,16 @@
+<mat-progress-bar *ngIf="submitInProgress" mode="indeterminate">
+</mat-progress-bar>
+
+<p class="text-indigo h1 text-center">New Ticket</p>
+
+<div mat-dialog-content>
+    <p>Add simple self assigned ticket (To Do)</p>
+    <mat-form-field class="w-100">
+        <mat-label>Subject</mat-label>
+        <input matInput [(ngModel)]="ticket.subject">
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="dialogRef.close()">close</button>
+    <button mat-button (click)="saveTicket()" cdkFocusInitial>Ok</button>
+</div>

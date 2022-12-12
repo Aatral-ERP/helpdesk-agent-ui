@@ -1,0 +1,110 @@
+<div class="container-fluid">
+    <div class="container">
+        <div class="row pointer filterdiv mt-0 pt-0 bg-primary text-white justify-content-center"
+            (click)="showFilterScreen = !showFilterScreen">
+            <div class="col text-center">
+                <span> <span class="small"> Salary Entries Filters &nbsp;&nbsp;</span>
+                    <i [hidden]="showFilterScreen" class="fa fa-angle-up"></i>
+                    <i [hidden]="!showFilterScreen" class="fa fa-angle-down"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container pt-2" [hidden]="!showFilterScreen">
+
+        <div class="row">
+            <div class="col-12">
+                <p class="indigo-text h4 text-center"> Salary Entries Filter
+                </p>
+                <hr style="width:100%;text-align:left;margin-left:0">
+            </div>
+
+            <div class="col-12">
+                <label>Staffs</label>
+                <ng-multiselect-dropdown [placeholder]="'Select staffs'" [data]="_agents" [(ngModel)]="_selectedAgent"
+                    [settings]="_AgentsDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <label>Salary Month</label>
+                <select name="salaryMonth" [(ngModel)]="_search_filters.salaryMonth" class="form-control">
+                    <option disabled value="">--select--</option>
+                    <option value="January">January</option>
+                    <option value="February">February</option>
+                    <option value="March">March</option>
+                    <option value="April">April</option>
+                    <option value="May">May</option>
+                    <option value="June">June</option>
+                    <option value="July">July</option>
+                    <option value="August">August</option>
+                    <option value="September">September</option>
+                    <option value="October">October</option>
+                    <option value="November">November</option>
+                    <option value="December">December</option>
+                </select>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <label>Salary Year</label>
+                <input class="form-control" type="text" id="salaryYear" placeHolder="Enter Salary Year"
+                    name="salaryYear" [(ngModel)]="_search_filters.salaryYear" />
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <label>Status</label>
+                <select name="status" [(ngModel)]="_search_filters.status" class="form-control">
+                    <option disabled value="">--select--</option>
+                    <option value="Generated">Generated</option>
+                    <option value="Credited">Credited</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center mt-2">
+                <button class="btn btn-md btn-primary" [disabled]="loading"
+                    (click)="loadSalaryEntries()">Submit</button>
+                <button class="btn btn-sm btn-outline-primary" (click)="clear()">Clear</button>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="rowData.length > 0">
+        <h5 class="text-center mt-4 mb-5"> Salary Entries </h5>
+        <div class="row">
+            <div class="col">
+                <ag-grid-angular enableCellTextSelection="true" *ngIf="!loading" [rowData]="rowData"
+                    style="width: 100%; height: 500px;" class="ag-theme-balham p-2" [columnDefs]="columnDefs"
+                    (gridReady)="onGridReady($event)" [rowSelection]="'multiple'" [paginationAutoPageSize]="true"
+                    [pagination]="true">
+                </ag-grid-angular>
+            </div>
+        </div>
+
+        <button [disabled]="generating" (click)="generatePayslips()" type="button" class="btn btn-sm btn-primary">
+            Generate Payslips
+        </button>
+
+        <button [disabled]="generating" (click)="sendPayslipsMail()" type="button" class="btn btn-sm btn-primary">
+            Send Payslips Mail
+        </button>
+
+        <button [disabled]="generating" (click)="exportBankSalaryEntriesReport()" type="button"
+            class="btn btn-sm btn-primary float-right">
+            Bank Salary Report
+        </button>
+
+        <button [disabled]="generating" (click)="exportSalaryEntries()" type="button"
+            class="btn btn-sm btn-primary float-right">
+            Export
+        </button>
+    </div>
+
+    <div class="item" *ngIf="loading">
+        <ngx-skeleton-loader count="10"></ngx-skeleton-loader>
+    </div>
+
+</div>

@@ -1,0 +1,180 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate">
+</mat-progress-bar>
+
+<div class="container p-2 mb-5">
+    <div class="card">
+        <div class="card-body">
+            <p class="text-indigo h4 text-center">
+                <span class="h4" *ngIf="ticket.ticketId == 0">New</span>
+                <span class="h4" *ngIf="ticket.ticketId > 0">Edit</span> Ticket
+            </p>
+            <hr>
+
+            <div class="row">
+                <div class="col-lg-6 col-md-12 col-sm-12">
+                    <mat-label class="required-label text-muted small">Institute Name</mat-label>
+                    <ng-multiselect-dropdown [placeholder]="'Select Institutes'" [data]="institute"
+                        [(ngModel)]="_selectedinst"
+                        (onSelect)="selectedinstitute = $event.instituteId;getInstituteProducts();ticket.product = '';"
+                        [settings]="_instituteDropdownSettings">
+                    </ng-multiselect-dropdown>
+                </div>
+                <div class="col-lg-6 col-md-12 col-sm-12">
+                    <mat-form-field class="w-100 pt-2">
+                        <mat-label class="required-label small text-muted">Subject</mat-label>
+                        <input matInput type="text" placeHolder="Enter Subject" name="subject" maxlength=500
+                            [(ngModel)]="ticket.subject" />
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-6 col-md-12 col-sm-12">
+                    <mat-form-field class="w-100 pt-2">
+                        <mat-label class="required-label text-muted small">Product</mat-label>
+                        <mat-select (change)="serviceUnderByProduct()" [(ngModel)]="ticket.product">
+                            <mat-option value="">--select--</mat-option>
+                            <mat-option *ngFor="let prod of InstProducts" value="{{prod.product.name}}">
+                                {{prod.product.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <mat-form-field class="w-100 pt-2">
+                        <mat-label class="required-label text-muted small">Service Under</mat-label>
+                        <mat-select id="document" name="serviceUnder" [(ngModel)]="ticket.serviceUnder">
+                            <mat-option value="" disabled>--select--</mat-option>
+                            <mat-option [disabled]="ticket.serviceUnder != 'Warranty' && auth.getLoginAgentType() > 1"
+                                value="Warranty">Warranty</mat-option>
+                            <mat-option [disabled]="ticket.serviceUnder != 'AMC' && auth.getLoginAgentType() > 1"
+                                value="AMC">
+                                AMC</mat-option>
+                            <mat-option
+                                [disabled]="ticket.serviceUnder != 'ServiceCall' && auth.getLoginAgentType() > 1"
+                                value="ServiceCall">ServiceCall
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <mat-form-field class="w-100 mb-0 pb-0 pt-2">
+                        <mat-label class="required-label text-muted small">Raised by Email Id</mat-label>
+                        <!-- <input type="text" matInput class="pb-0 mb-0" [(ngModel)]="ticket.emailId"
+                            [matAutocomplete]="autoLabel" /> -->
+
+                        <input type="text" matInput [(ngModel)]="ticket.emailId" [matAutocomplete]="raisedByEmail"
+                            placeHolder="Enter Raised By Email Id" />
+                        <mat-autocomplete #raisedByEmail="matAutocomplete">
+                            <mat-option [hidden]="!email.toLowerCase().includes(ticket.emailId)"
+                                *ngFor="let email of _email_ids" [value]="email">
+                                {{email}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col">
+                    <mat-label class="text-muted small">Summary</mat-label>
+                    <angular-editor [config]="editorConfig" [(ngModel)]="ticket.summary"></angular-editor>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <mat-form-field class="w-100 mb-0 pb-0 pt-2">
+                        <mat-label class="text-muted small">Email Updates</mat-label>
+                        <!-- <input matInput type="text" class="pb-0 mb-0" placeHolder="Enter Mail-ID" name="emailUpdates"
+                            [(ngModel)]="ticket.emailUpdates" />
+                             -->
+                        <input type="text" matInput (keyup.enter)="onEnterEmailUpdates()"
+                            (ngModelChange)="prepareEmailUpdatesAutoComplete($event)" [matAutocomplete]="updatesByEmail"
+                            [(ngModel)]="_emailUpdates" placeHolder="Email Updates" />
+                        <mat-autocomplete #updatesByEmail="matAutocomplete"
+                            (optionSelected)="updateOptionSelected($event)">
+                            <mat-option *ngFor="let email of _updates_email_ids" [value]="email">
+                                {{email}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    <span class="text-primary">{{ticket.emailUpdates}}</span>
+                    <span class="text-muted float-right">
+                        <small>Enter Multiple emailids by using semicolon<b>(;)</b></small><br>
+                        <small>Email Updates will be sent to these email ids on every status updates</small>
+                    </span>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-12">
+                    <mat-form-field class="w-100 mb-0 pb-0 pt-2">
+                        <mat-label class="text-muted small">Label/Category</mat-label>
+                        <input type="text" matInput [(ngModel)]="ticket.serviceType" [matAutocomplete]="autoLabel"
+                            placeHolder="Enter Category" />
+                        <mat-autocomplete #autoLabel="matAutocomplete">
+                            <mat-option [hidden]="!lbl.toLowerCase().includes(ticket.serviceType)"
+                                *ngFor="let lbl of serviceTypeList" [value]="lbl">
+                                {{lbl}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    <small class="text-muted pt-0 mt-0">Add Label to Group / Categorize the tasks. </small>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-12">
+                    <mat-form-field class="w-100 pt-2">
+                        <mat-label class="text-muted small">Priority</mat-label>
+                        <mat-select id="document" name="priority" [(ngModel)]="ticket.priority">
+                            <mat-option value="NotPreferred">--Not Preferred--</mat-option>
+                            <mat-option value="High">High</mat-option>
+                            <mat-option value="Medium">Medium</mat-option>
+                            <mat-option value="Low">Low</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <br>
+            <div class="row justify-content-center">
+                <div class="col">
+                    <label class="btn btn-sm btn-light">Add Attachment &nbsp;&nbsp;
+                        <input type="file" id="myFile" name="filename" (change)="fileChange($event)" multiple hidden>
+                    </label> &nbsp;
+                    <small *ngIf="files.length == 0"> No Files selected</small>
+                    <br>
+
+                    <small *ngFor="let file of files">
+                        {{file.name}}
+                        <small class="badge badge-light text-muted">{{file.size | filesize}} </small>
+                        <br>
+                    </small>
+                </div>
+            </div>
+            <br>
+            <div class="row text-center">
+                <div class="col">
+                    <button *ngIf="ticket.ticketId == 0 && gmailTicket == null" [disabled]="submitInProgress"
+                        class="btn btn-md btn-primary" (click)="AddTicket()">
+                        <div *ngIf="submitInProgress" class="spinner-border spinner-border-sm text-secondary small"
+                            role="status">
+                            <span class="sr-only">...</span>
+                        </div>
+                        Submit
+                    </button>&nbsp;&nbsp;
+                    <button *ngIf="ticket.ticketId > 0 && gmailTicket == null" [disabled]="submitInProgress"
+                        class="btn btn-md btn-primary" (click)="EditTicket()">
+                        <div *ngIf="submitInProgress" class="spinner-border spinner-border-sm text-secondary small"
+                            role="status">
+                            <span class="sr-only">...</span>
+                        </div>
+                        Edit Ticket
+                    </button>&nbsp;&nbsp;
+                    <button *ngIf="ticket.ticketId == 0 && gmailTicket != null" [disabled]="submitInProgress"
+                        class="btn btn-md btn-primary" (click)="saveGmailAsTicket()">
+                        <div *ngIf="submitInProgress" class="spinner-border spinner-border-sm text-secondary small"
+                            role="status">
+                            <span class="sr-only">...</span>
+                        </div>
+                        Save Gmail As Ticket
+                    </button>&nbsp;&nbsp;
+                    <button [disabled]="submitInProgress" class="btn btn-md btn-primary" (click)="clear()">
+                        Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

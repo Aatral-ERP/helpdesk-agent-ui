@@ -1,0 +1,81 @@
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark indigo">
+  <img routerLink="" src="{{logourl}}" width="50" height="40" class="d-inline-block align-top pointer" alt="logo">
+  &nbsp;&nbsp;
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav" *ngIf="auth.isLoggedIn()">
+      <li class="nav-item">
+        <a class="nav-link" routerLink=""><b>Home</b></a>
+      </li>
+      <li>&nbsp;</li>
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          <b>Billing</b>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item p-0 pl-3 text-muted" routerLink="/onboard/my-bills"><b>My AMC Bills</b></a>
+        </div>
+        
+      </li>
+      <li>&nbsp;</li>
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          <b>Deals</b>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item p-0 pl-3 text-muted" routerLink="/onboard/purchase-quotes"><b>My Quotes</b></a>
+          <a class="dropdown-item p-0 pl-3 text-muted" routerLink="/onboard/purchase-invoices"><b>My Invoices</b></a>
+          <a class="dropdown-item p-0 pl-3 text-muted" routerLink="/onboard/purchase-payments"><b>My Payments</b></a>
+          
+        </div>
+        
+        
+      </li>
+      
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/ticket"><b>My Tickets</b></a>
+      </li>
+
+      <!-- <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          <b>Support</b>
+        </a>
+        <div class="dropdown-menu dropdown-default" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item p-0 pl-3 text-muted" routerLink="/ticket"><b>Recent ticktes</b></a>
+          <a class="dropdown-item p-0 pl-3 text-muted" routerLink="/ticket"><b>Tickets Status</b></a>
+        </div>
+      </li> -->
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/ticket/add-ticket"><b>Open New Ticket</b></a>
+      </li>
+      <li>&nbsp;</li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/onboard/institute-details"><b>Manage Account</b></a>
+      </li>
+      <li class="nav-item">
+          <a *ngIf="auth.isLoggedIn()" class="nav-link" href="https://wa.me/91{{phoneNo}}" target="_blank"><img class="mb-1" src="./assets/icons/whatsapp-icon.png" width="25" height="25"></a>
+        </li>
+    </ul>
+
+    <ul class="navbar-nav nav-flex-icons ml-auto">
+      
+      <li class="nav-item">
+        <a *ngIf="auth.isLoggedIn()" class="nav-link btn btn-sm btn-outline-white" id="profile" aria-haspopup="true"
+          (click)="logout()" aria-expanded="false">
+          Logout
+        </a>
+        <a *ngIf="!auth.isLoggedIn()" class="nav-link btn btn-sm btn-outline-white" id="profile" aria-haspopup="true"
+          routerLink="/login" aria-expanded="false">
+          Login
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>

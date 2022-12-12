@@ -1,0 +1,138 @@
+<div class="container-fluid">
+    <div class="container">
+        <div class="row pointer filterdiv mt-0 pt-0 bg-primary text-white justify-content-center"
+            (click)="showFilterScreen = !showFilterScreen">
+            <div class="col text-center">
+                <span> <span class="small"> Sales Order Filters &nbsp;&nbsp;</span>
+                    <i [hidden]="showFilterScreen" class="fa fa-angle-up"></i>
+                    <i [hidden]="!showFilterScreen" class="fa fa-angle-down"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container pt-2" [hidden]="!showFilterScreen">
+
+        <div class="row">
+            <div class="col-12">
+                <p class="indigo-text h4 text-center"> Sales Order Filter
+                </p>
+                <hr style="width:100%;text-align:left;margin-left:0">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <label>Institute</label>
+                <ng-multiselect-dropdown [placeholder]="'Select Institutes'" [data]="_institutes"
+                    [(ngModel)]="_search_filters.institutes" [settings]="_instituteDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <label>Products</label>
+                <ng-multiselect-dropdown [placeholder]="'Select Products'" [data]="_products"
+                    [(ngModel)]="_search_filters.dealProducts" [settings]="_ProductsDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <label>Create By</label>
+                <ng-multiselect-dropdown [placeholder]="'Created By'" [data]="_agents"
+                    [disabled]="!this.role.salesAdmin" [(ngModel)]="_search_filters.agents"
+                    [settings]="_AgentsDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+
+
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <label>Deal Type</label>
+                <select class="form-control" name="dealType" id="dealType" [(ngModel)]="_search_filters.dealType">
+                    <option value="">--select--</option>
+                    <option value="Sales">Sales</option>
+                    <option value="AMC">AMC</option>
+                    <option value="Service">Service</option>
+                    <option value="Others">Others</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="m-1 p-1 border border-light">
+            <h6 (click)="showSOFilterScreen = !showSOFilterScreen" class="pointer text-dark font-weight-bold">
+                Sales Order Filter's &nbsp;
+                <i [hidden]="showSOFilterScreen" class="fas fa-caret-right"></i>
+                <i [hidden]="!showSOFilterScreen" class="fas fa-caret-down"></i>
+            </h6>
+            <div [hidden]="!showSOFilterScreen" class="row">
+
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                    <label for="soSubject">Sales Order Subject</label>
+                    <input class="form-control" type="text" id="soSubject" placeHolder="Enter Sales Order Subject"
+                        name="soSubject" [(ngModel)]="_search_filters.soSubject" />
+                </div>
+
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                    <label for="soNo">Sales Order No</label>
+                    <input class="form-control" type="text" id="soNo" placeHolder="Enter Sales Order No " name="soNo"
+                        [(ngModel)]="_search_filters.soNo" />
+                </div>
+
+                <div class="col-sm-6 col-md-6 col-lg-3">
+                    <label for="soDueDateObject" style="margin-bottom: 5px;"> SO Due Date </label>
+                    <div class="input-group">
+                        <input class="form-control" (focus)="soDueDatedp.toggleCalendar()"
+                            placeholder="choose valid date" angular-mydatepicker name="soDueDateObject"
+                            [(ngModel)]="_search_filters.soDueDateObject" [options]="myDatePickerOptions"
+                            (dateChanged)="_search_filters.soDueDateFrom = $event.dateRange.beginJsDate;_search_filters.soDueDateTo = $event.dateRange.endJsDate;"
+                            #soDueDatedp="angular-mydatepicker" autocomplete="off" />
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i (click)="soDueDatedp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                    <label>Sales Order Status</label>
+                    <select name="soStatus" [(ngModel)]="_search_filters.soStatus" class="form-control">
+                        <option value="">--select--</option>
+                        <option value="created">Created</option>
+                        <option value="approved">Approved</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center mt-2">
+                <button class="btn btn-md btn-primary" (click)="loadDealSalesOrders()">Submit</button>
+                <button class="btn btn-sm btn-outline-primary" (click)="clearFilters()">Clear</button>
+            </div>
+        </div>
+    </div>
+    <p class="h4 text-center mt-4"> Sales Orders Report
+    </p>
+    <div>
+        <div class="row mb-5">
+            <div class="col">
+                <ag-grid-angular enableCellTextSelection="true" *ngIf="!loading" [rowData]="rowData"
+                    style="width: 100%; height: 500px;" class="ag-theme-balham p-2" [columnDefs]="columnDefs"
+                    [rowSelection]="'single'" (gridReady)="onGridReady($event)" [paginationAutoPageSize]="true"
+                    [pagination]="true">
+                </ag-grid-angular>
+
+                <div class="item" *ngIf="loading">
+                    <ngx-skeleton-loader count="8"></ngx-skeleton-loader>
+                </div>
+
+                <button class="btn btn-sm btn-primary" *ngIf="rowData.length > 0" (click)="onBtnExport()">Export
+                    <i class="fas fa-download"></i></button>
+
+            </div>
+        </div>
+    </div>
+
+</div>

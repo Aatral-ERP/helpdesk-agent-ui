@@ -1,0 +1,218 @@
+<div class="container-fluid">
+
+    <div class="alert alert-info text-center" role="alert" [hidden]="so.id > 0">
+        <span *ngIf="!loading" class="pl-2">No Sales Order Found...</span>
+        <span *ngIf="loading" class="pl-2">loading...</span>
+    </div>
+
+    <h5 class="font-weight-bold">Sales Order Info</h5>
+
+
+    <div class="row">
+
+        <div class="col-sm-6 col-md-6 col-lg-6">
+            <label for="subject">Subject</label>
+            <input class="form-control" type="text" id="subject" placeHolder="Enter Subject" name="subject"
+                [(ngModel)]="so.subject" />
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-3">
+            <label for="salesOrderNo">Sales Order No</label>
+            <input class="form-control" type="text" id="salesOrderNo" placeHolder="Enter Sales Order No"
+                name="salesOrderNo" [(ngModel)]="so.salesOrderNo" />
+        </div>
+
+        <div class="col-sm-6 col-md-3 col-lg-3">
+            <label for="purchaseOrderNo">Purchase Order No</label>
+            <input class="form-control" type="text" id="purchaseOrderNo" placeHolder="Enter Purchase Order No"
+                name="purchaseOrderNo" [(ngModel)]="so.purchaseOrderNo" />
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <label for="dob" style="margin-bottom: 5px;"> Due Date </label>
+            <div class="input-group">
+                <input class="form-control" (focus)="dueDatedp.toggleCalendar()" placeholder="choose Invoice Date"
+                    angular-mydatepicker name="dueDateObject" [(ngModel)]="so.dueDateObject"
+                    (dateChanged)="so.dueDate = $event.singleDate.jsDate" [options]="myDatePickerOptions"
+                    #dueDatedp="angular-mydatepicker" autocomplete="off" />
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <i (click)="dueDatedp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <label>Status</label>
+            <select name="status" [(ngModel)]="so.status" class="form-control">
+                <option value="created">Created</option>
+                <option value="approved">Approved</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+            </select>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <label>Excise Duty</label>
+            <input type="number" class="form-control" name="exciseDuty" [(ngModel)]="so.exciseDuty">
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <label>Sales Commission</label>
+            <input type="number" class="form-control" name="salesCommission" [(ngModel)]="so.salesCommission">
+        </div>
+
+        <div class="col-12 ">
+            <label for="terms">Terms & Conditions</label>
+            <textarea class="form-control" name="terms" id="terms" rows="5" [(ngModel)]="so.terms"></textarea>
+
+            <p>
+                <span *ngIf="deal.grandTotal != null" class="d-block text-muted">Total Amount is
+                    {{deal.grandTotal | currency:'INR'}}
+                </span>
+            </p>
+
+            <p><small *ngIf="so.createddatetime != null" class="d-block text-muted small">Created by
+                    {{so.createdBy}} at
+                    {{so.createddatetime | date:'medium'}}</small>
+            </p>
+            <p>
+                <small *ngIf="so.lastupdatedatetime != null" class="d-block text-muted small">Last Modified by
+                    {{so.modifiedBy}} at
+                    {{so.lastupdatedatetime | date:'medium'}}
+                </small>
+            </p>
+
+            <small class="text-primary float-right pointer" (click)="showTermsMasters = !showTermsMasters">
+                <span *ngIf="!showTermsMasters">Choose Terms and Conditions from Master</span>
+                <span *ngIf="showTermsMasters">Close</span>
+            </small>
+
+            <br>
+
+            <app-terms-and-conditions *ngIf="showTermsMasters" (OnChoose)="so.terms = $event" [type]="'Sales Order'">
+            </app-terms-and-conditions>
+        </div>
+
+        <div class="col-12 text-center">
+
+            <button [disabled]="saving" class="btn btn-md btn-primary" (click)="saveDealSalesOrder()">Save
+                <span [hidden]="!saving" class="spinner-border spinner-border-sm" role="status"
+                    aria-hidden="true"></span>
+            </button>
+            <button class="btn btn-sm btn-outline-primary" (click)="clearFilters()">Clear</button>
+
+        </div>
+    </div>
+
+    <div *ngIf="so.id > 0" class="row noQuoteSpan mt-5 justify-content-center">
+
+        <div class="col-12 p-3 m-1">
+            <h6 class="text-primary pointer">
+
+                <span (click)="viewPDF()">
+                    {{so.filename}}
+                </span>
+                &nbsp;&nbsp;&nbsp;
+                <i class="fas fa-download" *ngIf="so.filename != null && so.filename != ''" (click)="downloadPDF()"></i>
+
+            </h6><br>
+            <!-- <h6 (click)="viewPDF()" class="text-primary pointer">
+                {{so.filename}} </h6><br> -->
+
+            <span (click)="showAddNewEmail = !showAddNewEmail" class="pointer text-primary">Send
+                Email &nbsp;
+                <i class="far fa-envelope-open"></i></span><br>
+
+            <span *ngIf="so.filename != ''" (click)="openShareWhatsAppModal()" class="pointer text-success">Share
+                on WhatsApp &nbsp;
+                <i class="fab fa-whatsapp"></i></span><br>
+
+            <span *ngIf="so.filename == ''" (click)="showPDFTemplateOptions = !showPDFTemplateOptions"
+                class="pointer text-primary">Generate Sales Order PDF &nbsp;
+                <i class="fas fa-file-pdf"></i></span><br>
+
+            <span *ngIf="so.filename != ''" (click)="showPDFTemplateOptions = !showPDFTemplateOptions"
+                class="pointer text-primary">Re-Generate Sales Order PDF &nbsp;
+                <i class="fas fa-file-pdf"></i></span><br>
+
+            <span (click)="fileUpload.click()" class="pointer text-primary">
+                Upload Generated Sales Order PDF &nbsp;
+                <i class="fas fa-upload"></i></span>
+
+            <input hidden type="file" #fileUpload (change)="fileUploadChange($event.target.files[0])">
+        </div>
+
+        <div class="col-12" [hidden]="!showPDFTemplateOptions">
+            <h6 class="text-muted text-center">Choose a Template</h6>
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <mat-checkbox [(ngModel)]="addRoundSeal">Add Round Seal</mat-checkbox>
+                    &nbsp;&nbsp;
+                    <mat-checkbox [(ngModel)]="addFullSeal">Add Full Seal</mat-checkbox>
+                    &nbsp;&nbsp;
+                    <mat-checkbox [(ngModel)]="addSign">Add Signature</mat-checkbox>
+                    &nbsp;&nbsp;
+                    <input type="text" size="25" class="designationinput" name="designation"
+                        [(ngModel)]="designation" />
+                </div>
+
+                <div class="col-12">
+
+                    <button class="text-center m-1" (click)="generateSalesOrderPDF('Sales_Order_Template_1')"
+                        mat-flat-button color="primary">Sales_Order_Template_1</button>
+                    <button class="text-center m-1" (click)="generateSalesOrderPDF('Sales_Order_Template_2')"
+                        mat-flat-button color="warn">Sales_Order_Template_2</button>
+
+                </div>
+            </div>
+            <small (click)="showPDFTemplateOptions = !showPDFTemplateOptions"
+                class="text-muted text-center pointer">Close</small>
+        </div>
+
+        <mat-progress-bar *ngIf="generatingPDF" mode="indeterminate">
+        </mat-progress-bar>
+
+    </div>
+
+    <app-deals-email-sender class="m-1" [deal]="deal" *ngIf="showAddNewEmail" [subject]="so.subject" [message]=""
+        [filename]="so.filename" [tab]="'Sales Order'" [dealId]="dealId" (resp)="resp($event)">
+    </app-deals-email-sender>
+
+    <p class="m-5 p-5">&nbsp;</p>
+
+    <div class="modal fade bottom" id="whatsappShareModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true" data-backdrop="true">
+        <div class="modal-dialog modal-frame modal-bottom modal-full-height modal-notify modal-primary" role="document">
+            <!--Content-->
+            <div class="modal-content">
+                <!--Body-->
+                <div class="modal-body">
+
+                    <h4 class="text-dark">WhatsApp share</h4>
+
+                    <form class="example-form">
+                        <mat-form-field class="=====example-full-width w-100">
+                            <mat-label>To</mat-label>
+                            <input matInput class="w-100" placeholder="Enter a WhatsApp number" name="shareWhatsappTo"
+                                [(ngModel)]="shareWhatsappTo">
+                        </mat-form-field>
+
+                        <mat-form-field class="example-full-width w-100">
+                            <mat-label>Leave a comment</mat-label>
+                            <textarea matInput class="w-100" rows="6" placeholder="Enter Something"
+                                name="shareWhatsappText" [(ngModel)]="shareWhatsappText"></textarea>
+                        </mat-form-field>
+                    </form>
+
+                    <button mat-stroked-button color="success" (click)="shareWhatsApp()">
+                        Sent
+                    </button>
+
+                </div>
+            </div>
+            <!--/.Content-->
+        </div>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+.noQuoteSpan {
+    border: 0.5px dotted rgb(104, 219, 240);
+    text-align: center;
+    background: rgb(240, 240, 240);
+}
+
+.quoteTempThump {
+    height: 280px;
+    width: 250px;
+    border: 2px solid lightgrey;
+}
+
+.quoteTempThump:hover {
+    border: 2px solid #4285f4;
+}

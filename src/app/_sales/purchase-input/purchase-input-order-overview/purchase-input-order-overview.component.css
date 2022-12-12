@@ -1,0 +1,17 @@
+.noQuoteSpan {
+    border: 0.5px dotted rgb(104, 219, 240);
+    text-align: center;
+    background: rgb(240, 240, 240);
+}
+
+.designationinput {
+    outline: none !important;
+    border-color: rgb(118, 169, 224);
+}
+
+.designationinput:focus {
+    outline: none !important;
+    outline-color: rgb(34, 132, 236);
+    border-color: rgb(44, 130, 221);
+    box-shadow: 0 0 7px rgb(60, 131, 206);
+}

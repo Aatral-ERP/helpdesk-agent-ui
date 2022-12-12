@@ -1,0 +1,390 @@
+<p class="indigo-text h3 text-center">Add Product</p>
+<mat-dialog-content class="mat-typography">
+    <div class="container pb-5 mb-5">
+        <div class="row justify-content-center">
+            <div class="col">
+                <div class="row justify-content-center">
+                    <div class="col">
+                        <label for="name">Product Name<span class="text-danger">*</span></label>
+                        <input class="form-control input-lg" type="text" id="name" placeHolder="Enter Product Name"
+                            name="name" [(ngModel)]="product.name" />
+                    </div>
+
+                    <div class="col-lg-3 col-md-5 col-sm-12">
+                        <label for="category">Category</label>
+
+                        <ng-autocomplete id="category" placeHolder="Enter Category" [(ngModel)]="product.category"
+                            [data]="_products_category" [itemTemplate]="categoryTemplateDesignation">
+                        </ng-autocomplete>
+
+                        <ng-template #categoryTemplateDesignation let-item>
+                            <a [innerHTML]="item"></a>
+                        </ng-template>
+
+                        <!-- <input class="form-control input-lg" type="text" id="category" placeHolder="Enter category"
+                            name="category" [(ngModel)]="product.category" /> -->
+                    </div>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col">
+                        <label for="description">About/Description</label>
+                        <angular-editor [config]="editorConfig" [(ngModel)]="product.description"></angular-editor>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 m-1 p-1 border border-light">
+                        <div class="text-center">
+                            <span class="pr-2" [ngClass]="product.finishedProduct ? 'text-muted' : 'text-dark'">Raw
+                                Material </span>
+                            <mat-slide-toggle color="primary" [(ngModel)]="product.finishedProduct">
+                            </mat-slide-toggle>
+                            <span class="pl-2" [ngClass]="product.finishedProduct ? 'text-dark' : 'text-muted'">Finished
+                                Product</span>
+                            <h6 [ngClass]="product.finishedProduct ? 'text-muted' : 'text-dark'"
+                                class="small text-muted p-1">
+                                Raw Materials Products are not for Sale.</h6>
+                        </div>
+
+                        <div class="row justify-content-center" *ngIf="product.finishedProduct">
+                            <div class="col-6">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <label>Default Product Amount (Rs.)</label>
+                                        <input type="number" class="form-control input-lg" id="productAmount"
+                                            (change)="onChangeProductAmount()" placeHolder="Enter Product Amount"
+                                            name="productAmount" [(ngModel)]="product.amount">
+                                    </div>
+
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <label>HSN</label>
+                                        <input class="form-control input-lg" type="text" id="hsn"
+                                            placeHolder="Enter HSN Code" name="hsn" [(ngModel)]="product.hsn" />
+                                    </div>
+
+                                    <div class="col-lg-3 col-md-3 col-sm-3">
+                                        <label>UoM<i title="Unit of Measurement" class="fas fa-info-circle"></i></label>
+                                        <input class="form-control input-lg" type="text" id="uom"
+                                            placeHolder="Enter UoM" name="uom" [(ngModel)]="product.uom" />
+                                    </div>
+
+                                    <div class="col-lg-3 col-md-3 col-sm-3">
+                                        <label>Gst</label>
+                                        <select id="gst" name="gst" [(ngModel)]="product.gst"
+                                            class="form-control custom-select">
+                                            <option value="0">0%</option>
+                                            <option value="5">5%</option>
+                                            <option value="12">12%</option>
+                                            <option value="18">18%</option>
+                                            <option value="28">28%</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <label>Warranty</label>
+                                        <select id="warranty" name="warranty" [(ngModel)]="product.warranty"
+                                            class="form-control custom-select">
+                                            <option value="">--select--</option>
+                                            <option value="1 years">1 Year</option>
+                                            <option value="2 years">2 Years</option>
+                                            <option value="3 years">3 Years</option>
+                                            <option value="4 years">4 Years</option>
+                                            <option value="5 years">5 Years</option>
+                                            <option value="6 years">6 Years</option>
+                                            <option value="7 years">7 Years</option>
+                                            <option value="8 years">8 Years</option>
+                                            <option value="9 years">9 Years</option>
+                                            <option value="10 years">10 Years</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 div col-sm-12">
+                                <label>Sales Description&nbsp;<i
+                                        title="This description will be auto filled on Sales Deal Creation"
+                                        class="fas fa-info-circle"></i></label>
+                                <textarea class="form-control" name="salesDescription" id="salesDescription" rows="4"
+                                    [(ngModel)]="product.salesDescription"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 m-1 p-1 border border-light">
+                        <div class="text-center">
+                            <span class="pr-2"
+                                [ngClass]="product.maintainable ? 'text-muted' : 'text-dark'">Non-Maintainable
+                                Product</span>
+                            <mat-slide-toggle color="primary" [(ngModel)]="product.maintainable">
+                            </mat-slide-toggle>
+                            <span class="pl-2"
+                                [ngClass]="product.maintainable ? 'text-dark' : 'text-muted'">Maintainable
+                                Product</span>
+                            <h6 [ngClass]="product.maintainable ? 'text-muted' : 'text-dark'"
+                                class="small text-muted p-1">
+                                Non-Maintainable Products does not have AMC Plans.</h6>
+                        </div>
+                        <div class="row" *ngIf="product.maintainable">
+                            <div class="col-lg-3 col-md-3 col-sm-6">
+                                <label>Default AMC Charges (Rs.)</label>
+                                <input [disabled]="!product.maintainable" class="form-control input-lg" type="number"
+                                    id="productAmc" placeHolder="Enter AMC Charges" name="productAmc"
+                                    [(ngModel)]="product.amcAmount" />
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-6">
+                                <label>AMC HSN Code</label>
+                                <input [disabled]="!product.maintainable" class="form-control input-lg" id="amchsn"
+                                    placeHolder="Enter AMC HSN Code" name="amchsn" [(ngModel)]="product.amchsn" />
+                            </div>
+                            <div class="col-lg-6 col-md-6 div col-sm-12">
+                                <label>AMC Description&nbsp;<i
+                                        title="This description will be auto filled on AMC Deal Creation"
+                                        class="fas fa-info-circle"></i></label>
+                                <textarea [disabled]="!product.maintainable" class="form-control" name="amcDescription"
+                                    id="amcDescription" rows="3" [(ngModel)]="product.amcDescription"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 m-1 p-1 border border-light">
+                        <div class="text-center">
+                            <span class="pr-2" [ngClass]="product.externalProduct ? 'text-muted' : 'text-dark'">Internal
+                                Product
+                            </span>
+                            <mat-slide-toggle color="primary" [(ngModel)]="product.externalProduct">
+                            </mat-slide-toggle>
+                            <span class="pl-2" [ngClass]="product.externalProduct ? 'text-dark' : 'text-muted'">External
+                                Product</span>
+                            <h6 [ngClass]="product.externalProduct ? 'text-muted' : 'text-dark'"
+                                class="small text-muted p-1">
+                                Incase you are a reseller of this product</h6>
+                        </div>
+                        <div class="row" *ngIf="product.externalProduct">
+                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                <label>Vendor</label>
+                                <ng-multiselect-dropdown [placeholder]="'Select Vendors'" [data]="_vendors"
+                                    [(ngModel)]="_selectedVendor" (onSelect)="product.vendor = $event;"
+                                    [settings]="_vendorDropdownSettings">
+                                </ng-multiselect-dropdown>
+                            </div>
+                            <div class="col-lg-3 col-md-3 div col-sm-12">
+                                <label>Vendor Product Amount (Rs.)</label>
+                                <input class="form-control input-lg" type="number" id="vendorAmount"
+                                    placeHolder="Enter Vendor Product Amount" name="vendorAmount"
+                                    [(ngModel)]="product.vendorAmount" />
+                            </div>
+                            <div *ngIf="product.maintainable" class="col-lg-3 col-md-3 div col-sm-12">
+                                <label>Vendor AMC Charges (Rs.)</label>
+                                <input class="form-control input-lg" type="number" id="vendorAmcAmount"
+                                    placeHolder="Enter Vendor AMC Charges" name="vendorAmcAmount"
+                                    [(ngModel)]="product.vendorAmcAmount" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <br>
+                <div class="row text-center">
+                    <div class="col">
+                        <button class="btn btn-md btn-primary" (click)="save()">
+                            Save
+                        </button>&nbsp;&nbsp;
+
+                        <button class="btn btn-md btn-primary" (click)="clear()">
+                            Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <mat-tab-group animationDuration="1ms" *ngIf="product.id > 0">
+        <mat-tab label="Raw Material Products ({{rawMaterials.length}})">
+
+
+            <div class="row">
+                <div class="col">
+                    <button (click)="openAddProductModal()" class="btn btn-md btn-primary float-right">Add Product
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="row container justify-content-center" *ngIf="rawMaterials.length > 0">
+                <div class="col">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th style="width: 2%" scope="col">#</th>
+                                    <th style="width: 40%" scope="col">Product</th>
+                                    <th style="width: 40%" scope="col">Description</th>
+                                    <th style="width: 10%" scope="col">Quantity</th>
+                                </tr>
+                            </thead>
+
+                            <tr *ngFor="let raw of rawMaterials;let i = index;">
+                                <td>
+                                    {{i+1}}<br>
+                                    <i (click)="rawMaterials.splice(i, 1);"
+                                        class="far fa-trash-alt text-danger pointer"></i>
+                                </td>
+                                <td>
+                                    {{raw.mappedProductName}}
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control editFocus" name="description"
+                                        [(ngModel)]="raw.description">
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control editFocus" name="quantity"
+                                        [(ngModel)]="raw.quantity">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <button (click)="saveRawMaterials()" class="btn btn-md btn-primary float-right">Save Raw Material
+                        Products
+                    </button>
+
+                </div>
+            </div>
+
+
+        </mat-tab>
+        <mat-tab label="Stock Details ({{product.stock | number}})">
+            <div class="container mb-5 pb-5" *ngIf="product.id > 0">
+                <h5 class="text-muted">In Stock : {{product.stock | number}}</h5>
+
+                <span *ngIf="!showStockEntry" (click)="showStockEntry = !showStockEntry"
+                    class="text-primary float-right pointer">Add Stock
+                    Entry</span>
+                <span *ngIf="showStockEntry" (click)="showStockEntry = !showStockEntry"
+                    class="text-primary float-right pointer">Close</span>
+
+                <div class="container border border-light p-5" [hidden]="!showStockEntry">
+                    <h5 class="text-center font-weight-bold">Add Stock Entry</h5>
+                    <h6 class="text-dark">{{product.name}}</h6>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label for="firstName">Add Stock in Nos.</label>
+                                    <input class="form-control input-sm" type="number" id="quantity"
+                                        placeHolder="Enter Quantity" name="quantity"
+                                        [(ngModel)]="stockEntry.quantity" />
+                                </div>
+                                <div class="col-6">
+                                    <label for="entryDate" style="margin-bottom: 5px;"> Stock Entry Date </label>
+
+                                    <input [(ngModel)]="stockEntry.entryDate" class="form-control"
+                                        (focus)="picker.open()" [matDatepicker]="picker">
+                                    <mat-datepicker #picker></mat-datepicker>
+
+                                    <!-- <input [(ngModel)]="stockEntry.entryDate" class="form-control" [owlDateTime]="dt2"
+                                    [owlDateTimeTrigger]="dt2" placeholder="Choose Stock Enty Date">
+                                <owl-date-time [pickerType]="'calendar'" #dt2></owl-date-time> -->
+                                </div>
+                                <div class="col-6">
+                                    <label for="firstName">Stock Type.</label>
+                                    <select name="type" id="type" class="form-control" [(ngModel)]="stockEntry.type">
+                                        <option value="Credit">Credit</option>
+                                        <option value="Deduct">Deduct</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="entryDate" style="margin-bottom: 5px;"> Stock Entry Remarks </label>
+                            <textarea class="form-control" cols="60%" id="remarks" rows="5" placeHolder="Enter Remarks"
+                                name="remarks" [(ngModel)]="stockEntry.remarks"></textarea>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-sm btn-primary float-right" (click)="saveStockEntry()">
+                        Save Stock Entry
+                    </button>
+
+                </div>
+                <br>
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="text-muted">Stock Entries</h6>
+                            <ag-grid-angular enableCellTextSelection="true" *ngIf="!loadingStock" [rowData]="rowData"
+                                style="width: 100%; height: 500px;" class="ag-theme-balham p-2"
+                                [columnDefs]="columnDefs" [paginationAutoPageSize]="true" [pagination]="true">
+                            </ag-grid-angular>
+
+                            <div class="item" *ngIf="loadingStock">
+                                <ngx-skeleton-loader count="8"></ngx-skeleton-loader>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+
+    <p class="container mb-5 pb-5"> &nbsp;</p>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <a (click)="closeDialog()"><u>close</u></a>
+</mat-dialog-actions>
+
+
+<!--Section: Live preview-->
+
+<!--Modal: modal-->
+<div class="modal fade right" id="productaddmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true" data-backdrop="true">
+    <div class="modal-dialog modal-frame modal-right modal-full-height modal-notify modal-primary" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <!--Body-->
+            <div class="modal-body">
+
+                <div class="row p-1 mb-1">
+                    <div class="col">
+                        <mat-form-field class="d-block">
+                            <input matInput placeholder="Enter Product Name to filter" name="productName"
+                                [(ngModel)]="productName">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-12" [hidden]="!_is_products_loading">
+                        <div class="item" *ngFor="let i of [].constructor(5)">
+                            <ngx-skeleton-loader count="1" animation="pulse" appearance="line">
+                            </ngx-skeleton-loader>
+                            <ngx-skeleton-loader count="1" animation="pulse" appearance="line" [theme]="{
+                                        height: '50px'
+                                      }">
+                            </ngx-skeleton-loader>
+                        </div>
+                    </div>
+
+                    <div class="col-12" [hidden]="_is_products_loading" *ngFor="let prod of _productsShow">
+
+                        <div [hidden]="prod.id == product.id"
+                            *ngIf="productName == '' || prod.name.toLowerCase().includes(productName.toLowerCase())"
+                            (click)="addProduct(prod)" class="pointer productCard cardPurple mt-1">
+                            <h5>{{prod.name}}</h5>
+                            <small class="productDesc"> <span [innerHTML]="prod.description"></span>
+                            </small>
+                            <button class="addProductButton">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/.Content-->
+    </div>
+</div>
+<!--Modal: modal-->
+
+<!--Section: Live preview-->

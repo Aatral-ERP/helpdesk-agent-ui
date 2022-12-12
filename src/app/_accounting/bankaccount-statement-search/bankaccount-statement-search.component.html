@@ -1,0 +1,83 @@
+<div class="container">
+    <div class="row pointer filterdiv mt-0 pt-0 bg-primary text-white justify-content-center"
+        (click)="showFilterScreen = !showFilterScreen">
+        <div class="col text-center">
+            <span> <span class="small"> Bank Statement Filters &nbsp;&nbsp;</span>
+                <i [hidden]="showFilterScreen" class="fa fa-angle-up"></i>
+                <i [hidden]="!showFilterScreen" class="fa fa-angle-down"></i>
+            </span>
+        </div>
+    </div>
+</div>
+
+<div class="container pt-2" [hidden]="!showFilterScreen">
+
+    <div class="row">
+        <div class="col-12">
+            <p class="indigo-text h4 text-center"> Bank Statement Filters
+            </p>
+            <hr style="width:100%;text-align:left;margin-left:0">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-1">&nbsp;</div>
+        <div class="col-6 col-md-6 col-sm-8 col-lg-6">
+            <label>Description</label>
+            <input class="form-control" placeholder="Enter description" name="description" [(ngModel)]="_search_filters.description"
+                id="description">
+        </div>
+
+        <div class="col-4 col-sm-12 col-md-12 col-lg-3">
+            <label>Reference.No</label>
+            <input class="form-control" placeholder="Enter Reference.No" name="refNo" [(ngModel)]="_search_filters.refNo"
+                id="refNo">
+        </div>   
+    </div>
+
+     <div class="row">
+       <div class="col-1">&nbsp;</div>
+        <div class="col-sm-12 col-md-8 col-lg-3">
+            <label for="transDateObject" style="margin-bottom: 5px;"> Transaction Date </label>
+            <div class="input-group">
+                <input class="form-control" (focus)="transDatedp.toggleCalendar()"
+                    placeholder="choose valid date" angular-mydatepicker name="transDateObject"
+                    [(ngModel)]="_search_filters.transDateObject" [options]="myDatePickerOptions"
+                    (dateChanged)="_search_filters.transDateFrom = $event.dateRange.beginJsDate;_search_filters.transDateTo = $event.dateRange.endJsDate;"
+                    #transDatedp="angular-mydatepicker" autocomplete="off" />
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <i (click)="transDatedp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        </div>
+
+    <div class="row">
+        <div class="col-12 text-center mt-2">
+            <button class="btn btn-md btn-primary" (click)="loadBankStatementReport()">Submit</button>
+            <button class="btn btn-sm btn-outline-primary" (click)="clearFilters()">Clear</button>
+        </div>
+    </div>
+    <p class="h4 text-center mt-4"> Bank Statement Report
+    </p>
+    <div>
+        <div class="row justify-content-center">
+            <div class="col-lg-11">
+                <ag-grid-angular *ngIf="!loading" [rowData]="rowData" style="width: 95%; height: 400px;"
+                    class="ag-theme-balham p-2" [columnDefs]="columnDefs" [rowSelection]="'single'"
+                    [paginationAutoPageSize]="true" [pagination]="true">
+                </ag-grid-angular>
+
+                <div class="item" *ngIf="loading">
+                    <ngx-skeleton-loader count="8"></ngx-skeleton-loader>
+                </div>
+            
+
+            </div>
+        </div>
+    </div>
+
+</div>

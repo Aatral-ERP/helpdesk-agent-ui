@@ -1,0 +1,11 @@
+.text-nowrap-pk {
+    height: 18px;
+    width: 90%;
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+    display: inline-block;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

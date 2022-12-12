@@ -1,0 +1,123 @@
+<div class="container pb-5 mb-5">
+    <div class="row">
+        <div class="col-3">
+            <div class="card-header1">
+                <i class="fa fa-user" aria-hidden="true"></i>&nbsp; My Account
+                <!-- <div class="float-right"><i class="fa fa-chevron-up" aria-hidden="true"></i></div> -->
+            </div>
+            <ul class="list-group list-group-flush">
+                <a routerLink="/onboard/register" class="list-group-item list-group-item-action">My Details</a>
+                <a routerLink="/onboard/contacts"
+                    class="list-group-item list-group-item-action">Contcats/Sub-Accounts</a>
+                <a routerLink="/onboard/change-password" class="list-group-item list-group-item-action">Change
+                    Password</a>
+                <li class="list-group-item list-group-item-action" (click)="logout()"><i class="fa fa-sign-out"
+                        aria-hidden="true"></i>&nbsp;Logout</li>
+            </ul>
+        </div>
+        <div class="col-9">
+            <p class="indigo-text h3 text-left">My Details</p>
+            <hr style="width:100%;text-align:left;margin-left:0">
+            <!-- <div class="row">
+                <div class="col-6">
+                    <label>First Name</label>
+                    <input class="form-control input-lg" type="firstname" id="firstname" 
+                    placeHolder="Enter First Name" [(ngModel)]="institute.instituteName"
+                        name="firstname" readonly/>
+                </div>
+                <div class="col-6">
+                    <label>Last Name</label>
+                    <input class="form-control input-lg" type="lastname" id="lastname" placeHolder="Enter Last Name"
+                        name="lastname" readonly/>
+                </div>
+            </div> -->
+            <br>
+            <div class="row">
+                <div class="col-6">
+                    <label>Institute Name</label>
+                    <input class="form-control input-lg" title="{{institute.instituteName}}" type="intname" id="intname"
+                        placeHolder="Enter Inst.Name" [(ngModel)]="institute.instituteName" name="intname" readonly />
+                </div>
+                <div class="col-6">
+                    <label>Email-ID</label>
+                    <input class="form-control input-lg" title="{{institute.emailId}}" type="email" id="emailId"
+                        placeHolder="Enter MailId" [(ngModel)]="institute.emailId" name="emailId" readonly />
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-6">
+                    <label>Address 1</label>
+                    <input title="{{institute.street1}}" [(ngModel)]="institute.street1" class="form-control input-lg"
+                        type="text" id="street1" placeHolder="Enter Address 1" name="street1" readonly />
+                </div>
+                <div class="col-6">
+                    <label>Address 2</label>
+                    <input title="{{institute.street2}}" [(ngModel)]="institute.street2" class="form-control input-lg"
+                        type="text" id="street2" placeHolder="Enter Address 2" name="street2" readonly />
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-6">
+                    <label>City</label>
+                    <input title="{{institute.city}}" [(ngModel)]="institute.city" class="form-control input-lg"
+                        type="text" id="city" placeHolder="Enter City" name="city" readonly />
+                </div>
+                <div class="col-6">
+                    <label>State</label>
+                    <input title="{{institute.state}}" [(ngModel)]="institute.state" class="form-control input-lg"
+                        type="text" id="state" placeHolder="Enter State" name="state" readonly />
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-6">
+                    <label>Phone</label>
+                    <input title="{{institute.phone}}" [(ngModel)]="institute.phone" type="text"
+                        class="form-control validate" id="mobileno" placeHolder="Enter Phone Number" maxlength="10"
+                        name="phone" readonly />
+                </div>
+                <div class="col-6">
+                    <label>Pin Code</label>
+                    <input title="{{institute.zipcode}}" [(ngModel)]="institute.zipcode" class="form-control input-lg"
+                        type="text" id="zipcode" placeHolder="Enter Zipcode" name="zipcode" readonly />
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-6">
+                    <label for="phone">Alt.Phone Number</label>
+                    <input title="{{institute.alternatePhone}}" [(ngModel)]="institute.alternatePhone"
+                        class="form-control input-lg" type="text" id="phone" maxlength="10"
+                        placeHolder="Enter Atl.Phone Number" name="alternatePhone" />
+                </div>
+                <div class="col-6">
+                    <label>Atl.Email-ID</label>
+                    <input title="{{institute.alternateEmailId}}" [(ngModel)]="institute.alternateEmailId"
+                        class="form-control input-lg" type="email" id="alternateEmailId" placeHolder="Enter Atl.MailId"
+                        name="alternateEmailId" />
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-6">
+                    <label>GST No</label>
+                    <input title="{{institute.gstno}}" [(ngModel)]="institute.gstno" class="form-control input-lg"
+                        type="text" id="gstno" placeHolder="Enter GST No" maxlength="40" name="gstno" />
+                </div>
+            </div>
+            <br>
+            <div class="row text-center">
+                <div class="col">
+                    <button class="btn btn-md btn-primary" (click)="save()">
+                        Save
+                    </button>&nbsp;&nbsp;
+                    <button class="btn btn-md btn-primary" (click)="clear()">
+                        Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,40 @@
+.workflows-cols {
+    min-width: 313px;
+    max-width: 313px;
+    background: rgb(235, 234, 234);
+    border-radius: 5px 5px 5px 5px;
+    padding: 2px 2px 2px 2px;
+}
+
+.scrollable {
+    overflow-y: auto;
+    width: 100%;
+    min-height: 560px;
+    max-height: 560px;
+}
+
+.container-fluid {
+    width: 100%;
+    overflow-x: auto;
+    min-height: 180px;
+    max-height: 620px;
+}
+
+.avator-thumb {
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
+    padding: 3px 3px;
+}
+
+.text-nowrap-2 {
+    line-height: 1.5em;
+    height: 3em;
+    overflow: hidden;
+    padding: 0;
+}
+
+.mat-flat-button {
+    line-height: 16px;
+    padding: 6px 6px;
+}

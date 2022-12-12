@@ -1,0 +1,364 @@
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <label>Institute</label>
+            <ng-multiselect-dropdown [placeholder]="'Select Institutes'" [data]="_institutes"
+                [(ngModel)]="_selectedInstitute" (onSelect)="onSelectInstitute($event)"
+                [settings]="_instituteDropdownSettings">
+            </ng-multiselect-dropdown>
+        </div>
+    </div>
+</div>
+<br>
+<hr>
+<div *ngIf="_selectedInstitute.length > 0">
+    <div class="container-fluid">
+        <div class="row m-3 content-justify-center">
+            <div class="col">
+                <div class="card p-3 gradientBlue instDetailCard">
+                    <p class="text-center text-white font-weight-light h3"> {{_inst_details.instituteName}}</p>
+                    <p class="text-center text-white font-weight-light">
+                        <span
+                            *ngIf="_inst_details.street1 != null && _inst_details.street1 != ''">{{_inst_details.street1}},</span>
+                        <span
+                            *ngIf="_inst_details.street2 != null && _inst_details.street2 != ''">{{_inst_details.street2}},</span>
+                        <span
+                            *ngIf="_inst_details.city != null && _inst_details.city != ''">{{_inst_details.city}},</span>
+                        <span
+                            *ngIf="_inst_details.state != null && _inst_details.state != ''">{{_inst_details.state}},</span>
+                        <span
+                            *ngIf="_inst_details.country != null && _inst_details.country != ''">{{_inst_details.country}}
+                        </span>
+                        <span *ngIf="_inst_details.zipcode != null && _inst_details.zipcode != ''"> -
+                            {{_inst_details.zipcode}}</span>
+                    </p>
+                    <p class="text-center">
+                        <span class="badge badge-light p-2 pr-3 pl-3 m-1 border-rounded gradientWhite font-size-16">
+                            Phone : {{_inst_details.phone}}
+                            <i class="fas fa-phone">&nbsp;</i></span>
+                        <span class="badge badge-light p-2 pr-3 pl-3 m-1 border-rounded gradientWhite  font-size-16">
+                            Alt. Phone : {{_inst_details.alternatePhone}}
+                            <i class="fas fa-phone">&nbsp;</i></span>
+                        <span class="badge badge-light p-2 pr-3 pl-3 m-1 border-rounded gradientWhite font-size-16">
+                            Email Id : {{_inst_details.emailId}}
+                            <i class="far fa-envelope-open">&nbsp;</i></span>
+                        <span class="badge badge-light p-2 pr-3 pl-3 m-1 border-rounded gradientWhite font-size-16">
+                            Alt. Email Id : {{_inst_details.alternateEmailId}}
+                            <i class="far fa-envelope-open">&nbsp;</i></span>
+                        <span class="badge badge-light p-2 pr-3 pl-3 m-1 border-rounded gradientWhite font-size-16">
+                            GST No : {{_inst_details.gstno}}</span>
+                    </p>
+
+                    <div class="edit-container">
+                        <div class="middle">
+                            <a class="btn btn-sm text-dark instEditButton"
+                                (click)="editInstDetails(_inst_details.instituteId)">Edit
+                                <i class="far fa-edit">&nbsp;</i>
+                            </a>
+
+                            <a class="btn btn-sm text-dark instEditButton pl-3"
+                                (click)="deleteInstDetails(_inst_details.instituteId)">Delete
+                                <i class="far fa-trash-alt">&nbsp;</i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p class="d-block pr-2 pl-2">
+        <a (click)="routeToCreateDeal()" class="float-right text-primary"><u>Create Deal</u></a>
+    </p>
+
+    <h4 class="pl-0 ml-0">
+        <span class=" p-2 pl-5 pr-2 text-white font-size-14 sideTitle">
+            <i class="fa fa-cubes">&nbsp;</i>Services&nbsp;({{instituteProducts.length}} services)&nbsp;&nbsp;
+        </span>
+    </h4>
+
+    <div class="row" [hidden]="instituteProducts.length > 0">
+        <div class="col text-center">
+            <span class="badge badge-primary p-3 pr-5 pl-5 border-rounded gradientBlue font-size-16"> No Service Found
+                <i class="fa fa-cubes">&nbsp;</i></span>
+        </div>
+    </div>
+
+    <div class="p-2 pl-5 pr-5">
+        <div id="accordion">
+            <div class="card p-0 m-1" *ngFor="let ip of instituteProducts">
+                <div class="card-header" id="headingOne">
+                    <h5 class="mb-0">
+                        <a role="button" data-toggle="collapse" data-parent="#accordion"
+                            href="{{'#service-detail-'+ip.product.id}}" aria-expanded=" false">
+
+                            <span class="float-left text-dark small">
+                                {{ip.product.name}}
+                            </span>
+                            <span class="text-muted float-right">
+                                <small class="pr-2"> AMC expiry at {{ip.amcExpiryDate | date:'mediumDate'}}</small>
+                                <span *ngIf="ip.currentServiceUnder == 'AMC' || ip.currentServiceUnder == 'Warranty'"
+                                    class="badge badge-info mr-2">{{ip.currentServiceUnder}}</span>
+                                <span *ngIf="ip.currentServiceUnder != 'AMC' && ip.currentServiceUnder != 'Warranty'"
+                                    class="badge badge-info mr-2">{{ip.currentServiceUnder}}</span>
+                            </span>
+                        </a>
+                    </h5>
+                </div>
+
+                <div id="{{'service-detail-'+ip.product.id}}" class="collapse" aria-labelledby="headingOne"
+                    data-parent="#accordion">
+                    <div class="card-body">
+                        <p class="text-muted" [innerHTML]="ip.product.description"></p>
+                        <p class="text-muted float-left">
+                            <span class="badge badge-info mr-2">Last AMC Paid at
+                                {{ip.lastAMCPaidDate | date:'mediumDate'}}</span>
+                            <span class="badge badge-info mr-2">AMC Expiry at
+                                {{ip.amcExpiryDate | date:'mediumDate'}}</span>
+                            <span class="badge badge-info mr-2">AMC Amount Paid
+                                {{ip.amcAmount | currency:'INR'}} </span>
+                            <span class="badge badge-info mr-2">Currently under
+                                {{ip.currentServiceUnder}} </span>
+                            <span class="badge badge-info mr-2">since
+                                {{ip.createddatetime | date:'mediumDate'}}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h4 class="pl-0 ml-0">
+        <span class=" p-2 pl-5 pr-2 text-white font-size-14 sideTitle">
+            <i class="fa fa-cubes">&nbsp;</i>Contacts&nbsp;({{instituteContacts.length}} contacts)&nbsp;&nbsp;
+        </span>
+    </h4>
+    <div class="row" [hidden]="instituteContacts.length > 0">
+        <div class="col text-center">
+            <span class="badge badge-primary p-3 pr-5 pl-5 border-rounded gradientBlue font-size-16"> No Contacts Found
+                <i class="fa fa-cubes">&nbsp;</i></span>
+        </div>
+    </div>
+    <p class="text-right mr-5">
+        <span class="pointer text-primary" *ngIf="!showAddContact" (click)="showAddContact = !showAddContact"> <u>Add
+                Contact</u></span>
+        <span class="pointer text-primary" *ngIf="showAddContact" (click)="showAddContact = !showAddContact">
+            <u>Close</u></span>
+    </p>
+
+    <div class="container border border-light p-5" *ngIf="showAddContact">
+        <h5 class="text-center font-weight-bold">Add Contact</h5>
+        <div class="row">
+            <div class="col-6">
+                <label for="firstName">First Name</label>
+                <input class="form-control input-lg" type="text" id="firstName" placeHolder="Enter First Name"
+                    name="firstName" [(ngModel)]="addContact.firstName" />
+            </div>
+            <div class="col-6">
+                <label for="lastName">Last Name</label>
+                <input class="form-control input-lg" type="text" id="lastName" placeHolder="Enter Last Name"
+                    name="lastName" [(ngModel)]="addContact.lastName" />
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-6">
+                <label for="emailId">Email-ID</label>
+                <input class="form-control input-lg" type="text" id="emailId" placeHolder="Enter MailId" name="emailId"
+                    [(ngModel)]="addContact.emailId" />
+                <small *ngIf="showEmailError" class="text-danger help-text">Invalid
+                    Email ID<i class="fas fa-exclamation-triangle"></i></small>
+            </div>
+            <div class="col-6">
+                <label for="phone">Mobile Number</label>
+                <input class="form-control input-lg" type="text" id="phone" placeHolder="Enter Mobile Number"
+                    maxlength="10" name="phone" [(ngModel)]="addContact.phone" />
+                <small *ngIf="showNumberError" class="text-danger help-text">Invalid
+                    Mobile Number<i class="fas fa-exclamation-triangle"></i></small>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-check float-left">
+                    <input class="form-check-input" type="checkbox" id="isBlocked" [(ngModel)]="addContact.isBlocked" />
+                    <label class="form-check-label" for="isBlocked">
+                        Block Login Access
+                    </label>
+                </div>
+                <button class="btn btn-sm btn-primary float-left" (click)="sendDetails()">
+                    Send Login Details
+                </button>
+                <button class="btn btn-sm btn-primary float-right" (click)="saveContact()">
+                    Save Contact
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-2 pl-5 pr-5">
+        <div class="card p-0 m-1" *ngFor="let ic of instituteContacts">
+            <div class="card-header" id="headingOne">
+                <h5 class="mb-0">
+                    <a role="button">
+                        <span class="float-left text-dark small">
+                            {{ic.firstName}} {{ic.lastName}}
+                        </span>
+                        <span class="text-muted float-right">
+                            <small class="pr-2"> {{ic.phone}} - {{ic.emailId}}</small>
+                            <small class="text-success" *ngIf="ic.isBlocked == 0"> Login Access <i
+                                    class="fas fa-user-alt">&nbsp;</i> </small>
+                            <small class="text-danger" *ngIf="ic.isBlocked > 0"> Login Access Blocked <i
+                                    class="fas fa-user-alt-slash">&nbsp;</i> </small>
+                            <small class="text-primary" (click)="editContact(ic)"> Edit <i
+                                    class="fas fa-edit">&nbsp;</i>
+                            </small>
+                        </span>
+                    </a>
+                </h5>
+            </div>
+        </div>
+    </div>
+
+    <h4 class="pl-0 ml-0">
+        <span class=" p-2 pl-5 pr-2 text-white font-size-14 sideTitle">
+            <i class="fa fa-cubes">&nbsp;</i>Invoices&nbsp;({{invoices.length}} invoices)&nbsp;&nbsp;
+        </span>
+    </h4>
+
+    <div class="row" [hidden]="invoices.length > 0">
+        <div class="col text-center">
+            <span class="badge badge-primary p-3 pr-5 pl-5 border-rounded gradientBlue font-size-16"> No Invoices Found
+                <i class="fa fa-cubes">&nbsp;</i></span>
+        </div>
+    </div>
+
+    <div class="p-2 pl-5 pr-5">
+        <div id="accordion">
+            <div class="card p-0 m-1" *ngFor="let inv of invoices">
+                <div class="card-header" id="headingOne">
+                    <h5 class="mb-0">
+                        <a *ngIf="role.sales == 'Full Access' && role.salesAdmin"
+                            href="/sales/invoices/overview/{{inv.id}}" target="_blank"> <i
+                                class='fas fa-external-link-alt mr-1'></i> </a>
+
+                        <span class="text-dark small">
+                            #{{inv.invoiceNo}} - {{inv.subject}}
+                        </span>
+                        <span class="text-muted float-right">
+                            <small class="pr-2"> dated. {{inv.invoiceDate | date:'mediumDate'}}</small>
+                            <small class="chip-pk">
+                                <i class="fas fa-download"
+                                    (click)="downloadWorkCompletionCertificatePDF(inv)"></i>&nbsp;&nbsp;
+
+                                <small title="{{inv.workCompletionCertificate}}"
+                                    (click)="viewWorkCompletionCertificatePDF(inv)"
+                                    *ngIf="inv.workCompletionCertificate != null">
+                                    {{ (inv.workCompletionCertificate.length > 20) ? (inv.workCompletionCertificate
+                                    |
+                                    slice:0:20)+'..':(inv.workCompletionCertificate) }}</small>
+
+                                <input hidden type="file" #workCompletionFileUpload
+                                    (change)="workCompletionFileUploadChange($event.target.files[0],inv)">
+
+                                <small class="pointer" *ngIf="inv.workCompletionCertificate == null"> Upload Work
+                                    Completion &nbsp;&nbsp; </small>
+                                <i class="fas fa-upload ml-1" (click)="workCompletionFileUpload.click()"></i>
+                            </small>
+
+                            <small class="chip-pk pointer">
+                                <i class="fas fa-download" (click)="downloadSatisfactoryCertificatePDF(inv)"></i>
+                                &nbsp;&nbsp;
+                                <small title="{{inv.satisfactoryCertificate}}"
+                                    (click)="viewSatisfactoryCertificatePDF(inv)"
+                                    *ngIf="inv.satisfactoryCertificate != null">
+                                    {{ (inv.satisfactoryCertificate.length > 20) ? (inv.satisfactoryCertificate |
+                                    slice:0:20)+'..':(inv.satisfactoryCertificate) }}</small>
+
+                                <input hidden type="file" #satisfactoryFileUpload
+                                    (change)="satisfactoryFileUploadChange($event.target.files[0],inv)">
+
+                                <small class="pointer" *ngIf="inv.satisfactoryCertificate == null">
+                                    Upload Satisfactory Certificate
+                                </small>
+                                <i class="fas fa-upload ml-1" (click)="satisfactoryFileUpload.click()"></i>
+                            </small>
+                        </span>
+                    </h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h4 class="pl-0 ml-0 mt-3">
+        <span class=" p-2 pl-5 pr-2 text-white font-size-14 sideTitle">
+            <i class="fa fa-ticket">&nbsp;</i>Tickets&nbsp;({{tickets.length}} tickets)&nbsp;&nbsp;
+        </span>
+    </h4>
+
+    <div class="row" [hidden]="tickets.length > 0">
+        <div class="col text-center">
+            <span class="badge badge-primary p-3 pr-5 pl-5 border-rounded gradientBlue font-size-16"> No Tickets Found
+                <i class="fa fa-ticket">&nbsp;</i></span>
+        </div>
+    </div>
+
+    <div class="row mb-3 pb-5  pl-5 pr-5">
+        <div class="col scrollableTicketsDiv">
+            <div id="ticket_accordion" class="mb-5">
+                <div class="card p-0 m-1" *ngFor="let ticket of tickets">
+                    <div class="card-header" id="ticket_headingOne">
+                        <h5 class="mb-0">
+                            <a role="button" data-toggle="collapse" data-parent="#accordion"
+                                href="{{'#ticket-detail-'+ticket.ticketId}}" aria-expanded=" false">
+                                <span class="float-left text-dark small text-nowrap-2">
+                                    #{{ticket.ticketId}} -
+                                    <span [innerHTML]="ticket.subject | base64HTML"></span>
+                                </span>
+                                <span class="text-muted float-right">
+                                    <span class="badge badge-success mr-2"
+                                        *ngIf="ticket.status == 'Closed'">{{ticket.status}}</span>
+                                    <span class="badge badge-warning mr-2"
+                                        *ngIf="ticket.status == 'Hold'">{{ticket.status}}</span>
+                                    <span class="badge badge-primary mr-2"
+                                        *ngIf="ticket.status == 'Assigned'">{{ticket.status}}</span>
+                                    <span class="badge badge-info mr-2"
+                                        *ngIf="ticket.status != 'Closed' && ticket.status != 'Hold' && ticket.status != 'Assigned'">{{ticket.status}}</span>
+                                    <small class="pr-2">last updated at
+                                        {{ticket.lastupdatedatetime | date:'mediumDate'}}</small>
+                                    <small class="badge badge-primary  badge-pill">
+                                        <i class="fas fa-chevron-down"></i>
+                                    </small>
+                                </span>
+                            </a>
+                        </h5>
+                    </div>
+
+                    <div id="{{'ticket-detail-'+ticket.ticketId}}" class="collapse" aria-labelledby="ticket_headingOne"
+                        data-parent="#ticket_accordion">
+                        <div class="card-body">
+                            <p class="text-muted float-left" [innerHTML]="ticket.summary | base64HTML"></p>
+                            <br>
+                            <p class="text-muted float-left">
+                                <span class="badge badge-info mr-2"
+                                    *ngIf="ticket.assignedTo != '' && ticket.assignedTo != null">Assigned To :
+                                    {{ticket.assignedTo}}</span>
+                                <span class="badge badge-info mr-2" *ngIf="ticket.emailUpdates != ''">Updates to :
+                                    {{ticket.emailUpdates}}</span>
+                                <span class="badge badge-info mr-2">Raised by : {{ticket.emailId}}</span>
+                                <span class="badge badge-info mr-2">Priority : {{ticket.priority}} </span>
+                                <span class="badge badge-info mr-2"
+                                    *ngIf="ticket.product != null && ticket.product != ''"> {{ticket.product}} </span>
+                                <span class="badge badge-info mr-2"> {{ticket.serviceType}}</span>
+                                <span class="badge badge-info mr-2">{{ticket.serviceUnder}}</span>
+                            </p>
+                            <a class="btn btn-primary btn-sm float-right" href="/view-ticket/{{ticket.ticketId}}"
+                                target="_blank"> View Ticket <i class="fas fa-external-link-alt"></i> </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

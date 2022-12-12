@@ -1,0 +1,59 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate">
+</mat-progress-bar>
+
+<div class="row pt-2">
+    <div class="col">
+        <h6 class="font-weight-bold pt-2">Team Settings </h6>
+    </div>
+</div>
+
+<div class="row justify-content-center pt-2" *ngIf="setting.id > 0">
+    <div class="col-lg-6 col-md-8 col-sm-12">
+        <p class="text-dark font-weight-bold d-block">Administrator</p>
+        <mat-checkbox color="primary" class="pl-3 d-block" [disabled]="loading"
+            [(ngModel)]="setting.adminCanCreateTasks">Can Create
+            Tasks
+        </mat-checkbox>
+
+        <mat-checkbox color="primary" class="pl-3 d-block" [disabled]="loading"
+            [(ngModel)]="setting.adminCanModifyOthersTasks">Can
+            Modify Others Tasks
+        </mat-checkbox>
+
+        <p class="text-dark font-weight-bold d-block">Member</p>
+        <mat-checkbox color="primary" class="pl-3 d-block" [disabled]="loading"
+            [(ngModel)]="setting.membersCanCreateTasks">Can Create
+            Tasks of own
+        </mat-checkbox>
+
+        <mat-checkbox color="primary" class="pl-3 d-block" [disabled]="loading"
+            [(ngModel)]="setting.membersCanCloseTaskOfOwn">Can Close
+            Tasks of own
+        </mat-checkbox>
+
+        <mat-checkbox color="primary" class="pl-3 d-block" [disabled]="loading"
+            [(ngModel)]="setting.membersCanViewOthersTasks">Can View
+            Others Tasks
+        </mat-checkbox>
+
+        <mat-checkbox color="primary" class="pl-3 d-block" [disabled]="loading"
+            [(ngModel)]="setting.membersCanCommentOthersTasks">Can
+            Comment Others Tasks
+        </mat-checkbox>
+
+        <p class="text-dark font-weight-bold d-block">Viewer</p>
+        <mat-checkbox color="primary" class="pl-3 d-block" [disabled]="loading"
+            [(ngModel)]="setting.viewerCanCommentTasks">Can Comment
+            on Tasks
+        </mat-checkbox>
+
+        <small class="text-muted">
+            last updated by {{setting.lastUpdatedBy}} at {{setting.lastupdatedatetime | date:'MMM d, yyyy hh:mm a'}}
+        </small>
+        <hr>
+
+        <button mat-stroked-button color="primary" class="p-1" [disabled]="loading" (click)="saveTeamSetting()">Save
+            Team Settings
+        </button>
+    </div>
+</div>

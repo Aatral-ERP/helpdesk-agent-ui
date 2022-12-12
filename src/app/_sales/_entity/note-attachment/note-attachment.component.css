@@ -1,0 +1,14 @@
+.progressbar-wrapper {
+    position: relative;
+    z-index: 1;
+}
+
+.progressbar {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    background-color: #1e58d6;
+    z-index: -1;
+    height: 3px;
+}

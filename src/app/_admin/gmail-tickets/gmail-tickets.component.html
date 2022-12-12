@@ -1,0 +1,50 @@
+<div class="container-fluid">
+    <div class="row m-1" *ngFor="let gmt of gmailTickets">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    {{gmt.subject}}
+
+                    <span class="small float-right">{{gmt.createddatetime | date:'MMM dd, yyyy'}}</span>
+                </div>
+                <div class="card-body">
+                    <table>
+                        <tr>
+                            <td>From</td>
+                            <td class="pr-2 pl-2">:</td>
+                            <td>{{gmt.emailId}}</td>
+                        </tr>
+                        <tr *ngIf="gmt.emailUpdates != ''">
+                            <td>CC</td>
+                            <td class="pr-2 pl-2">:</td>
+                            <td>{{gmt.emailUpdates}}</td>
+                        </tr>
+                        <tr>
+                            <td>Institute</td>
+                            <td class="pr-2 pl-2">:</td>
+                            <td>{{gmt.institute.instituteName}}
+                                <br>
+                                <small class="text-muted">
+                                    {{gmt.institute.city}} - {{gmt.institute.state}}
+                                </small>
+                            </td>
+                        </tr>
+                    </table>
+                    <pre class="p-1" [innerHTML]="gmt.summary"></pre>
+
+                </div>
+                <div class="card-footer">
+                    <span class="float-left" *ngIf="gmt.attachments != ''">
+                        Attachments : {{gmt.attachments}}
+                    </span>
+
+                    <button *ngIf="gmt.ticketId == 0" (click)="saveAsTicket(gmt)"
+                        class="btn btn-sm btn-outline-primary float-right">Save As
+                        Ticket</button>
+                    <a *ngIf="gmt.ticketId > 0" routerLink="/view-ticket/{{gmt.ticketId}}"
+                        class="btn btn-sm btn-outline-primary float-right">View Ticket</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

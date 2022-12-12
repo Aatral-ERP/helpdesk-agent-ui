@@ -1,0 +1,94 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate">
+</mat-progress-bar>
+
+<div class="container-fluid pt-2" [hidden]="team.id == 0">
+
+    <div class="row">
+        <div class="col">
+            <small class="text-muted">
+                <a routerLink='/teams/boards'> <u>My Team Boards</u></a> /
+                <a *ngIf="team.id > 0" routerLink='/teams/view/{{team.id}}'><u>{{team.name}}</u></a>
+                / <a *ngIf="team.id > 0">
+                    <span [hidden]="tab != 'dashboard'">Dashboard</span>
+                    <span [hidden]="tab != 'features'">Features</span>
+                    <span [hidden]="tab != 'members'">Team Members</span>
+                    <span [hidden]="tab != 'search'">Search Task</span>
+                    <span [hidden]="tab != 'workflow'">Manage Workflow</span>
+                    <span [hidden]="tab != 'team-settings'">Team Settings</span>
+                    <span [hidden]="tab != 'email-notification-settings'">Email Notification Settings</span>
+                    <span [hidden]="tab != 'push-notification-settings'">Push Notification Settings</span>
+                </a>
+            </small>
+            <small class="float-right text-danger pointer" (click)="deleteTeam()">Delete team &nbsp; <i
+                    class="fas fa-trash-alt"></i></small>
+        </div>
+    </div>
+
+    <div class="row pt-1 m-0">
+        <div class="col">
+            <span class="h4 text-nowrap-pk">{{team.name}}
+                <i *ngIf="ts.auth.getLoginEmailId() == team.leadEmail" class="fas fa-edit pointer pl-2 text-primary"
+                    (click)="openTeamCreateModal()"></i>
+            </span>
+            <br>
+            <button class="btn btn-sm menu-button" routerLink='/teams/view/{{team.id}}/dashboard'
+                [ngClass]="tab == 'dashboard' ? 'btn-primary' : 'btn-outline-primary'">Task Dashboard</button>
+            <button class="btn btn-sm menu-button" routerLink='/teams/view/{{team.id}}/features'
+                [ngClass]="tab == 'features' ? 'btn-primary' : 'btn-outline-primary'">Task Features</button>
+            <button class="btn btn-sm menu-button" routerLink='/teams/view/{{team.id}}/members'
+                [ngClass]="tab == 'members' ? 'btn-primary' : 'btn-outline-primary'">Team Members</button>
+            <button class="btn btn-sm menu-button" routerLink='/teams/view/{{team.id}}/search'
+                [ngClass]="tab == 'search' ? 'btn-primary' : 'btn-outline-primary'">Search Task</button>
+            <button *ngIf="ts.auth.getLoginEmailId() == team.leadEmail" class="btn btn-sm menu-button"
+                routerLink='/teams/view/{{team.id}}/workflow'
+                [ngClass]="tab == 'workflow' ? 'btn-primary' : 'btn-outline-primary'">Manage Workflow</button>
+            <button *ngIf="ts.auth.getLoginEmailId() == team.leadEmail" class="btn btn-sm menu-button"
+                routerLink='/teams/view/{{team.id}}/team-settings'
+                [ngClass]="tab == 'team-settings' ? 'btn-primary' : 'btn-outline-primary'">Team Settings</button>
+            <button *ngIf="ts.auth.getLoginEmailId() == team.leadEmail" class="btn btn-sm menu-button"
+                routerLink='/teams/view/{{team.id}}/email-notification-settings'
+                [ngClass]="tab == 'email-notification-settings' ? 'btn-primary' : 'btn-outline-primary'">Email
+                Notification Settings</button>
+            <button *ngIf="ts.auth.getLoginEmailId() == team.leadEmail" class="btn btn-sm menu-button"
+                routerLink='/teams/view/{{team.id}}/push-notification-settings'
+                [ngClass]="tab == 'push-notification-settings' ? 'btn-primary' : 'btn-outline-primary'">Push
+                Notification Settings</button>
+        </div>
+    </div>
+
+    <div class="p-1" *ngIf="team.id > 0">
+
+        <hr [hidden]="tab == 'search'" class="m-0">
+
+        <app-team-members [hidden]="tab != 'members'" (selectedMemberEmitter)="selectedMember = $event"
+            (myTeamMembershipEmitter)="myTeamMembership = $event" (allAgentsMinEmitter)="agents = $event"
+            (allTeamMembersEmitter)="allTeamMembers = $event" [team]="team">
+        </app-team-members>
+
+        <hr class="m-0">
+
+        <app-search-tasks *ngIf="tab == 'search'" [teamSetting]="teamSetting" [allAgents]="agents"
+            [allTeamMembersEmitter]="allTeamMembers" [myTeamMembershipEmitter]="myTeamMembership" [team]="team">
+        </app-search-tasks>
+
+        <app-workflow *ngIf="tab == 'workflow'" [team]="team"> </app-workflow>
+
+        <app-task-features [hidden]="tab != 'features'" [team]="team" [teamMembers]="allTeamMembers"
+            [allAgents]="agents" (featuresEmitter)="featuresLoaded = true;allFeatures = $event">
+        </app-task-features>
+
+        <app-team-dashboard *ngIf="tab == 'dashboard' && featuresLoaded" [teamSetting]="teamSetting"
+            [allAgents]="agents" [allTeamMembersEmitter]="allTeamMembers" [selectedMemberEmitter]="selectedMember"
+            [myTeamMembershipEmitter]="myTeamMembership" [team]="team" [allFeaturesEmitter]="allFeatures">
+        </app-team-dashboard>
+
+        <app-team-settings *ngIf="tab == 'team-settings'" (teamSettingEmitter)="teamSetting = $event"
+            [teamSetting]="teamSetting" [team]="team"> </app-team-settings>
+
+        <app-team-email-notification-settings *ngIf="tab == 'email-notification-settings'" [team]="team">
+        </app-team-email-notification-settings>
+
+        <app-team-push-notification-settings *ngIf="tab == 'push-notification-settings'" [team]="team">
+        </app-team-push-notification-settings>
+    </div>
+</div>

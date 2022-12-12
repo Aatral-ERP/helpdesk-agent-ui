@@ -1,0 +1,141 @@
+<div class="container-fluid">
+    <div class="row border-bottom border-light pb-0 mb-0">
+        <div class="col">
+            <a routerLink="create" class="btn btn-md btn-primary float-right">
+                <i class="fa fa-plus"> Create Bill </i>
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row pointer filterdiv mt-0 pt-0 bg-primary text-white justify-content-center"
+            (click)="showFilterScreen = !showFilterScreen">
+            <div class="col text-center">
+                <span> <span class="small"> Bill Filters &nbsp;&nbsp;</span>
+                    <i [hidden]="showFilterScreen" class="fa fa-angle-up"></i>
+                    <i [hidden]="!showFilterScreen" class="fa fa-angle-down"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container pt-2" [hidden]="!showFilterScreen">
+
+        <div class="row">
+            <div class="col-12">
+                <p class="indigo-text h4 text-center"> Bills Filter
+                </p>
+                <hr style="width:100%;text-align:left;margin-left:0">
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-sm-12 col-md-6 col-lg-3">
+                <label>Bill No</label>
+                <input class="form-control" placeholder="Enter Bill No" name="billNo" id="billNo"
+                    [(ngModel)]="_search_filters.billNo">
+            </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-3">
+                <label>Bill Date</label>
+                <div class="input-group">
+                    <input class="form-control" (focus)="billdatesdp.toggleCalendar()"
+                        placeholder="Select From - To Date range" angular-mydatepicker name="dates"
+                        (dateChanged)="_search_filters.billDateFrom = $event.dateRange.beginJsDate;_search_filters.billDateTo = $event.dateRange.endJsDate;"
+                        [(ngModel)]="_search_filters.billDateFromObject" [options]="myDatePickerOptions"
+                        #billdatesdp="angular-mydatepicker" autocomplete="off" />
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i (click)="billdatesdp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-3">
+                <label>Order No</label>
+                <input class="form-control" placeholder="Enter Order No" name="orderNo" id="orderNo"
+                    [(ngModel)]="_search_filters.orderNo">
+            </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-3">
+                <label>Due Date</label>
+                <div class="input-group">
+                    <input class="form-control" (focus)="duedatesdp.toggleCalendar()"
+                        placeholder="Select From - To Date range" angular-mydatepicker name="dates"
+                        (dateChanged)="_search_filters.dueDateFrom = $event.dateRange.beginJsDate;_search_filters.dueDateTo = $event.dateRange.endJsDate;"
+                        [(ngModel)]="_search_filters.dueDateFromObject" [options]="myDatePickerOptions"
+                        #duedatesdp="angular-mydatepicker" autocomplete="off" />
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i (click)="duedatesdp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <label>Vendors</label>
+                <ng-multiselect-dropdown [placeholder]="'Select Vendors'" [data]="_vendors"
+                    [(ngModel)]="_search_filters.vendors" [settings]="_vendorDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <label>Products</label>
+                <ng-multiselect-dropdown [placeholder]="'Select Products'" [data]="_products"
+                    [(ngModel)]="_search_filters.billProducts" [settings]="_ProductsDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <label>Create By</label>
+                <ng-multiselect-dropdown [placeholder]="'Created By'" [data]="_agents"
+                    [(ngModel)]="_search_filters.agents" [settings]="_AgentsDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+
+            <div class="col-sm-12 col-md-12 col-lg-3">
+                <label>Last Modified Date</label>
+                <div class="input-group">
+                    <input class="form-control" (focus)="datesdp.toggleCalendar()"
+                        placeholder="Select From - To Date range" angular-mydatepicker name="dates"
+                        (dateChanged)="_search_filters.billModifiedDateFrom = $event.dateRange.beginJsDate;_search_filters.billModifiedDateTo = $event.dateRange.endJsDate;"
+                        [(ngModel)]="_search_filters.billModifiedDateObject" [options]="myDatePickerOptions"
+                        #datesdp="angular-mydatepicker" autocomplete="off" />
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i (click)="datesdp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center mt-2">
+                <button class="btn btn-md btn-primary" (click)="getBills()">Submit</button>
+                <button class="btn btn-sm btn-outline-primary" (click)="clearFilters()">Clear</button>
+            </div>
+        </div>
+    </div>
+    <p class="h4 text-center mt-4"> Bills Report
+    </p>
+    <div>
+        <div class="row">
+            <div class="col">
+                <ag-grid-angular enableCellTextSelection="true" *ngIf="!loading" [rowData]="rowData"
+                    style="width: 100%; height: 500px;" class="ag-theme-balham p-2" [columnDefs]="columnDefs"
+                    [rowSelection]="'single'" [paginationAutoPageSize]="true" [pagination]="true">
+                </ag-grid-angular>
+
+                <div class="item" *ngIf="loading">
+                    <ngx-skeleton-loader count="8"></ngx-skeleton-loader>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>

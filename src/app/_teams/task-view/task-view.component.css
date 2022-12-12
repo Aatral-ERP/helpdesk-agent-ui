@@ -1,0 +1,35 @@
+.scrollable {
+    overflow-x: auto;
+    width: 100%;
+    max-width: 100%;
+    min-height: 460px;
+    max-height: 460px;
+}
+
+.scrollable-small {
+    overflow-x: auto;
+    width: 100%;
+    min-height: 200px;
+    max-height: 200px;
+}
+
+.avator-thumb {
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
+    padding: 3px 3px;
+}
+
+.menu-button {
+    line-height: 40px;
+    height: 40px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.text-nowrap-2 {
+    line-height: 1.5em;
+    height: 3em;
+    overflow: hidden;
+    padding: 0;
+}

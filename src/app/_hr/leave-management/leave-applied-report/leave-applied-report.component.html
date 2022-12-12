@@ -1,0 +1,373 @@
+<div class="container-fluid">
+    <div class="container">
+        <div class="row pointer filterdiv mt-0 pt-0 bg-primary text-white justify-content-center"
+            (click)="showFilterScreen = !showFilterScreen">
+            <div class="col text-center">
+                <span> <span class="small"> Leave Applied Filters &nbsp;&nbsp;</span>
+                    <i [hidden]="showFilterScreen" class="fa fa-angle-up"></i>
+                    <i [hidden]="!showFilterScreen" class="fa fa-angle-down"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container pt-2" [hidden]="!showFilterScreen">
+
+        <div class="row">
+            <div class="col-12">
+                <p class="indigo-text h4 text-center"> Leave Applied Filter
+                </p>
+                <hr style="width:100%;text-align:left;margin-left:0">
+            </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-3">
+                <label>Applied By</label>
+                <ng-multiselect-dropdown [placeholder]="'Applied By'" [data]="_agents" [(ngModel)]="_filters.appliedBy"
+                    [settings]="_AgentsDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+
+            <div class="col-sm-6 col-md-6 col-lg-3">
+                <label for="appliedDateObject" style="margin-bottom: 5px;"> Applied Date </label>
+                <div class="input-group">
+                    <input class="form-control" (focus)="appliedDatedp.toggleCalendar()" placeholder="choose valid date"
+                        angular-mydatepicker name="appliedDateObject" [(ngModel)]="_filters.appliedDateObject"
+                        (dateChanged)="_filters.appliedDateFrom = $event.dateRange.beginJsDate;_filters.appliedDateTo = $event.dateRange.endJsDate;"
+                        [options]="myDatePickerOptions" #appliedDatedp="angular-mydatepicker" autocomplete="off" />
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i (click)="appliedDatedp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-md-6 col-lg-3">
+                <label for="leaveDateObject" style="margin-bottom: 5px;"> Leave Date </label>
+                <div class="input-group">
+                    <input class="form-control" (focus)="leaveDatedp.toggleCalendar()" placeholder="choose valid date"
+                        angular-mydatepicker name="leaveDateObject" [(ngModel)]="_filters.leaveDateObject"
+                        (dateChanged)="_filters.leaveFrom = $event.dateRange.beginJsDate;_filters.leaveTo = $event.dateRange.endJsDate;"
+                        [options]="myDatePickerOptions" #leaveDatedp="angular-mydatepicker" autocomplete="off" />
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i (click)="leaveDatedp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-md-6 col-lg-3">
+                <label for="approvedDateObject" style="margin-bottom: 5px;"> Approved Date </label>
+                <div class="input-group">
+                    <input class="form-control" (focus)="approvedDatedp.toggleCalendar()"
+                        placeholder="choose valid date" angular-mydatepicker name="approvedDateObject"
+                        [(ngModel)]="_filters.approvedDateObject"
+                        (dateChanged)="_filters.approvedDateFrom = $event.dateRange.beginJsDate;_filters.approvedDateTo = $event.dateRange.endJsDate;"
+                        [options]="myDatePickerOptions" #approvedDatedp="angular-mydatepicker" autocomplete="off" />
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i (click)="approvedDatedp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-3">
+                <label>Status</label>
+                <select class="form-control" name="dealType" id="dealType" [(ngModel)]="_filters.status">
+                    <option value="">--select--</option>
+                    <option value="Applied">Applied</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Rejected">Rejected</option>
+                </select>
+            </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-3">
+                <label>Leave Type</label>
+                <select class="form-control" name="leaveType" id="leaveType" [(ngModel)]="_filters.leaveType">
+                    <option value="">--select--</option>
+                    <option value="Annual Leave">Annual Leave</option>
+                    <option value="Casual Leave">Casual Leave</option>
+                    <option value="Sick Leave">Sick Leave</option>
+                    <option value="Other Leave">Other Leave</option>
+                    <option value="Half Day">Half Day</option>
+                    <option value="Permission">Permission</option>
+                </select>
+            </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-3">
+                <label>Approved/Rejected By</label>
+                <ng-multiselect-dropdown [placeholder]="'Approved By'" [data]="_agents"
+                    [(ngModel)]="_filters.approvedBy" [settings]="_AgentsDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-3">
+                <label for="noOfDays">No Of Days</label>
+                <input class="form-control" type="number" id="noOfDays" placeHolder="Enter No Of Days" name="noOfDays"
+                    [(ngModel)]="_filters.noOfDays" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center mt-2">
+                <button class="btn btn-md btn-primary" (click)="searchLeaveApplied()">Submit</button>
+                <button class="btn btn-sm btn-outline-primary" (click)="clearFilters()">Clear</button>
+            </div>
+        </div>
+    </div>
+
+    <p class="h4 text-center mt-4"> Leave Applied Report </p>
+    <div>
+        <div class="row mb-5">
+            <div class="col">
+                <ag-grid-angular enableCellTextSelection="true" *ngIf="!loading" [rowData]="leavesApplied"
+                    style="width: 100%; height: 500px;" class="ag-theme-balham p-2" [columnDefs]="columnDefs"
+                    [frameworkComponents]="frameworkComponents" [paginationAutoPageSize]="true" [pagination]="true">
+                </ag-grid-angular>
+                <div class="item" *ngIf="loading">
+                    <ngx-skeleton-loader count="8"></ngx-skeleton-loader>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="leaveActionModal" tabindex="-1" role="dialog" aria-labelledby="leaveActionModalTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="leaveActionModalTitle">Leave Application</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container p-1 m-1 mb-5">
+                    <div class="row" *ngIf="_leaveApplied != null">
+                        <div class="col">
+                            <mat-tab-group>
+                                <mat-tab label="Leave Application">
+                                    <div class="row mb-5">
+                                        <div class="col-12">
+
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                                        <mat-label class="text-muted">Staff </mat-label>
+                                                    </td>
+                                                    <td>&nbsp;:&nbsp;</td>
+                                                    <td>
+                                                        {{getMemberName(_leaveApplied.agentEmailId)}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <mat-label class="text-muted">Leave Type </mat-label>
+                                                    </td>
+                                                    <td>&nbsp;:&nbsp;</td>
+                                                    <td> {{_leaveApplied.leaveType}} </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <mat-label class="text-muted">Leave Date </mat-label>
+                                                    </td>
+                                                    <td>&nbsp;:&nbsp;</td>
+                                                    <td>
+                                                        <div [ngSwitch]="_leaveApplied.leaveType">
+                                                            <span *ngSwitchCase="'Half Day'">
+                                                                {{_leaveApplied.leaveFrom | date:'dd/MM/yyyy'}}
+                                                                ( {{getWhichHalf(_leaveApplied.leaveFrom)}} )
+                                                            </span>
+                                                            <span *ngSwitchCase="'Permission'">
+                                                                {{_leaveApplied.leaveFrom | date:'dd/MM/yyyy'}}
+                                                                ( {{_leaveApplied.leaveFrom | date:'hh:mm a'}} -
+                                                                {{_leaveApplied.leaveTo |
+                                                                date:'hh:mm a'}} )
+                                                            </span>
+                                                            <span *ngSwitchDefault>
+                                                                {{_leaveApplied.leaveFrom | date:'dd/MM/yyyy'}} -
+                                                                {{_leaveApplied.leaveTo |
+                                                                date:'dd/MM/yyyy'}}
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <mat-label class="text-muted">No of Days </mat-label>
+                                                    </td>
+                                                    <td>&nbsp;:&nbsp;</td>
+                                                    <td>{{_leaveApplied.noOfDays}} </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <mat-label class="text-muted">Applied Date </mat-label>
+                                                    </td>
+                                                    <td>&nbsp;:&nbsp;</td>
+                                                    <td>{{_leaveApplied.createddatetime | date:'medium'}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <mat-label class="text-muted">Reason For Leave </mat-label>
+                                                    </td>
+                                                    <td>&nbsp;:&nbsp;</td>
+                                                    <td>
+                                                        <p [innerHTML]="_leaveApplied.reason"></p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <mat-label class="text-muted">Status </mat-label>
+                                                    </td>
+                                                    <td>&nbsp;:&nbsp;</td>
+                                                    <td>
+                                                        <span *ngIf="_leaveApplied.status == 'Approved'"
+                                                            class="badge badge-success"> {{_leaveApplied.status}}
+                                                        </span>
+
+                                                        <span *ngIf="_leaveApplied.status == 'Rejected'"
+                                                            class="badge badge-danger">
+                                                            {{_leaveApplied.status}}
+                                                        </span>
+
+                                                        <span *ngIf="_leaveApplied.status == 'Applied'"
+                                                            class="badge badge-light">
+                                                            {{_leaveApplied.status}}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+
+                                        <div class="col-12" *ngIf="_leaveApplied.status != 'Applied'">
+                                            <span class="text-success" *ngIf="_leaveApplied.status == 'Approved'">
+                                                {{_leaveApplied.status}} by
+                                                {{getMemberName(_leaveApplied.approvedRejectedBy)}} at
+                                                {{_leaveApplied.approvedRejectedDate | date:'medium'}}
+                                            </span>
+
+                                            <span class="text-danger" *ngIf="_leaveApplied.status == 'Rejected'">
+                                                {{_leaveApplied.status}} by
+                                                {{getMemberName(_leaveApplied.approvedRejectedBy)}} at
+                                                {{_leaveApplied.approvedRejectedDate | date:'medium'}}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 text-center" *ngIf="_leaveApplied.status == 'Applied'">
+                                        <button mat-flat-button color="primary" (click)="approveLeave()" class="mr-2"
+                                            [disabled]="saving">Approve</button>
+                                        <button mat-flat-button color="accent" (click)="rejectLeave()" class="ml-2"
+                                            [disabled]="saving">Reject</button>
+                                    </div>
+                                </mat-tab>
+                                <mat-tab label="Leave Balance">
+
+                                    <div class="row" *ngIf="_leaveBalance != null">
+                                        <div class="col">
+                                            <table>
+                                                <tr>
+                                                    <td>Annual Leave</td>
+                                                    <td>&nbsp;:&nbsp;</td>
+                                                    <td>{{_leaveBalance.annualLeave}} day(s)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Casual Leave</td>
+                                                    <td>&nbsp;:&nbsp;</td>
+                                                    <td>{{_leaveBalance.casualLeave}} day(s)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Sick Leave</td>
+                                                    <td>&nbsp;:&nbsp;</td>
+                                                    <td>{{_leaveBalance.sickLeave}} day(s)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Other Leave</td>
+                                                    <td>&nbsp;:&nbsp;</td>
+                                                    <td>{{_leaveBalance.otherLeave}} day(s)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Permissions</td>
+                                                    <td>&nbsp;:&nbsp;</td>
+                                                    <td>{{_leaveBalance.permissions}}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </mat-tab>
+                                <mat-tab label="Leave Applied History">
+                                    <!--Table-->
+                                    <table class="table table-hover table-fixed mb-5">
+                                        <!--Table head-->
+                                        <thead>
+                                            <tr>
+                                                <th style="width:12%">Staff Name</th>
+                                                <th style="width:10%">Leave Type</th>
+                                                <th style="width:5%">Status</th>
+                                                <th style="width:20%">Reason</th>
+                                                <th style="width:16%">Leave From - To date</th>
+                                                <th style="width:5%">No Of Days</th>
+                                                <th style="width:10%">Applied Date</th>
+                                                <th style="width:12%">Approved/Rejected by</th>
+                                                <th style="width:10%">Approved/Rejected Date</th>
+
+                                            </tr>
+                                        </thead>
+                                        <!--Table head-->
+                                        <!--Table body-->
+                                        <tbody>
+                                            <tr *ngFor="let la of _leavesAppliedAgent">
+                                                <td>{{getMemberName(la.agentEmailId)}}</td>
+                                                <td>{{la.leaveType}}</td>
+                                                <td>
+                                                    <span *ngIf="la.status == 'Approved'"
+                                                        class="badge badge-success">{{la.status}}</span>
+                                                    <span *ngIf="la.status == 'Rejected'"
+                                                        class="badge badge-danger">{{la.status}}</span>
+                                                    <span *ngIf="la.status == 'Applied'"
+                                                        class="badge badge-light">{{la.status}}</span>
+                                                </td>
+                                                <td>
+                                                    <p [innerHTML]="la.reason"></p>
+                                                </td>
+                                                <td>
+                                                    <span *ngIf="la.leaveType != 'Permission'">
+                                                        {{la.leaveFrom | date:'MMM dd, yyyy'}} - {{la.leaveTo |
+                                                        date:'MMM dd, yyyy'}}
+                                                    </span>
+
+                                                    <span *ngIf="la.leaveType == 'Permission'">
+                                                        {{la.leaveFrom | date:'MMM dd, yyyy'}}
+                                                        <br>
+                                                        {{la.leaveFrom | date:'hh:mm a'}} - {{la.leaveTo | date:'hh:mm
+                                                        a'}}
+                                                    </span>
+                                                </td>
+                                                <td>{{la.noOfDays}}</td>
+                                                <td>{{la.createddatetime | date:'MMM dd, yyyy'}}</td>
+                                                <td>{{getMemberName(la.approvedRejectedBy)}}</td>
+                                                <td>
+                                                    <span class="text-right">
+                                                        {{la.approvedRejectedDate | date:'MMM dd, yyyy'}}
+                                                    </span>
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                        <!--Table body-->
+                                    </table>
+                                    <!--Table-->
+                                </mat-tab>
+                            </mat-tab-group>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

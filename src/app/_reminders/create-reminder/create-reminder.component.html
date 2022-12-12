@@ -1,0 +1,289 @@
+<h6 mat-dialog-title class="indigo-text">Create Reminder</h6>
+
+<mat-progress-bar *ngIf="loading" mode="indeterminate">
+</mat-progress-bar>
+
+<mat-dialog-content class="mat-typography">
+    <div class="row">
+        <div class="col-12">
+            <mat-form-field class="w-100">
+                <mat-label class="required-label">Subject</mat-label>
+                <input type="text" matInput [(ngModel)]="reminder.subject">
+            </mat-form-field>
+        </div>
+        <div class="col-12">
+            <mat-form-field class="w-100">
+                <mat-label>Description</mat-label>
+                <textarea rows="5" matInput [(ngModel)]="reminder.description"></textarea>
+            </mat-form-field>
+        </div>
+
+        <div class="col-12">
+            <mat-form-field class="w-100">
+                <mat-label>Tag</mat-label>
+                <input type="text" matInput [(ngModel)]="reminder.tag">
+            </mat-form-field>
+        </div>
+        <div class="col-12">
+            <mat-label class="required-label text-muted d-block">One Time/Recurring</mat-label>
+            <mat-button-toggle-group (ngModelChange)="resetTabChange()" [(ngModel)]="reminder.recurringType">
+                <mat-button-toggle value="One Time">One Time</mat-button-toggle>
+                <mat-button-toggle value="Recurring Daily">Recurring Daily</mat-button-toggle>
+                <mat-button-toggle value="Recurring Weekly">Recurring Weekly</mat-button-toggle>
+                <mat-button-toggle value="Recurring Monthly">Recurring Monthly</mat-button-toggle>
+                <mat-button-toggle value="Recurring Yearly">Recurring Yearly</mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
+
+        <div class="col-12" *ngIf="reminder.recurringType == 'One Time'">
+
+
+            <input hidden matInput [ngxMatDatetimePicker]="oneTimeDateTimePicker" placeholder="Choose a date"
+                [(ngModel)]="reminder.eventDateTime">
+
+            <span *ngIf="reminder.eventDateTime !== undefined" class="text-muted" (click)="oneTimeDateTimePicker.open()"
+                class="pointer">
+                <h5 class="text-dark">1 reminder to be created on below dates</h5>
+                {{reminder.eventDateTime | date:'MMM dd yyyy, hh:mm a'}}
+            </span>
+
+            <ngx-mat-datetime-picker [enableMeridian]="true" [touchUi]="true" #oneTimeDateTimePicker>
+            </ngx-mat-datetime-picker>
+
+            <br>
+
+            <button (click)="oneTimeDateTimePicker.open()"
+                class="btn btn-light rounded-circle border border-dark eventOneButt m-2 p-0">
+                Custom
+            </button>
+
+            <button (click)="setEventTime('Today 4PM')"
+                class="btn btn-light rounded-circle border border-dark eventOneButt m-2 p-0">
+                Today <br>4PM
+            </button>
+
+            <button (click)="setEventTime('Today 6PM')"
+                class="btn btn-light rounded-circle border border-dark eventOneButt m-2 p-0">
+                Today <br>6PM
+            </button>
+
+            <button (click)="setEventTime('Tomorrow 10AM')"
+                class="btn btn-light rounded-circle border border-dark eventOneButt m-2 p-0">
+                Tomorrow <br>10AM
+            </button>
+
+            <button (click)="setEventTime('Tomorrow 6PM')"
+                class="btn btn-light rounded-circle border border-dark eventOneButt m-2 p-0">
+                Tomorrow <br>6PM
+            </button>
+        </div>
+
+        <div *ngIf="reminder.recurringType == 'Recurring Daily'">
+            <div class="col-12">
+                <mat-checkbox color="primary" [(ngModel)]="excludeSundays">Exclude Sundays</mat-checkbox>
+                <mat-checkbox color="primary" [(ngModel)]="excludeSaturdays">Exclude Saturdays</mat-checkbox>
+            </div>
+            <div class="col-6">
+                <mat-form-field class="w-100">
+                    <mat-label class="required-label text-muted small">From</mat-label>
+                    <input matInput [matDatepicker]="fromDatepicker" placeholder="Choose from date"
+                        (ngModelChange)="calculateRDEventDays($event,'From')" name="fromDate"
+                        (focus)="fromDatepicker.open()" [ngModel]="fromDate">
+                    <mat-datepicker-toggle matSuffix [for]="fromDatepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #fromDatepicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="col-6">
+                <mat-form-field class="w-100">
+                    <mat-label class="required-label text-muted small">To</mat-label>
+                    <input matInput [matDatepicker]="toDatepicker" placeholder="Choose to date"
+                        (focus)="toDatepicker.open()" [matDatepicker]="toDatepicker"
+                        (ngModelChange)="calculateRDEventDays($event,'To')" name="toDate" [ngModel]="toDate">
+                    <mat-datepicker-toggle matSuffix [for]="toDatepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #toDatepicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <div class="col-lg-3 col-md-5 col-sm-12">
+                <mat-label class="text-muted small">Event Time</mat-label>
+                <ngx-mat-timepicker [enableMeridian]="true" [(ngModel)]="eventTime"
+                    (ngModelChange)="eventTime = $event;calculateRDEventDays(fromDate,'From')">
+                </ngx-mat-timepicker>
+            </div>
+
+            <div class="col-12" *ngIf="eventDates.length > 0">
+                <h5 class="text-dark">{{eventDates.length}} reminder(s) to be created on below dates</h5>
+                <p class="text-muted d-block" *ngFor="let dt of eventDates">{{dt | date:'dd/MM/yyyy h:mm a'}}</p>
+            </div>
+        </div>
+
+        <div *ngIf="reminder.recurringType == 'Recurring Weekly'">
+            <div class="col-12">
+                <mat-radio-group color="primary" aria-label="Select an option"
+                    (ngModelChange)="calculateRWEventDays($event,'From')" [(ngModel)]="eventDay">
+                    <mat-radio-button value="Sunday">Sunday</mat-radio-button>
+                    <mat-radio-button value="Monday">Monday</mat-radio-button>
+                    <mat-radio-button value="Tuesday">Tuesday</mat-radio-button>
+                    <mat-radio-button value="Wednesday">Wednesday</mat-radio-button>
+                    <mat-radio-button value="Thursday">Thursday</mat-radio-button>
+                    <mat-radio-button value="Friday">Friday</mat-radio-button>
+                    <mat-radio-button value="Saturday">Saturday</mat-radio-button>
+                </mat-radio-group>
+            </div>
+            <div class="col-6">
+                <mat-form-field class="w-100">
+                    <mat-label class="required-label text-muted small">From</mat-label>
+                    <input matInput [matDatepicker]="_rw_fromDatepicker" placeholder="Choose from date"
+                        (ngModelChange)="calculateRWEventDays($event,'From')" name="fromDate"
+                        (focus)="_rw_fromDatepicker.open()" [ngModel]="fromDate">
+                    <mat-datepicker-toggle matSuffix [for]="_rw_fromDatepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #_rw_fromDatepicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="col-6">
+                <mat-form-field class="w-100">
+                    <mat-label class="required-label text-muted small">To</mat-label>
+                    <input matInput [matDatepicker]="_rw_toDatepicker" placeholder="Choose to date"
+                        (focus)="_rw_toDatepicker.open()" [matDatepicker]="_rw_toDatepicker"
+                        (ngModelChange)="calculateRWEventDays($event,'To')" name="toDate" [ngModel]="toDate">
+                    <mat-datepicker-toggle matSuffix [for]="_rw_toDatepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #_rw_toDatepicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <div class="col-lg-3 col-md-5 col-sm-12">
+                <mat-label class="text-muted small">Event Time</mat-label>
+                <ngx-mat-timepicker [enableMeridian]="true" [(ngModel)]="eventTime"
+                    (ngModelChange)="eventTime = $event;calculateRDEventDays(fromDate,'From')">
+                </ngx-mat-timepicker>
+            </div>
+
+            <div class="col-12" *ngIf="eventDates.length > 0">
+                <h5 class="text-dark">{{eventDates.length}} reminder(s) to be created on below dates</h5>
+                <p class="text-muted d-block" *ngFor="let dt of eventDates">{{dt | date:'dd/MM/yyyy h:mm a'}}</p>
+            </div>
+        </div>
+
+        <div *ngIf="reminder.recurringType == 'Recurring Monthly'">
+            <div class="col-6">
+                <mat-label class="required-label text-muted small">From</mat-label>
+
+                <input type="hidden" [matDatepicker]="_rm_fromDatepicker" placeholder="Choose from date"
+                    (ngModelChange)="calculateRMEventDays($event,'From')" name="fromDate"
+                    (focus)="_rm_fromDatepicker.open()" [ngModel]="fromDate">
+
+                <span (click)="_rm_fromDatepicker.open()" class="text-muted d-block">
+                    <mat-icon>event</mat-icon> {{fromDate | date:'MMM yyyy'}}
+                </span>
+                <mat-datepicker #_rm_fromDatepicker startView="multi-year"
+                    (monthSelected)="closeDatePicker($event, 'fromDate', _rm_fromDatepicker);calculateRMEventDays($event,'From')">
+                </mat-datepicker>
+
+            </div>
+            <div class="col-6">
+                <mat-label class="required-label text-muted small">To </mat-label>
+                <input type="hidden" [matDatepicker]="_rm_toDatepicker" placeholder="Choose to date"
+                    (focus)="_rm_toDatepicker.open()" [matDatepicker]="_rm_toDatepicker"
+                    (ngModelChange)="calculateRMEventDays($event,'To')" name="toDate" [ngModel]="toDate">
+
+                <span (click)="_rm_toDatepicker.open()" class="text-muted d-block">
+                    <mat-icon>event</mat-icon> {{toDate | date:'MMM yyyy'}}
+                </span>
+                <mat-datepicker #_rm_toDatepicker startView="multi-year"
+                    (monthSelected)="closeDatePicker($event, 'toDate', _rm_toDatepicker);calculateRMEventDays($event,'To')">
+                </mat-datepicker>
+
+            </div>
+
+            <div class="col-lg-3 col-md-5 col-sm-12">
+                <mat-form-field class="w-100">
+                    <mat-label class="text-muted small">Event Date</mat-label>
+                    <mat-select name="eventDate" id="eventDate" [(ngModel)]="eventDate"
+                        (ngModelChange)="calculateRMEventDays(fromDate,'From')">
+                        <mat-option *ngFor="let _date of _dates" [value]="_date">{{_date}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="col-lg-3 col-md-5 col-sm-12">
+                <mat-label class="text-muted small">Event Time</mat-label>
+                <ngx-mat-timepicker [enableMeridian]="true" [(ngModel)]="eventTime"
+                    (ngModelChange)="eventTime = $event;calculateRMEventDays(fromDate,'From')">
+                </ngx-mat-timepicker>
+            </div>
+
+            <div class="col-12" *ngIf="eventDates.length > 0">
+                <h5 class="text-dark">{{eventDates.length}} reminder(s) to be created on below dates</h5>
+                <p class="text-muted d-block" *ngFor="let dt of eventDates">{{dt | date:'dd/MM/yyyy h:mm a'}}</p>
+            </div>
+        </div>
+
+        <div *ngIf="reminder.recurringType == 'Recurring Yearly'">
+            <div class="col-12">
+                <mat-form-field class="w-100">
+                    <mat-label>From</mat-label>
+                    <input type="number" matInput [(ngModel)]="yearFrom"
+                        (ngModelChange)="calculateRYEventDays($event,'From')">
+                </mat-form-field>
+            </div>
+
+            <div class="col-12">
+                <mat-form-field class="w-100">
+                    <mat-label>To</mat-label>
+                    <input type="number" matInput [(ngModel)]="yearTo"
+                        (ngModelChange)="calculateRYEventDays($event,'To')">
+                </mat-form-field>
+            </div>
+
+            <div class="col-6">
+                <mat-form-field class="w-100">
+                    <mat-label class="text-muted small">Event Month</mat-label>
+                    <mat-select name="eventMonth" id="eventMonth" [(ngModel)]="eventMonth"
+                        (ngModelChange)="calculateRYEventDays(yearFrom,'From')">
+                        <mat-option value="0">January</mat-option>
+                        <mat-option value="1">February</mat-option>
+                        <mat-option value="2">March</mat-option>
+                        <mat-option value="3">April</mat-option>
+                        <mat-option value="4">May</mat-option>
+                        <mat-option value="5">June</mat-option>
+                        <mat-option value="6">July</mat-option>
+                        <mat-option value="7">August</mat-option>
+                        <mat-option value="8">September</mat-option>
+                        <mat-option value="9">October</mat-option>
+                        <mat-option value="10">November</mat-option>
+                        <mat-option value="11">December</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="col-6">
+                <mat-form-field class="w-100">
+                    <mat-label class="text-muted small">Event Date</mat-label>
+                    <mat-select name="eventDate" id="eventDate" [(ngModel)]="eventDate"
+                        (ngModelChange)="calculateRYEventDays(yearFrom,'From')">
+                        <mat-option *ngFor="let _date of _dates" [value]="_date">{{_date}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="col-lg-3 col-md-5 col-sm-12">
+                <mat-label class="text-muted small">Event Time</mat-label>
+                <ngx-mat-timepicker [enableMeridian]="true" [(ngModel)]="eventTime"
+                    (ngModelChange)="eventTime = $event;calculateRYEventDays(yearFrom,'From')">
+                </ngx-mat-timepicker>
+            </div>
+
+            <div class="col-12" *ngIf="eventDates.length > 0">
+                <h5 class="text-dark">{{eventDates.length}} reminder(s) to be created on below dates</h5>
+                <p class="text-muted d-block" *ngFor="let dt of eventDates">{{dt | date:'dd/MM/yyyy h:mm a'}}</p>
+            </div>
+        </div>
+
+    </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <a (click)="closeDialog()"><u>close</u></a>
+    <button mat-stroked-button color="primary" (click)="saveReminder()" class="pl-2">Save Reminder</button>
+</mat-dialog-actions>

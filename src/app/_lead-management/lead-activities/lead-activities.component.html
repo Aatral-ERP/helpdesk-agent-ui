@@ -1,0 +1,159 @@
+<div class="container pb-5">
+    <div class="row pb-0 mb-0">
+        <div class="col">
+            <h5 class="indigo-text">Tasks</h5>
+        </div>
+        <div class="col">
+            <button (click)="openCreateTaskModal()" class="btn btn-sm btn-primary pointer float-right pr-2">
+                <i class="fa fa-plus"></i> Create Task&nbsp;&nbsp;&nbsp;&nbsp;
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+
+            <table mat-table [dataSource]="dataSource_tasks" matSort class="mat-elevation-z8">
+
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> </th>
+                    <td mat-cell *matCellDef="let element">
+                        <i class='fas fa-edit text-primary pointer' (click)="openCreateTaskModal(element)"></i>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="subject">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Subject </th>
+                    <td mat-cell *matCellDef="let element"> {{element.subject}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="dueDateTime">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Due Date </th>
+                    <td mat-cell *matCellDef="let element"> {{element.dueDateTime | date:'dd/MM/yyyy'}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="priority">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Priority </th>
+                    <td mat-cell *matCellDef="let element"> {{element.priority}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                    <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="description">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Description </th>
+                    <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="createddatetime">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Created at </th>
+                    <td mat-cell *matCellDef="let element"> {{element.createddatetime | date:'dd/MM/yyyy h:mm a'}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="lastupdatedatetime">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Last Updated at </th>
+                    <td mat-cell *matCellDef="let element"> {{element.lastupdatedatetime | date:'dd/MM/yyyy h:mm a'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="delete">
+                    <th mat-header-cell *matHeaderCellDef> </th>
+                    <td mat-cell *matCellDef="let element">
+                        <i class='fas fa-trash-alt text-danger pointer' (click)="deleteTask(element)"></i>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="_tasks_displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: _tasks_displayedColumns;"></tr>
+            </table>
+
+        </div>
+    </div>
+    <hr>
+
+
+    <div class="row pb-0 mb-0">
+        <div class="col">
+            <h5 class="indigo-text">Meetings</h5>
+        </div>
+        <div class="col">
+            <button (click)="openCreateMeetingModal()" class="btn btn-sm btn-primary pointer float-right pr-2">
+                <i class="fa fa-plus"></i> Create Meeting&nbsp;&nbsp;&nbsp;&nbsp;
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+
+            <table mat-table [dataSource]="dataSource_meetings" matSort class="mat-elevation-z8">
+
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> </th>
+                    <td mat-cell *matCellDef="let element">
+                        <i class='fas fa-edit text-primary pointer' (click)="openCreateMeetingModal(element)"></i>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="subject">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Subject </th>
+                    <td mat-cell *matCellDef="let element"> {{element.subject}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fromDateTime">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> From DateTime </th>
+                    <td mat-cell *matCellDef="let element"> {{element.fromDateTime | date:'dd/MM/yyyy'}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="toDateTime">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> To DateTime </th>
+                    <td mat-cell *matCellDef="let element"> {{element.toDateTime | date:'dd/MM/yyyy'}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="priority">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Priority </th>
+                    <td mat-cell *matCellDef="let element"> {{element.priority}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="location">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Location </th>
+                    <td mat-cell *matCellDef="let element"> {{element.location}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="participants">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Participants </th>
+                    <td mat-cell *matCellDef="let element"> {{element.participants}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="description">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Description </th>
+                    <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="createddatetime">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Created at </th>
+                    <td mat-cell *matCellDef="let element"> {{element.createddatetime | date:'dd/MM/yyyy h:mm a'}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="lastupdatedatetime">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Last Updated at </th>
+                    <td mat-cell *matCellDef="let element"> {{element.lastupdatedatetime | date:'dd/MM/yyyy h:mm a'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="delete">
+                    <th mat-header-cell *matHeaderCellDef> </th>
+                    <td mat-cell *matCellDef="let element">
+                        <i class='fas fa-trash-alt text-danger pointer' (click)="deleteMeeting(element)"></i>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="_meetings_displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: _meetings_displayedColumns;"></tr>
+            </table>
+
+        </div>
+    </div>
+</div>

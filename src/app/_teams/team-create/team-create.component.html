@@ -1,0 +1,49 @@
+<h4 mat-dialog-title class="indigo-text" mat-dialog-title>Create Team</h4>
+<mat-dialog-content class="mat-typography">
+    <div class="row">
+        <div class="col-12">
+            <label class="required-label" for="">Name</label>
+            <input type="text" class="form-control w-auto" name="name" [(ngModel)]="team.name">
+        </div>
+
+        <div class="col-12">
+            <label class="required-label" for="">Category</label>
+            <input type="text" class="form-control w-auto" name="name" [(ngModel)]="team.category">
+        </div>
+
+        <!-- <div *ngIf="team.id > 0" class="col-12">
+            <label class="required-label" for="">Team Lead</label>
+            <select class="form-control" name="description" rows="3" [(ngModel)]="team.leadEmail">
+                <option [hidden]="!agent.isBlocked && agent.workingStatus == 'Releived'" *ngFor="let agent of agents"
+                    [value]="agent.emailId">{{agent.firstName}} {{agent.lastName}}
+                </option>
+            </select>
+        </div> -->
+
+        <div class="col-12">
+            <label class="required-label" for="">Color Code</label>
+            <br>
+            <color-compact color="team.colorcode"
+                (onChangeComplete)="team.colorcode = $event.color.hex;onColorChangeComplete($event)">
+            </color-compact>
+        </div>
+
+        <div class="col-12">
+            <label for="">About Team / Description</label>
+            <textarea class="form-control" name="description" rows="3" [(ngModel)]="team.description"></textarea>
+        </div>
+    </div>
+    <p class="m-5 p-5">&nbsp;</p>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button cdkFocusInitial [disabled]="saving" (click)="saveTeam()">Save&nbsp;
+        <i class="fa fa-save"></i>
+        <div *ngIf="saving" class="spinner-border spinner-border-sm pl-1" role="status">
+            &nbsp;<span class="sr-only"> Saving...</span>
+        </div>
+    </button>
+
+</mat-dialog-actions>

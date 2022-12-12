@@ -1,0 +1,65 @@
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  font: 400 14px/20px Roboto, "Helvetica Neue", sans-serif;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 15px;
+}
+
+.md-form label {
+  font-size: 0.8rem;
+  transform: translateY(-50%);
+}
+
+.custom-select {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+.btn {
+  text-transform: unset !important;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.h5 {
+  height: 5px;
+}
+
+.h10 {
+  height: 10px;
+}
+
+.h20 {
+  height: 20px;
+}
+
+.h36 {
+  height: 36px;
+}
+
+.font-size-12 {
+  font-size: 12px;
+}
+
+.font-size-14 {
+  font-size: 14px;
+}
+
+.font-size-22 {
+  font-size: 22px;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}

@@ -1,0 +1,53 @@
+<div class="limiter">
+	<div class="container-login100">
+		<div class="wrap-login100">
+			<form class="login100-form validate-form card">
+				<span class="login100-form-title">
+					Login to Continue
+				</span>
+
+				<div class="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz">
+					<input class="input100" type="text" name="userName" [(ngModel)]="userName">
+					<span class="focus-input100"></span>
+					<span class="label-input100">Email</span>
+				</div>
+
+				<div class="wrap-input100 validate-input" data-validate="Password is required">
+					<input class="input100" type="password" name="password" [(ngModel)]="password">
+					<span class="focus-input100"></span>
+					<span class="label-input100">Password</span>
+				</div>
+
+				<div class="flex-sb-m w-full p-t-3 p-b-32">
+
+					<div>
+						<a routerLink="/forget-password" class="txt1">
+							Forgot Password?
+						</a>
+					</div>
+				</div>
+
+				<div class="container-login100-form-btn">
+					<button class="login100-form-btn btn-indigo"
+						[disabled]="userName == '' || password=='' || submitted" (click)="login()">
+						Login
+					</button>
+				</div>
+
+				<div class="container-login100-form-btn mt-2">
+					<button id="googleBtn" class="login100-form-btn" [disabled]="google_submitted">
+						<img src="https://www.freepngimg.com/thumb/google/67060-play-photos-search-google-account-png-file-hd.png"
+							height="35" width="35" alt=""> &nbsp;&nbsp;&nbsp; Sign in with Google
+					</button>
+				</div>
+
+			</form>
+
+			<!-- <div class="login100-more">
+                        <img
+                        src="assets/static/images/logo.jpg" class="z-depth-1 mb-3 mx-auto"
+                        height="830px;" width="1125px;">
+				</div> -->
+		</div>
+	</div>
+</div>

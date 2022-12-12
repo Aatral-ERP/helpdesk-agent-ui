@@ -1,0 +1,187 @@
+<!-- Modal -->
+<div class="modal fade" id="addRoleScrollable" tabindex="-1" role="dialog" aria-labelledby="addRoleScrollableTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addRoleScrollableTitle">Create Role</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container p-1 m-1">
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="name">Role Name</label>
+                            <input type="text" class="form-control" id="name" name="name" [(ngModel)]="role.name" />
+                        </div>
+
+                        <div class="col-12">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Module</th>
+                                        <th scope="col">Access</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-dark font-weight-bold">Product</td>
+                                        <td>
+                                            <mat-radio-group color="primary" [(ngModel)]="role.product">
+                                                <mat-radio-button class="example-margin" value="No Access">No Access
+                                                </mat-radio-button>
+                                                <mat-radio-button class="example-margin" value="Full Access">Full Access
+                                                </mat-radio-button>
+                                            </mat-radio-group>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-dark font-weight-bold">Institute</td>
+                                        <td>
+                                            <mat-radio-group color="primary" [(ngModel)]="role.institute">
+                                                <mat-radio-button class="example-margin" value="No Access">No Access
+                                                </mat-radio-button>
+                                                <mat-radio-button class="example-margin" value="Full Access">Full Access
+                                                </mat-radio-button>
+                                            </mat-radio-group>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-dark font-weight-bold">Supplier</td>
+                                        <td>
+                                            <mat-radio-group color="primary" [(ngModel)]="role.supplier">
+                                                <mat-radio-button class="example-margin" value="No Access">No Access
+                                                </mat-radio-button>
+                                                <mat-radio-button class="example-margin" value="Full Access">Full Access
+                                                </mat-radio-button>
+                                            </mat-radio-group>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-dark font-weight-bold">Lead Management</td>
+                                        <td>
+                                            <mat-radio-group color="primary" [(ngModel)]="role.leadManagement">
+                                                <mat-radio-button class="example-margin" value="No Access">No Access
+                                                </mat-radio-button>
+                                                <mat-radio-button class="example-margin" value="Full Access">Full Access
+                                                </mat-radio-button>
+                                            </mat-radio-group>
+                                            <mat-checkbox color="primary" [(ngModel)]="role.leadManagementAdmin">Lead
+                                                Management Admin
+                                            </mat-checkbox>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-dark font-weight-bold">Sales</td>
+                                        <td>
+                                            <mat-radio-group color="primary" [(ngModel)]="role.sales">
+                                                <mat-radio-button class="example-margin" value="No Access">No Access
+                                                </mat-radio-button>
+                                                <mat-radio-button class="example-margin" value="Full Access">Full Access
+                                                </mat-radio-button>
+                                            </mat-radio-group>
+                                            <mat-checkbox color="primary" [(ngModel)]="role.salesAdmin">Sales Admin
+                                            </mat-checkbox>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-dark font-weight-bold">Purchase Input</td>
+                                        <td>
+                                            <mat-radio-group color="primary" [(ngModel)]="role.purchaseInput">
+                                                <mat-radio-button class="example-margin" value="No Access">No Access
+                                                </mat-radio-button>
+                                                <mat-radio-button class="example-margin" value="Full Access">Full Access
+                                                </mat-radio-button>
+                                            </mat-radio-group>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-dark font-weight-bold">Accounting</td>
+                                        <td>
+                                            <mat-radio-group color="primary" [(ngModel)]="role.accounting">
+                                                <mat-radio-button class="example-margin" value="No Access">No Access
+                                                </mat-radio-button>
+                                                <mat-radio-button class="example-margin" value="Full Access">Full Access
+                                                </mat-radio-button>
+                                            </mat-radio-group>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-dark font-weight-bold">HR</td>
+                                        <td>
+                                            <mat-radio-group color="primary" [(ngModel)]="role.hr">
+                                                <mat-radio-button class="example-margin" value="No Access">No Access
+                                                </mat-radio-button>
+                                                <mat-radio-button class="example-margin" value="Full Access">Full Access
+                                                </mat-radio-button>
+                                            </mat-radio-group>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-dark font-weight-bold">Admin</td>
+                                        <td>
+                                            <mat-radio-group color="primary" [(ngModel)]="role.admin">
+                                                <mat-radio-button class="example-margin" value="No Access">No Access
+                                                </mat-radio-button>
+                                                <mat-radio-button class="example-margin" value="Full Access">Full Access
+                                                </mat-radio-button>
+                                            </mat-radio-group>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-dark font-weight-bold">Tickets</td>
+                                        <td>
+                                            <mat-radio-group color="primary" [(ngModel)]="role.tickets">
+                                                <mat-radio-button class="example-margin" value="No Access">No Access
+                                                </mat-radio-button>
+                                                <mat-radio-button class="example-margin" value="Full Access">Full Access
+                                                </mat-radio-button>
+                                            </mat-radio-group>
+                                            <mat-checkbox color="primary" [(ngModel)]="role.ticketsAdmin">Tickets Admin
+                                            </mat-checkbox>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-dark font-weight-bold">Reports</td>
+                                        <td>
+                                            <mat-radio-group color="primary" [(ngModel)]="role.reports">
+                                                <mat-radio-button class="example-margin" value="No Access">No Access
+                                                </mat-radio-button>
+                                                <mat-radio-button class="example-margin" value="Full Access">Full Access
+                                                </mat-radio-button>
+                                            </mat-radio-group>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-dark font-weight-bold">Default Dashboard</td>
+                                        <td>
+                                            <mat-button-toggle-group name="defaultDashboard"
+                                                [(ngModel)]="role.defaultDashboard" aria-label="Font Style">
+                                                <mat-button-toggle value="Home">Home</mat-button-toggle>
+                                                <mat-button-toggle value="Teams Dashboard">Teams Dashboard
+                                                </mat-button-toggle>
+                                                <mat-button-toggle value="Sales Dashboard">Sales Dashboard
+                                                </mat-button-toggle>
+                                                <mat-button-toggle value="Hr Dashboard">Hr Dashboard</mat-button-toggle>
+                                            </mat-button-toggle-group>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <span (click)="deleteRole()" class="text-danger pointer">
+                    <u>Delete</u> <i class="fas fa-trash-alt pl-1"></i></span>
+
+                <button type="button" class="btn btn-sm btn-outline-primary" data-dismiss="modal">Close</button>
+                <button type="button" (click)="saveRole()" [disabled]="saving" class="btn btn-sm btn-primary">Save
+                    changes</button>
+            </div>
+        </div>
+    </div>
+</div>

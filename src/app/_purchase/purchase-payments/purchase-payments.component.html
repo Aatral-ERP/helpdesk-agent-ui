@@ -1,0 +1,59 @@
+<div class="p-4">
+    <p class="indigo-text h3 text-center">View Payments</p>
+    <hr>
+    <div class="row  justify-content-centre" *ngFor="let payments of paymentList">
+        <div class="col-12 col-lg-12 col-md-6 col-sm-12">
+            <div class="card p-1">
+                <div class="card-header">
+                    <h5 class="text-dark">{{payments.payment.totalAmount | currency:'INR'}}</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush font-size-14">
+
+
+                        <li class="p-1 list-group-item list-group-item-action">
+                            <span class="text-muted">Payment Date :
+                            </span>{{payments.payment.paymentDate  | date:'MMM dd, yyyy'}}
+                        </li>
+                        <li class="p-1 list-group-item list-group-item-action">
+                            <span class="text-muted">Receipt No : </span>{{payments.payment.receiptno}}
+                        </li>
+                        <li class="p-1 list-group-item list-group-item-action">
+                            <span class="text-muted">Reference No : </span>{{payments.payment.referenceno}}
+                        </li>
+                        <li class="p-1 list-group-item list-group-item-action">
+                            <span class="text-muted">Total : </span>{{payments.payment.totalAmount | currency:'INR'}}
+                        </li>
+                        <li class="p-1 list-group-item list-group-item-action">
+                            <span class="text-muted">Description : </span>{{payments.payment.description}}
+                        </li>
+                        <li class="p-1 list-group-item list-group-item-action">
+                            <span class="text-muted">Subject : </span>{{payments.payment.subject}}
+                        </li>
+
+                    </ul>
+
+                    <div class="card-header">
+
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item list-group-item-action">
+
+                                <small class="float-left badge badge-light text-muted">
+                                    <i class="fa fa-paperclip" aria-hidden="true"></i>
+                                    &nbsp; {{payments.payment.receiptfilename}} &nbsp; &nbsp;
+                                    <i (click)="viewPDF(payments.payment.dealId,payments.payment.receiptfilename)"
+                                        class="fa fa-download pointer"></i>
+                                </small>
+                            </li>
+                        </ul>
+                        <!-- <div class="float-right"><i class="fa fa-chevron-up" aria-hidden="true"></i></div> -->
+                    </div>
+                    <div class="card-body">
+                        <span class="text-muted small" *ngIf="payments.payment.filename == ''">No Attachments</span>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

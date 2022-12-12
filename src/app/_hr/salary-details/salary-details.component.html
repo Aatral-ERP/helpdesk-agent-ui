@@ -1,0 +1,106 @@
+<div class="container-fluid">
+    <div class="row border-bottom border-light pb-0 mb-0">
+        <div class="col">
+            <a routerLink="/hr/salary-details-create" class="btn btn-sm btn-primary float-right">
+                <i class="fa fa-plus"> Add Staff Details </i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="!loading">
+    <p class="h4 text-center"> Staff's Salary Records
+    </p>
+    <div class="row">
+        <div class="col">
+            <ag-grid-angular enableCellTextSelection="true" [rowData]="rowData" style="width: 100%; height: 400px;"
+                class="ag-theme-balham p-2" [suppressRowClickSelection]="true" [columnDefs]="columnDefs"
+                [rowSelection]="'multiple'" (gridReady)="onGridReady($event)" [paginationAutoPageSize]="true"
+                [pagination]="true">
+            </ag-grid-angular>
+        </div>
+    </div>
+</div>
+
+<div class="item" *ngIf="loading">
+    <ngx-skeleton-loader count="10"></ngx-skeleton-loader>
+</div>
+
+<!-- Button trigger modal -->
+<button (click)="openSalaryEntryGenerateModal()" type="button" class="btn btn-primary">
+    Generate SalaryEntries
+</button>
+
+
+
+<!--Section: Live preview-->
+
+<!--Modal: modal-->
+<div class="modal fade right" id="salarymonthyearmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true" data-backdrop="true">
+    <div class="modal-dialog modal-frame modal-right modal-full-height modal-notify modal-primary" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <!--Body-->
+            <div class="modal-body">
+                <h5 class="text-dark">Select Month And Year</h5>
+                <div class="row">
+                    <div class="col">
+                        <label>Salary Month</label>
+                        <select name="salaryMonth" [(ngModel)]="salaryMonth" class="form-control">
+                            <option disabled value="">--select--</option>
+                            <option value="January">January</option>
+                            <option value="February">February</option>
+                            <option value="March">March</option>
+                            <option value="April">April</option>
+                            <option value="May">May</option>
+                            <option value="June">June</option>
+                            <option value="July">July</option>
+                            <option value="August">August</option>
+                            <option value="September">September</option>
+                            <option value="October">October</option>
+                            <option value="November">November</option>
+                            <option value="December">December</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label>Salary Year</label>
+                        <input type="number" class="form-control" name="salaryYear" [(ngModel)]="salaryYear">
+                    </div>
+
+                    <div class="col-12">
+                        <label for="salaryCreditedDateObject" style="margin-bottom: 5px;">Salary Credited Date</label>
+                        <div class="input-group">
+                            <input class="form-control" placeholder="choose Salary Credited Date" angular-mydatepicker
+                                name="quoteDateObject" [(ngModel)]="salaryCreditedDateObject"
+                                (dateChanged)="salaryCreditedDate = $event.singleDate.jsDate"
+                                [options]="myDatePickerOptions" #salaryCreditedDatedp="angular-mydatepicker"
+                                autocomplete="off" />
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <i (click)="salaryCreditedDatedp.toggleCalendar()"
+                                        class="fas fa-calendar-alt pointer"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="defaultUnchecked"
+                                [(ngModel)]="isSalaryCredited">
+                            <label class="custom-control-label" for="defaultUnchecked">Mark as Credited</label>
+                        </div>
+                    </div>
+                </div>
+                <button [disabled]="generating" class="btn btn-sm btn-primary"
+                    (click)="generateSalaryEntries()">Generate</button>
+
+            </div>
+        </div>
+        <!--/.Content-->
+    </div>
+</div>
+<!--Modal: modal-->
+
+<!--Section: Live preview-->

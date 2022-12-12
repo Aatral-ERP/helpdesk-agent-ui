@@ -1,0 +1,87 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate">
+</mat-progress-bar>
+
+<div class="row p-2">
+    <div class="col">
+        <h6 class="font-weight-bold">Tasks Board
+            <span class="float-right">
+                <button *ngIf="canCreateTasks" mat-flat-button color="primary" (click)="openCreateTaskDialog()">Create
+                    Task
+                    <i class="fas fa-plus pl-2"></i>
+                </button>
+            </span>
+        </h6>
+    </div>
+</div>
+
+<div class="container-fluid">
+
+    <div class="row flex-nowrap pl-2 pr-2">
+        <div class="workflows-cols m-1" *ngFor="let workflow of workflows">
+
+            <h6 class="card-title pt-2 pl-2">{{workflow}}
+                <small class="text-muted">
+                    ({{getTaskByStatus(workflow).length}} tasks)
+                </small>
+                <small class="text-muted float-right pr-2" *ngIf="workflow == 'Done'">
+                    showing last 7 days
+                </small>
+            </h6>
+            <div class="scrollable">
+                <div class="row m-0">
+                    <div class="col-12 p-1" *ngFor="let task of getTaskByStatus(workflow)"
+                        [hidden]="_selected_member !== undefined && task.assignee != _selected_member.memberEmailId">
+                        <div class="card pointer" (click)="openViewTaskDialog(task)">
+                            <div class="card-body pt-0 pb-0 mt-0 mb-0">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <span class="float-left" *ngIf="task.reporter != null && task.reporter != ''">
+                                            <img title="{{getMemberName(task.reporter)}}" class="pointer avator-thumb"
+                                                src="{{getMemberImageURL(task.reporter)}}">
+                                        </span>
+
+                                        <span class="float-right">
+                                            <small
+                                                class="badge badge-light mr-2 font-weight-light">{{task.lastupdatedatetime
+                                                | amTimeAgo}}</small>
+
+                                            <i *ngIf="task.priority == 'Not Preferred'"
+                                                class="fas fa-arrows-alt-h text-muted p-1"></i>
+                                            <i *ngIf="task.priority == 'High'"
+                                                class="fas fa-arrow-up text-danger p-1"></i>
+                                            <i *ngIf="task.priority == 'Medium'"
+                                                class="fas fa-arrow-up text-warning p-1"></i>
+                                            <i *ngIf="task.priority == 'Low'"
+                                                class="fas fa-arrow-down text-info p-1"></i>
+
+                                            <span *ngIf="task.assignee != null && task.assignee != ''">
+                                                <img title="{{getMemberName(task.assignee)}}"
+                                                    class="pointer avator-thumb"
+                                                    src="{{getMemberImageURL(task.assignee)}}">
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="col-12">
+                                        <span class="text-muted float-left">#{{task.taskId}}&nbsp;-&nbsp;
+                                            {{task.subject}} ({{task.featureId}})
+                                        </span>
+                                    </div>
+                                    <div class="col-12" *ngIf="task.featureId > 0">
+                                        <small class="fond-weight-light">
+                                            <i class="fa fa-briefcase pr-1 {{getFeatureCaseBGColorByPriority(task.featureId)}}"
+                                                aria-hidden="true"></i>
+                                            {{getFeatureName(task.featureId)}}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<p class="m-2">&nbsp;</p>

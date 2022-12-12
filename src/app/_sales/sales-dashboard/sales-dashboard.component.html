@@ -1,0 +1,114 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+
+<div class="container-fluid" *ngIf="!loading">
+    <div class="row">
+        <div class="col">
+            <h5 class="text-muted p-1">Sales Dashboard
+                <span class="float-right">
+                    <input hidden class="form-control" (focus)="dp.toggleCalendar()" placeholder="choose valid date"
+                        angular-mydatepicker name="dateObject" [(ngModel)]="_search_filters.dateObject"
+                        [options]="myDatePickerOptions"
+                        (dateChanged)="_search_filters.fromDate = $event.dateRange.beginJsDate;_search_filters.toDate = $event.dateRange.endJsDate;getSalesDashboardDataFromAPI();"
+                        #dp="angular-mydatepicker" autocomplete="off" />
+                    ({{_search_filters.fromDate | date:'MMM dd, yyyy'}} -
+                    {{_search_filters.toDate | date:'MMM dd, yyyy'}})
+                    <i (click)="dp.toggleCalendar()" class="far fa-calendar-alt pr-2 pointer"></i>
+
+                    <small class="text-muted">last updated {{lastLoadedDate | amTimeAgo}}</small>
+                    <i (click)="getSalesDashboardDataFromAPI()" class="fas fa-redo pointer pl-2"></i>
+                </span>
+            </h5>
+        </div>
+    </div>
+    <div class="row pt-2">
+        <div class="col-lg-3 col-md-3 col-sm-6 p-2">
+            <div class="card bq-primary p-4 pl-4 pr-4">
+                <div class="row">
+                    <div class="col">
+                        <h6 class="text-primary">QUOTATION(s)</h6>
+                        <h5 class="text-dark font-weight-bold">{{Stats.quotationCount}}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 p-2">
+            <div class="card bq-warning p-4 pl-4 pr-4">
+                <div class="row">
+                    <div class="col">
+                        <h6 class="text-warning">ORDER(s)</h6>
+                        <h5 class="text-dark font-weight-bold">{{Stats.poCount}}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 p-2">
+            <div class="card bq-info p-4 pl-4 pr-4">
+                <div class="row">
+                    <div class="col">
+                        <h6 class="text-info">INVOICE(s)</h6>
+                        <h5 class="text-dark font-weight-bold">{{Stats.invoiceCount}}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 p-2">
+            <div class="card bq-success p-4 pl-4 pr-4">
+                <div class="row">
+                    <div class="col">
+                        <h6 class="text-success">PAYMENT(s)</h6>
+                        <h5 class="text-dark font-weight-bold">
+                            {{Stats.totalAmount | currency:'INR'}}
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row bg-light">
+        <div class="col-lg-6 col-md-6 col-sm-12 mt-2">
+            <h5>Chart based on Revenue Type</h5>
+            <ngx-charts-advanced-pie-chart [view]="piechartview" [scheme]="dealTypeDatasColorArray"
+                [results]="_dealTypeDatas" [gradient]="true">
+            </ngx-charts-advanced-pie-chart>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 pr-2 mt-2">
+            <h5>Chart based on Payment Mode</h5>
+            <ngx-charts-advanced-pie-chart [view]="piechartview" [scheme]="modeTypeDatasColorArray"
+                [results]="_modeTypeDatas" [gradient]="true">
+            </ngx-charts-advanced-pie-chart>
+        </div>
+    </div>
+
+    <div class="row mt-2 pt-4">
+        <div class="col">
+            <h5>Monthly Revenue Graph</h5>
+            <ngx-charts-line-chart [scheme]="dealTypeDatasGraphColorArray" [view]="linechartview" [legend]="true"
+                [xAxis]="true" [yAxis]="true" [legendTitle]="'Revenue Types'" [timeline]="true"
+                [results]="_dealTypeDatasGraph">
+            </ngx-charts-line-chart>
+        </div>
+    </div>
+
+    <div class="row mt-2 pt-2">
+        <div class="col">
+            <h5>Product wise Revenue Chart</h5>
+            <ngx-charts-pie-chart [view]="piechartview" [scheme]="dealTypeDatasGraphColorArray"
+                [results]="_productwiseRevenueChartDatas" [legendTitle]="'Products'" [labels]="true" [gradient]="true"
+                [legend]="true" [doughnut]="false">
+            </ngx-charts-pie-chart>
+        </div>
+        <div class="col">
+            <h5>Product wise No. of Orders Chart</h5>
+            <ngx-charts-pie-chart [view]="piechartview" [scheme]="dealTypeDatasGraphColorArray"
+                [results]="_productwiseNoOfOrdersChartDatas" [legendTitle]="'No. of Orders'" [labels]="true"
+                [gradient]="true" [legend]="true" [doughnut]="false">
+            </ngx-charts-pie-chart>
+        </div>
+    </div>
+
+    <app-amc-dashboard></app-amc-dashboard>
+
+</div>
+
+<p class="p-5 m-5">&nbsp;</p>

@@ -1,0 +1,78 @@
+<br>
+<div>
+  <p class="indigo-text h4 text-center">My&nbsp;Support&nbsp;Tickets</p>
+</div>
+<br>
+<div class="container">
+  <div class="row">
+    <div class="col-3">
+      <ul class="list-group">
+        <h4 class="side-title">Status:</h4>
+        <li class="list-group-item pointer">Total Services
+          <span class="badge badge-primary badge-pill float-right">{{tickets.length}}</span>
+        </li>
+        <li class="list-group-item pointer" [ngClass]="statusSelected == 'Raised' ? 'active' : ''"
+          (click)="statusSelected = 'Raised'">Raised
+          <span class="badge badge-primary badge-pill float-right">{{TicketStatus.Raised}}</span>
+        </li>
+        <li class="list-group-item pointer" [ngClass]="statusSelected == 'Assigned' ? 'active' : ''"
+          (click)="statusSelected = 'Assigned'">Assigned
+          <span class="badge badge-primary badge-pill float-right">{{TicketStatus.Assigned}}</span>
+        </li>
+        <li class="list-group-item pointer" [ngClass]="statusSelected == 'Closed' ? 'active' : ''"
+          (click)="statusSelected = 'Closed'">Closed
+          <span class="badge badge-primary badge-pill float-right">{{TicketStatus.Closed}}</span>
+        </li>
+        <li class="list-group-item pointer" [ngClass]="statusSelected == 'Rejected' ? 'active' : ''"
+          (click)="statusSelected = 'Rejected'">Rejected
+          <span class="badge badge-primary badge-pill float-right">{{TicketStatus.Rejected}}</span>
+        </li>
+        <li class="list-group-item pointer" [ngClass]="statusSelected == 'Hold' ? 'active' : ''"
+          (click)="statusSelected = 'Hold'">Hold
+          <span class="badge badge-primary badge-pill float-right">{{TicketStatus.Hold}}</span>
+        </li>
+        <li class="list-group-item pointer" [ngClass]="statusSelected == 'ReOpened' ? 'active' : ''"
+          (click)="statusSelected = 'ReOpened'">ReOpened
+          <span class="badge badge-primary badge-pill float-right">{{TicketStatus.ReOpened}}</span>
+        </li>
+        <li class="list-group-item pointer" [ngClass]="statusSelected == 'Waiting_For_Client_Reply' ? 'active' : ''"
+          (click)="statusSelected = 'Waiting_For_Client_Reply'">Waiting For Your Reply
+          <span class="badge badge-primary badge-pill float-right">{{TicketStatus.Waiting_For_Client_Reply}}</span>
+        </li>
+      </ul>
+    </div>
+    <div class="col-8 ">
+      <div class="card m-3" [hidden]="statusSelected != ticket.status" *ngFor="let ticket of tickets">
+        <div class="card-header">
+          Ticket&nbsp;No : #{{ticket.ticketId}}
+
+          <span class="float-right">Date&nbsp; : {{ticket.createddatetime | date:'mediumDate'}}</span>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <span class="text-primary" [innerHTML]="ticket.subject | base64HTML"></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              Summary&nbsp;:&nbsp;<span [innerHTML]="ticket.summary | base64HTML"></span>
+            </div>
+          </div>
+          <p class="m-0">
+            Service Under&nbsp;:&nbsp;{{ticket.serviceUnder}}
+          </p>
+          <p class="m-0">Service Type&nbsp;:&nbsp;{{ticket.serviceType}}</p>
+          <p class="m-0">Status : <span class="badge badge-info">{{ticket.status}}</span><br>
+            <small [hidden]="ticket.status == 'Raised'" class="text-muted">last modified at
+              {{ticket.createddatetime | date:'medium'}}</small></p>
+          <br>
+          <a routerLink="/ticket/view-ticket/{{ticket.ticketId}}" class="btn btn-lg btn-blue">
+            <i class="fa fa-eye" aria-hidden="true"></i>&nbsp;<span>View Ticket</span></a>
+        </div>
+      </div>
+    </div>
+    <br>
+    <!-- <app-pagination (page)="pageEmitted($event)" [currentPage]="currentPage" [perPage]="perPage"
+    [setCount]="searchResultsCount"></app-pagination> -->
+  </div>

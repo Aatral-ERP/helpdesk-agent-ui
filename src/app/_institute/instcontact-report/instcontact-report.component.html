@@ -1,0 +1,74 @@
+<div class="container p-2 mb-5">
+    <div class="card">
+        <div class="card-body">
+            <p class="h4 text-center"> Institute Contact Report</p>
+            <hr style="width:100%;text-align:left;margin-left:0">
+            <div class="row justify-content-center">
+                <div class="col-8">
+                    <label>Institute</label>
+                    <ng-multiselect-dropdown [placeholder]="'Select Institutes'" [data]="_institutes"
+                        [(ngModel)]="_search_instContactfilters.institutes" [settings]="_instituteDropdownSettings">
+                    </ng-multiselect-dropdown>
+                </div>
+                <div class="col-4">
+                    <label for="firstName">Contact Name</label>
+                    <input class="form-control input-lg" type="text" id="firstName" placeHolder="Enter contact Name"
+                        name="firstName" [(ngModel)]="_search_instContactfilters.firstName" />
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <label for="isBlocked">Block Status</label>
+                    <select id="isBlocked" name="isBlocked" [(ngModel)]="_search_instContactfilters.isBlocked"
+                        class="form-control custom-select">
+                        <option value="">--select--</option>
+                        <option value="0">Login Access</option>
+                        <option value="1">Blocked</option>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <label for="city">City</label>
+                    <input class="form-control input-lg" type="text" id="city" placeHolder="Enter city" name="city"
+                        [(ngModel)]="_search_instContactfilters.city" />
+                </div>
+                <div class="col-3">
+                    <label for="emailId">EmailId</label>
+                    <input class="form-control input-lg" type="text" id="emailId" placeHolder="Enter EmailId"
+                        name="emailId" [(ngModel)]="_search_instContactfilters.emailId" />
+                </div>
+                <div class="col-4">
+                    <label for="phone">Phone Number</label>
+                    <input class="form-control input-lg" type="text" id="city" placeHolder="Enter Phone Number"
+                        name="phone" [(ngModel)]="_search_instContactfilters.phone" />
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col text-center">
+                    <button [disabled]="loading" class="btn btn-md btn-primary" (click)="search()">
+                        Submit
+                    </button>&nbsp;&nbsp;
+
+                    <button class="btn btn-md btn-primary" (click)="clear()">
+                        Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="showGrid">
+    <div class="row">
+        <div class="col">
+            <ag-grid-angular enableCellTextSelection="true" [rowData]="rowData" style="width: 100%; height: 400px;"
+                class="ag-theme-balham p-2" [columnDefs]="columnDefs" [paginationAutoPageSize]="true"
+                [pagination]="true">
+            </ag-grid-angular>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="item" *ngIf="loading">
+    <ngx-skeleton-loader count="10"></ngx-skeleton-loader>
+</div> -->

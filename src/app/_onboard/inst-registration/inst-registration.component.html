@@ -1,0 +1,274 @@
+<div class="container pb-5 mb-5">
+    <div class="row">
+        <div class="col-12">
+            <p class="indigo-text h3 text-center">Institution Register</p>
+            <hr style="width:100%;text-align:left;margin-left:0">
+
+            <div class="row" *ngIf="logoDiv">
+                <div class="col-lg-12 mb-12">
+                    <div class="narrower">
+
+                        <div class="card-body card-body-cascade text-center">
+                            <img *ngIf="inst.logourl == null || inst.logourl === undefined || inst.logourl == ''"
+                                (click)="photoUpload.click()" src="assets/images/No-image.png" alt="User Photo"
+                                class="z-depth-1 mb-3 mx-auto pointer" height="250px;" width="240px;">
+
+                            <img *ngIf="inst.logourl !== undefined && inst.logourl != ''  && inst.logourl != null"
+                                (click)="photoUpload.click()" src="{{getImageURL()}}"
+                                class="z-depth-1 mb-3 mx-auto pointer" height="250px;" width="250px;">
+
+                            <input type="file" #photoUpload accept="image/x-png,image/jpeg" id="photo" name="photo"
+                                (change)="fileChange($event)" hidden>
+
+                            <div *ngIf="logoLoading"
+                                class="mask flex-center waves-effect waves-light rgba-teal-super-light">
+                                <mat-chip>
+                                    updating...
+                                </mat-chip>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-8">
+                    <div class="ng-autocomplete">
+                        <label for="instituteName">Institute Name</label>
+                        <ng-autocomplete id="instituteName" placeHolder="Enter Inst.Name"
+                            (inputChanged)='inst.instituteName = $event' [data]="_inst_data"
+                            [(ngModel)]="inst.instituteName" (selected)='inst.instituteName = $event'
+                            [itemTemplate]="itemTemplateInstName">
+                        </ng-autocomplete>
+                        <small *ngIf="showInstExistsError" class="text-danger help-text">Institute Name already exists
+                            <i class="fas fa-exclamation-triangle"></i></small>
+
+                        <ng-template #itemTemplateInstName let-item>
+                            <a [innerHTML]="item"></a>
+                        </ng-template>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="ng-autocomplete">
+                        <label for="shortTerm">Institute Short-Term</label>
+                        <ng-autocomplete id="shortTerm" placeHolder="Enter Institution Short-Term"
+                            [(ngModel)]="inst.shortTerm" [data]="emptydata" [searchKeyword]="'name'">
+                        </ng-autocomplete>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <div class="ng-autocomplete">
+                        <label for="instituteType">Institute Type</label>
+                        <ng-autocomplete id="instituteType" placeHolder="Enter Institution Type"
+                            [(ngModel)]="inst.instituteType" [data]="instituteTypes"
+                            [itemTemplate]="itemTemplateInstType">
+                        </ng-autocomplete>
+
+                        <ng-template #itemTemplateInstType let-item>
+                            <a [innerHTML]="item"></a>
+                        </ng-template>
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <div class="ng-autocomplete">
+                        <label for="gstno">GST No</label>
+                        <ng-autocomplete id="gstno" placeHolder="Enter GST No" [(ngModel)]="inst.gstno"
+                            [data]="emptydata" [searchKeyword]="'name'">
+                        </ng-autocomplete>
+                        <small *ngIf="showGstError" class="text-danger help-text">Invalid
+                            GST Number <i class="fas fa-exclamation-triangle"></i></small>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="ng-autocomplete">
+                        <label for="street1">Address 1</label>
+                        <ng-autocomplete id="street1" placeHolder="Enter Address 1" [(ngModel)]="inst.street1"
+                            [data]="emptydata" [searchKeyword]="'name'">
+                        </ng-autocomplete>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="ng-autocomplete">
+                        <label for="street2">Address 2</label>
+                        <ng-autocomplete id="street2" placeHolder="Enter Address 2" [(ngModel)]="inst.street2"
+                            [data]="emptydata" [searchKeyword]="'name'">
+                        </ng-autocomplete>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="ng-autocomplete">
+                        <label for="city">City / District</label>
+                        <ng-autocomplete id="city" placeHolder="Enter city" [(ngModel)]="inst.city" [data]="emptydata"
+                            [searchKeyword]="'name'">
+                        </ng-autocomplete>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="ng-autocomplete">
+                        <label for="State">State</label>
+
+                        <ng-template #itemTemplateState let-item>
+                            <a [innerHTML]="item"></a>
+                        </ng-template>
+
+                        <ng-autocomplete id="State" placeHolder="Enter State" [(ngModel)]="inst.state"
+                            [data]="stateData" [itemTemplate]="itemTemplateState">
+                        </ng-autocomplete>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="ng-autocomplete">
+                        <label for="Country">Country</label>
+                        <ng-autocomplete id="Country" placeHolder="Enter Country" [(ngModel)]="inst.country"
+                            [data]="emptydata" [searchKeyword]="'name'">
+                        </ng-autocomplete>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="ng-autocomplete">
+                        <label for="zipcode">Pin Code <i (click)="openfetchAddressModal()"
+                                class="fas fa-map pointer pl-1"></i></label>
+                        <ng-autocomplete id="zipcode" placeHolder="Enter Pin Code" [(ngModel)]="inst.zipcode"
+                            [data]="emptydata" [searchKeyword]="'name'">
+                        </ng-autocomplete>
+                        <small *ngIf="showPinError" class="text-danger help-text">Invalid
+                            PinCode <i class="fas fa-exclamation-triangle"></i></small>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="ng-autocomplete">
+                        <label for="phone">Phone</label>
+                        <ng-autocomplete id="phone" placeHolder="Enter Phone" [(ngModel)]="inst.phone"
+                            [data]="emptydata" [searchKeyword]="'name'" [itemTemplate]="itemTemplatephone">
+                        </ng-autocomplete>
+                        <small *ngIf="showNumberError" class="text-danger help-text">Invalid
+                            Phone Number <i class="fas fa-exclamation-triangle"></i></small>
+
+                        <ng-template #itemTemplatephone let-item>
+                            <a [innerHTML]="item.name"></a>
+                        </ng-template>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="ng-autocomplete">
+                        <label for="alternatePhone">Alt.Phone Number</label>
+                        <ng-autocomplete id="alternatePhone" placeHolder="Enter Alt.Phone Number"
+                            [(ngModel)]="inst.alternatePhone" [data]="emptydata" [searchKeyword]="'name'">
+                        </ng-autocomplete>
+                        <small *ngIf="showAltNumberError" class="text-danger help-text">Invalid
+                            Alt.Phone Number <i class="fas fa-exclamation-triangle"></i></small>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="ng-autocomplete">
+                        <label for="emailId">Email-ID</label>
+                        <ng-autocomplete id="emailId" placeHolder="Enter Email-Id" [(ngModel)]="inst.emailId"
+                            [data]="emptydata" [searchKeyword]="'name'">
+                        </ng-autocomplete>
+                        <small *ngIf="showEmailError" class="text-danger help-text">Invalid
+                            Email <i class="fas fa-exclamation-triangle"></i></small>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="ng-autocomplete">
+                        <label for="alternateEmailId">Atl.MailId</label>
+                        <ng-autocomplete id="alternateEmailId" placeHolder="Enter Atl.MailId"
+                            [(ngModel)]="inst.alternateEmailId" [data]="emptydata" [searchKeyword]="'name'">
+                        </ng-autocomplete>
+                        <small *ngIf="showAltEmailError" class="text-danger help-text">Invalid
+                            Alt.Email <i class="fas fa-exclamation-triangle"></i></small>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="ng-autocomplete">
+                        <label for="keyInfo">Key Information</label>
+                        <textarea class="form-control" name="keyInfo" id="keyInfo" rows="5"
+                            placeHolder="Enter key Information about this Institution"
+                            [(ngModel)]="inst.keyInfo"></textarea>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="ng-autocomplete">
+                        <label for="remarks">Remarks</label>
+                        <textarea class="form-control" name="remarks" id="remarks" rows="5" placeHolder="Enter Remarks"
+                            [(ngModel)]="inst.remarks"></textarea>
+                    </div>
+                </div>
+
+
+                <div class="col-12">
+                    <label>Project Manager(s)</label>
+                    <ng-multiselect-dropdown [placeholder]="'Project Manager(s)'" [data]="_agents" [(ngModel)]="agents"
+                        [settings]="_AgentsDropdownSettings">
+                    </ng-multiselect-dropdown>
+                </div>
+            </div>
+
+            <div class="row">
+
+
+            </div>
+
+            <div class="row text-center">
+                <div class="col">
+                    <button class="btn btn-md btn-primary" (click)="save()">
+                        Save
+                    </button>&nbsp;&nbsp;
+                    <button class="btn btn-md btn-primary" (click)="clear()">
+                        Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Section: Live preview-->
+
+<!--Modal: modal-->
+<div class="modal fade right" id="addressModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true" data-backdrop="true">
+    <div class="modal-dialog modal-frame modal-right modal-full-height modal-notify modal-primary" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <!--Body-->
+            <div class="modal-body">
+
+                <h4 class="text-dark">Select Address</h4>
+
+                <div *ngIf="!loading_address && _address.length == 0" class="alert alert-info text-center" role="alert">
+                    <span class="pl-2">No Address Found...</span>
+                </div>
+
+                <div *ngIf="loading_address" class="alert alert-info text-center" role="alert">
+                    <span class="pl-2">loading...</span>
+                </div>
+
+                <div class="card pointer p-2 m-2" (click)="fillAddress(addr)" *ngFor="let addr of _address">
+                    <h6 class="text-dark">{{addr.Name}}</h6>
+                    <p class="text-muted">
+                        {{addr.Name}},&nbsp;{{addr.Division}},&nbsp;{{addr.Taluk}},&nbsp;{{addr.District}},&nbsp;{{addr.State}},&nbsp;{{addr.Country}}
+                    </p>
+                </div>
+
+            </div>
+        </div>
+        <!--/.Content-->
+    </div>
+</div>

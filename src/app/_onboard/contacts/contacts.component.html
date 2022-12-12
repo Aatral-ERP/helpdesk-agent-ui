@@ -1,0 +1,32 @@
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <div class="card-header1">
+                <i class="fa fa-user" aria-hidden="true"></i>&nbsp; My Account
+                <!-- <div class="float-right"><i class="fa fa-chevron-up" aria-hidden="true"></i></div> -->
+            </div>
+
+            <ul class="list-group list-group-flush">
+                <a routerLink="/onboard/register" class="list-group-item list-group-item-action">My Details</a>
+                <a routerLink="/onboard/contacts"
+                    class="list-group-item list-group-item-action">Contcats/Sub-Accounts</a>
+                <a routerLink="/onboard/change-password" class="list-group-item list-group-item-action">Change
+                    Password</a>
+                    <li class="list-group-item list-group-item-action" (click)="logout()"><i class="fa fa-sign-out"
+                        aria-hidden="true"></i>&nbsp;Logout</li>
+            </ul>
+        </div>
+        <div class="col-9" *ngIf="instituteContacts.length > 0">
+            <p class="indigo-text h3 text-center">Contacts</p>
+            <br>
+            <p class="font-weight-bold p-2">
+                <a routerLink="/onboard/sub-contact" class="text-primary float-right">Add Contact
+                    &nbsp; <i class="fa fa-user" aria-hidden="true"></i>
+                </a>
+            </p>
+            <div *ngFor="let viewContact of instituteContacts">
+                <app-view-contacts [viewContact]="viewContact"></app-view-contacts>
+            </div>
+        </div>
+    </div>
+</div>

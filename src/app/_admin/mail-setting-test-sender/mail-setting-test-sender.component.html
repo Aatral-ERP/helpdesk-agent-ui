@@ -1,0 +1,32 @@
+<h4 mat-dialog-title>{{configName}}</h4>
+
+<mat-dialog-content>
+
+    <div class="row">
+        <div class="col-12">
+            <label class="required-label">Email Id</label>
+            <input type="text" name="username" class="form-control" placeholder="Eg., someone@gmail.com"
+                [(ngModel)]="mailTo">
+            <small> This Email-Id will receive a test e-mail from the Selected Mail Settings ({{configName}})</small>
+        </div>
+
+        <button class="btn btn-md btn-primary" (click)="sendTestMail()" [disabled]="sending_test_mail"> Send
+            Test Mail
+            <div *ngIf="sending_test_mail" class="spinner-border spinner-border-sm" role="status">
+                <span class="sr-only"> Sending...</span>
+            </div>
+        </button>&nbsp;&nbsp;
+    </div>
+
+
+    <p class="text-success m-2" [innerHTML]="success_msg"></p>
+
+    <p class="text-danger m-2" [innerHTML]="error_msg"></p>
+
+
+</mat-dialog-content>
+
+
+<mat-dialog-actions align="end">
+    <a (click)="closeDialog()"><u>close</u></a>
+</mat-dialog-actions>

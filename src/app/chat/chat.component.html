@@ -1,0 +1,128 @@
+<div class="container justify-content-center p-5" *ngIf="stompClient === undefined || stompClient.connected == false"
+  style="width: 28rem;">
+  
+    <div *ngIf="loading" class="container d-flex justify-content-center p-1">
+      <div class="spinner-border text-success" style="width: 5rem; height: 5rem;" role="status">
+          <span class="sr-only">Loading Chat...</span>
+      </div>
+  </div>
+  
+</div>
+<div class="container" *ngIf="stompClient !== undefined && stompClient.connected == true">
+  <h3 class=" text-center">Messaging</h3>
+  <div class="messaging">
+    <div class="inbox_msg">
+      <div class="inbox_people">
+        <div class="headind_srch black" [ngClass]="stompClient.connected == true ? 'indigo' : 'bg-danger'">
+          <!-- <h4>Recent</h4> -->
+          <div class="chat_people">
+            <div class="chat_img"> <img class="rounded-circle border border-white" src="{{'data:image/png;base64,' + photo}}" alt="User Photo"> </div>
+            <div class="chat_ib">
+
+
+              
+              <h5 class="p-0 m-0 text-white font-weight-bold"> {{agentName}} </h5>
+              <small class="p-0 m-0 text-light">{{employeeId}}</small>
+            </div>
+          </div>
+        </div>
+        <div class="inbox_chat">
+          <div class="chat_list pointer" *ngFor="let admin of RecentMessageMembers"
+            (click)="active_chat = admin ; changeActiveChat(admin.user_email_id);"
+            [ngClass]="active_chat.agent_email_id == admin.agent_email_id ? 'active_chat' : ''">
+            <div class="chat_people">
+              <div class="chat_img"> <img name="chatname" id="chatname" src="{{getPhotoUrl(admin.photo)}}" alt="">
+              </div>
+              <div class="chat_ib">
+                <h5> {{admin.first_name}}
+                  <span *ngIf="admin.lastmsgid > 0" [ngClass]="admin.is_read_by_user == 0 ? 'text-success' : ''"
+                    class="chat_date">{{admin.last_message_datetime | date :'d/M/yy h:mm'}}
+                  </span>
+                </h5>
+                <small> {{admin.institute_name}} </small>
+                <br>
+                <small title="{{admin.last_message}}" [ngClass]="admin.is_read_by_user == 0 ? 'text-success' : ''"
+                  *ngIf="admin.last_message != null">
+                  <!-- {{ (admin.last_message.length > 25)? (admin.last_message | slice:0:25)+'...':(admin.last_message) }} -->
+                  <span [innerHTML]="admin.last_message"></span>
+                </small>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mesgs">
+
+        <div *ngIf="!isAgent" class="text-center">
+          <img class="img-fluid p-5 m-5 pb-0 mb-0" src="./assets/icon images/messaging.png"
+            alt="Select Admins for Chat">
+
+          <p class="text-muted">Select Staff to Chat.</p>
+
+        </div>
+
+        <div *ngIf="isAgent">
+          <div class="headind_srch">
+            <div class="recent_heading">
+              <!-- <h4>{{active_chat.member_name}}</h4> -->
+              <div class="chat_people">
+                <div class="chat_img"> <img src="{{getPhotoUrl(active_chat.photo)}}" alt="{{active_chat.first_name}}">
+                </div>
+                <div class="chat_ib">
+                  <h5> {{active_chat.first_name}} </h5>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div  class="msg_history">
+            <p *ngIf="Messages.length == 0"
+              class="text-center border border-info bg-info text-white small font-weight-bold">No messages yet!</p>
+
+            <p *ngIf="Messages.length > 45" class="text-center text-primary pointer" (click)="loadOldMessages()">Load
+              Old Messages</p>
+
+            <div *ngFor="let msg of Messages">
+
+              <div *ngIf="msg.messageBy == user_email_id" class="incoming_msg">
+               
+                <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
+                </div>
+                <div class="received_msg" *ngIf="msg.messageBy == user_email_id">
+                  <div class="received_withd_msg">
+                    <span [innerHTML]="msg.message"></span>
+                    <span class="time_date"> {{msg.messageDateTime | date:'EEE, MMM d, y, h:mm:ss a'}}</span></div>
+                </div>
+              </div>
+              <div *ngIf="msg.messageBy != user_email_id" class="outgoing_msg">
+                <div class="sent_msg">
+                  <p [innerHTML]="msg.message"></p>
+                  <span class="time_date"> {{msg.messageDateTime | date:'EEE, MMM d, y, h:mm:ss a'}}</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="type_msg">
+            <div class="input_msg_write">
+              <input type="text" (keyup.enter)="sendMessage()" class="write_msg"
+                [disabled]="stompClient === undefined || stompClient.connected == false" [(ngModel)]="str" name="str"
+                placeholder="Type a message" />
+              <button class="msg_send_btn mr-1" (click)="sendMessage()" type="button">
+               
+                <fa-icon [icon]="faPaperPlane"></fa-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <p *ngIf="user_rights < 2">
+  <span routerLink="/chat/settings" class="text-primary pointer">Chat Settings</span>
+</p> -->
+<!-- {{messages | json}} -->
+

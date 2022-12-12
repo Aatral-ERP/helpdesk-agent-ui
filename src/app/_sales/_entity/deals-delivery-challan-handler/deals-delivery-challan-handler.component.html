@@ -1,0 +1,30 @@
+<div class="container">
+
+    <ngx-skeleton-loader *ngIf="loading" count="3" appearance="line"></ngx-skeleton-loader>
+
+    <div *ngIf="!loading" class="alert alert-info text-center" role="alert" [hidden]="dcs.length > 0">
+        No Delivery Challan Found...
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-md float-right" (click)="convertDC()">Create Delivery Challan&nbsp;
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+    </div>
+
+    <div *ngFor="let dc of dcs" class="card-header mb-4">
+        <span class="text-primary">#{{dc.id}}</span>
+
+        <span *ngIf="dc.invoiceNo != null && dc.invoiceNo != ''" class="text-primary"> - #{{dc.invoiceNo}} </span>
+
+        <span class="text-primary pointer" (click)="convertDC(dc)">&nbsp;<u>Edit</u>&nbsp;
+            &nbsp;<i class='fas fa-edit'></i> </span> &nbsp;&nbsp;
+
+        <i class="far fa-trash-alt text-danger float-right" (click)="deleteDC(dc)"></i>
+    </div>
+
+    <app-deals-delivery-challan *ngIf="showDCEdit" [deliveryChallan]="dc" (DeliveryChallanEvent)="dcUpdate($event)"
+        [dealId]="dealId" [deal]="deal"></app-deals-delivery-challan>
+</div>

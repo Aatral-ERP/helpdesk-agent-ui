@@ -1,0 +1,18 @@
+<div class="row p-1" style="border-bottom: 1px solid lightgray;">
+    <div class="col">
+        <div class="row">{{rating.feedback}}</div>
+        <div class="row">
+            <small class="text-muted">ratinged at {{rating.createddatetime | date:'dd/MM/yyyy'}} </small></div>
+        <div class="row">
+            <small>
+                <i [ngClass]="rating.rating > 0 ? 'text-warning' : 'text-light'" class="fa fa-star">
+                </i>
+                <i [ngClass]="rating.rating > 1 ? 'text-warning' : 'text-light'" class="fa fa-star"></i>
+                <i [ngClass]="rating.rating > 2 ? 'text-warning' : 'text-light'" class="fa fa-star"></i>
+                <i [ngClass]="rating.rating > 3 ? 'text-warning' : 'text-light'" class="fa fa-star"></i>
+                <i [ngClass]="rating.rating > 4 ? 'text-warning' : 'text-light'" class="fa fa-star"></i>
+            </small>
+        </div>
+
+    </div>
+</div>

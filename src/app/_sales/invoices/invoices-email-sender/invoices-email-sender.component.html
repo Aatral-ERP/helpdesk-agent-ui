@@ -1,0 +1,75 @@
+<div class="row justify-content-center">
+    <div class="col">
+        <div class="card">
+            <div class="card-body p-5">
+                <h5 class="text-dark font-weight-bold">Send Email</h5>
+
+                <div class="row">
+
+                    <div class="col-4">
+                        <label for="mailIds">Mail To</label>
+                        <input type="text" class="form-control" id="mailIds" [(ngModel)]="invoiceEmail.mailIds">
+                    </div>
+
+                    <div class="col-8">
+                        <label for="mailIdCC">Mail CC</label>
+                        <input type="text" class="form-control" id="mailIdCC" [(ngModel)]="invoiceEmail.mailIdCC">
+                    </div>
+
+                    <div class="col-12">
+                        <label for="subject">Subject</label>
+                        <input type="text" class="form-control" id="subject" [(ngModel)]="invoiceEmail.subject">
+                    </div>
+
+                    <div class="col-12">
+                        <label for="message">Message</label>
+                        <angular-editor [config]="editorConfig" [(ngModel)]="invoiceEmail.message"></angular-editor>
+                    </div>
+
+                    <br>
+                    <div class="col-12 p-1 center">
+
+                        <ngx-file-drop multiple="true" [showBrowseBtn]="false" dropZoneLabel="Drop files here."
+                            (onFileDrop)="dropped($event)" (onFileOver)="fileOver($event)"
+                            (onFileLeave)="fileLeave($event)">
+                            <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                                Drop files here
+                                or&nbsp;&nbsp;
+                                <span class="pointer" (click)="openFileSelector()"><u>Browse Files</u></span>
+                            </ng-template>
+                        </ngx-file-drop>
+
+                        <small *ngIf="files.length == 0"> No Files selected</small>
+                        <br>
+
+                        <span class="text-dark">Attachments</span><br>
+
+                        <small>{{invoiceEmail.filename}}</small><br>
+
+                        <small *ngFor="let file of files;let i = index">
+                            <small><i class="fas fa-trash-alt text-danger pointer mr-1"
+                                    (click)="files.splice(i , 1)"></i></small>
+
+                            {{file.name}}
+                            <small class="badge badge-light text-muted">{{file.size | filesize}} </small>
+
+                            <br>
+                        </small>
+                    </div>
+
+                    <div class="col-12 text-center">
+                        <button [disabled]="" class="btn btn-sm btn-primary" (click)="saveDealMail()">
+                            Send Mail
+                            <div *ngIf="loading" class="spinner-border spinner-border-sm" role="status">
+                                <span class="sr-only"> Saving...</span>
+                            </div>
+                        </button>
+                        <button class="btn btn-sm btn-primary-outline" (click)="sendResp('close')">
+                            close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

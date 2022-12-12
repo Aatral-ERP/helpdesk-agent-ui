@@ -1,0 +1,260 @@
+<div class="container-fluid">
+
+    <div class="alert alert-info text-center" role="alert" [hidden]="dealQuote.id > 0">
+        <span *ngIf="!loading" class="pl-2">No Quotation Found...</span>
+        <span *ngIf="loading" class="pl-2">loading...</span>
+    </div>
+
+    <h5 class="font-weight-bold">Quote Info</h5>
+
+    <div class="row">
+
+        <div class="col-sm-12 col-md-12 col-lg-6">
+            <label for="subject">Subject</label>
+            <input class="form-control" type="text" id="subject" placeHolder="Enter Subject" name="subject"
+                [(ngModel)]="dealQuote.subject" />
+        </div>
+
+        <div class="col-sm-12 col-md-8 col-lg-6">
+            <label for="quoteNo">Quotation No</label>
+            <input class="form-control" type="text" id="quoteNo" placeHolder="Enter Quotation No " name="quoteNo"
+                [(ngModel)]="dealQuote.quoteNo" />
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <label for="dob" style="margin-bottom: 5px;"> Quote Date </label>
+            <div class="input-group">
+                <input class="form-control" (focus)="quoteDatedp.toggleCalendar()" placeholder="choose Quote Date"
+                    angular-mydatepicker name="quoteDateObject" [(ngModel)]="dealQuote.quoteDateObject"
+                    (dateChanged)="dealQuote.quoteDate = $event.singleDate.jsDate" [options]="myDatePickerOptions"
+                    #quoteDatedp="angular-mydatepicker" autocomplete="off" />
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <i (click)="quoteDatedp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <label for="dob" style="margin-bottom: 5px;"> Valid Until
+                <i [matMenuTriggerFor]="menu" class="fas fa-cog text-right pointer"></i>
+
+                <mat-menu #menu="matMenu">
+                    <button (click)="changeDueDate('Net 15')" mat-menu-item>Net 15</button>
+                    <button (click)="changeDueDate('Net 30')" mat-menu-item>Net 30</button>
+                    <button (click)="changeDueDate('Net 45')" mat-menu-item>Net 45</button>
+                    <button (click)="changeDueDate('Net 60')" mat-menu-item>Net 60</button>
+                    <button (click)="changeDueDate('Net 90')" mat-menu-item>Net 90</button>
+                </mat-menu>
+            </label>
+            <div class="input-group">
+                <input class="form-control" (focus)="validuntildp.toggleCalendar()" placeholder="choose valid date"
+                    angular-mydatepicker name="validUntilObject" [(ngModel)]="dealQuote.validUntilObject"
+                    (dateChanged)="dealQuote.validUntil = $event.singleDate.jsDate" [options]="myDatePickerOptions"
+                    #validuntildp="angular-mydatepicker" autocomplete="off" />
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <i (click)="validuntildp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-4 col-lg-6">
+            <label>Quote Stage</label>
+            <select name="quoteStage" [(ngModel)]="dealQuote.quoteStage" class="form-control">
+                <option value="Draft">Draft</option>
+                <option value="Negotiation">Negotiation</option>
+                <option value="On Hold">On Hold</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Confirmed">Confirmed</option>
+                <option value="Closed Won">Closed Won</option>
+                <option value="Closed Lost">Closed Lost</option>
+            </select>
+        </div>
+
+        <div class="col-12 ">
+            <label for="terms">Terms & Conditions</label>
+            <textarea class="form-control" name="terms" id="terms" rows="5" [(ngModel)]="dealQuote.terms"></textarea>
+            <p><small *ngIf="dealQuote.createddatetime != null" class="d-block text-muted small">Created By
+                    {{dealQuote.createdBy}}
+                    {{dealQuote.createddatetime | date:'medium'}}</small>
+            </p>
+            <p class="d-block">
+                <small *ngIf="dealQuote.lastupdatedatetime != null" class="d-block text-muted small">Last Modified By
+                    {{dealQuote.modifiedBy}}
+                    {{dealQuote.lastupdatedatetime | date:'medium'}}
+                </small>
+            </p>
+
+            <small class="text-primary float-right pointer" (click)="showTermsMasters = !showTermsMasters">
+                <span *ngIf="!showTermsMasters">Choose Terms and Conditions from Master</span>
+                <span *ngIf="showTermsMasters">Close</span>
+            </small>
+
+            <br>
+
+            <app-terms-and-conditions *ngIf="showTermsMasters" (OnChoose)="dealQuote.terms = $event"
+                [type]="'Quotation'">
+            </app-terms-and-conditions>
+
+        </div>
+
+        <div class="col-12 text-center">
+
+            <button [disabled]="saving" class="btn btn-md btn-primary" (click)="saveDealQuotation()">
+                Save
+                <span [hidden]="!saving" class="spinner-border spinner-border-sm" role="status"
+                    aria-hidden="true"></span>
+            </button>
+            <button class="btn btn-sm btn-outline-primary" (click)="clearFilters()">Clear</button>
+
+        </div>
+
+
+    </div>
+
+    <div *ngIf="dealQuote.id > 0" class="row noQuoteSpan mt-5 justify-content-center">
+
+        <div class="col-12 p-3 m-1">
+            <h6 class="text-primary pointer">
+
+                <span (click)="viewPDF()">
+                    {{dealQuote.filename}}
+                </span>
+                &nbsp;&nbsp;&nbsp;
+                <i class="fas fa-download" *ngIf="dealQuote.filename != null && dealQuote.filename != ''"
+                    (click)="downloadPDF()"></i>
+
+            </h6><br>
+
+            <span *ngIf="dealQuote.filename == ''" (click)="showPDFTemplateOptions = !showPDFTemplateOptions"
+                class="pointer text-primary">Generate
+                Quotation PDF &nbsp;
+                <i class="fas fa-file-pdf"></i></span><br>
+
+            <div class="row" *ngIf="dealQuote.filename != ''">
+                <div class="col">
+
+                    <span (click)="showAddNewEmail = !showAddNewEmail" class="pointer text-primary">Send
+                        Email &nbsp;
+                        <i class="far fa-envelope-open"></i></span><br>
+
+                    <span *ngIf="dealQuote.filename != ''" (click)="openShareWhatsAppModal()"
+                        class="pointer text-success">Share
+                        on WhatsApp &nbsp;
+                        <i class="fab fa-whatsapp"></i></span><br>
+
+
+                    <span (click)="showPDFTemplateOptions = !showPDFTemplateOptions"
+                        class="pointer text-primary">Re-Generate
+                        Quotation PDF &nbsp;
+                        <i class="fas fa-file-pdf"></i></span><br>
+                </div>
+            </div>
+
+            <span (click)="quotationFileUpload.click()" class="pointer text-primary">Upload Generated Quotation PDF
+                &nbsp;
+                <i class="fas fa-upload"></i></span>
+
+            <input hidden type="file" #quotationFileUpload (change)="quotationFileUploadChange($event.target.files[0])">
+        </div>
+
+        <div class="col-12" *ngIf="showPDFTemplateOptions">
+            <h6 class="text-muted text-center">Choose Preamble File (Optional)</h6>
+            <small class="text-muted">This Selected File will be appended with Quotation.</small>
+
+            <h4>Selected File : {{preamble}}</h4>
+            <app-preamble (OnChoose)="preamble = $event;OnChoosePreamble($event)"
+                (OnUnChoose)="preamble = $event;OnUnChoosePreamble($event)">
+            </app-preamble>
+
+            <mat-radio-group *ngIf="preamble != ''" aria-label="Select an option" [(ngModel)]="preamblePosition">
+                <mat-radio-button value="Preamble First">Preamble First&nbsp;&nbsp;</mat-radio-button>
+                <mat-radio-button value="Quotation First">Quotation First</mat-radio-button>
+            </mat-radio-group>
+
+            <h6 class="text-muted text-center">Choose a Template</h6>
+
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <mat-checkbox [(ngModel)]="addRoundSeal">Add Round Seal</mat-checkbox>
+                    &nbsp;&nbsp;
+                    <mat-checkbox [(ngModel)]="addFullSeal">Add Full Seal</mat-checkbox>
+                    &nbsp;&nbsp;
+                    <mat-checkbox [(ngModel)]="addSign">Add Signature</mat-checkbox>
+                    &nbsp;&nbsp;
+                    <mat-checkbox [(ngModel)]="detailedPricing">Detailed Pricing</mat-checkbox>
+                    &nbsp;&nbsp;
+
+                    <mat-radio-group aria-label="Select an option" [(ngModel)]="exportType">
+                        <mat-radio-button value="PDF">PDF&nbsp;&nbsp;</mat-radio-button>
+                        <mat-radio-button value="RTF">Editable RTF&nbsp;&nbsp;</mat-radio-button>
+                    </mat-radio-group>
+                    &nbsp;&nbsp;
+                    <input type="text" size="25" class="designationinput" name="designation"
+                        [(ngModel)]="designation" />
+                </div>
+
+                <div class="col-12">
+
+                    <button class="text-center m-1" (click)="generateQuotationPDF('Quote_Template_1')" mat-flat-button
+                        color="primary">Quote_Template_1</button>
+                    <button class="text-center m-1" (click)="generateQuotationPDF('Quote_Template_2')" mat-flat-button
+                        color="warn">Quote_Template_2</button>
+                    <button class="text-center m-1" (click)="generateQuotationPDF('Quote_Template_3')" mat-flat-button
+                        color="accent">Quote_Template_3</button>
+
+                </div>
+            </div>
+            <small (click)="showPDFTemplateOptions = !showPDFTemplateOptions"
+                class="text-muted text-center pointer">Close</small>
+        </div>
+
+        <mat-progress-bar *ngIf="generatingQuotationPDF" mode="indeterminate">
+        </mat-progress-bar>
+
+    </div>
+
+    <app-deals-email-sender class="m-1" [deal]="deal" *ngIf="showAddNewEmail" [subject]="dealQuote.subject" [message]=""
+        [filename]="dealQuote.filename" [tab]="'Quotation'" [dealId]="dealId" (resp)="resp($event)">
+    </app-deals-email-sender>
+
+
+    <p class="m-5 p-5">&nbsp;</p>
+
+    <div class="modal fade bottom" id="whatsappShareModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true" data-backdrop="true">
+        <div class="modal-dialog modal-frame modal-bottom modal-full-height modal-notify modal-primary" role="document">
+            <!--Content-->
+            <div class="modal-content">
+                <!--Body-->
+                <div class="modal-body">
+
+                    <h4 class="text-dark">WhatsApp share</h4>
+
+                    <form class="example-form">
+                        <mat-form-field class="=====example-full-width w-100">
+                            <mat-label>To</mat-label>
+                            <input matInput class="w-100" placeholder="Enter a WhatsApp number" name="shareWhatsappTo"
+                                [(ngModel)]="shareWhatsappTo">
+                        </mat-form-field>
+
+                        <mat-form-field class="example-full-width w-100">
+                            <mat-label>Leave a comment</mat-label>
+                            <textarea matInput class="w-100" rows="6" placeholder="Enter Something"
+                                name="shareWhatsappText" [(ngModel)]="shareWhatsappText"></textarea>
+                        </mat-form-field>
+                    </form>
+
+                    <button mat-stroked-button color="success" (click)="shareWhatsApp()">
+                        Sent
+                    </button>
+
+                </div>
+            </div>
+            <!--/.Content-->
+        </div>
+    </div>
+</div>

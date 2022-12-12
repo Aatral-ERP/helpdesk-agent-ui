@@ -1,0 +1,117 @@
+<!-- Modal -->
+<div class="modal fade" id="addLeaveMasterScrollable" tabindex="-1" role="dialog"
+    aria-labelledby="addLeaveMasterScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addLeaveMasterScrollableTitle">Create Leave Master</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container p-1 m-1">
+
+                    <div class="row">
+                        <div class="col-12">
+                            <mat-form-field class="w-100">
+                                <mat-label class="required-label">Name</mat-label>
+                                <input matInput placeholder="Enter Name... " [(ngModel)]="leaveMaster.name">
+                            </mat-form-field>
+                            <small [hidden]="errors.name == ''" class="text-danger">{{errors.name}}</small>
+                        </div>
+                        <h6 class="text-dark">
+                            Leave Policies
+                        </h6>
+                        <div class="col-12">
+                            <mat-form-field class="w-50">
+                                <mat-label class="required-label">Annual/Privilege Leave</mat-label>
+                                <input type="number" matInput placeholder="Enter Annual/Privilege Leave... "
+                                    [(ngModel)]="leaveMaster.annualLeave">
+                            </mat-form-field>
+                            <small [hidden]="errors.annualLeave == ''"
+                                class="text-danger d-block">{{errors.annualLeave}}</small>
+                        </div>
+                        <div class="col-12">
+                            <mat-form-field class="w-50">
+                                <mat-label class="required-label">Casual Leave</mat-label>
+                                <input type="number" matInput placeholder="Enter Casual Leave... "
+                                    [(ngModel)]="leaveMaster.casualLeave">
+                            </mat-form-field>
+                            <small [hidden]="errors.casualLeave == ''"
+                                class="text-danger d-block">{{errors.casualLeave}}</small>
+                        </div>
+                        <div class="col-12">
+                            <mat-form-field class="w-50">
+                                <mat-label class="required-label">Sick Leave</mat-label>
+                                <input type="number" matInput placeholder="Enter Sick Leave... "
+                                    [(ngModel)]="leaveMaster.sickLeave">
+                            </mat-form-field>
+                            <small [hidden]="errors.sickLeave == ''"
+                                class="text-danger d-block">{{errors.sickLeave}}</small>
+                        </div>
+                        <div class="col-12">
+                            <mat-form-field class="w-50">
+                                <mat-label class="required-label">Other Leave</mat-label>
+                                <input type="number" matInput placeholder="Enter Other Leave... "
+                                    [(ngModel)]="leaveMaster.otherLeave">
+                            </mat-form-field>
+                            <small [hidden]="errors.otherLeave == ''"
+                                class="text-danger d-block">{{errors.otherLeave}}</small>
+                        </div>
+                        <div class="col-12">
+                            <mat-form-field class="w-50">
+                                <mat-label class="required-label">Permissions</mat-label>
+                                <input type="number" matInput placeholder="Enter Permissions... "
+                                    [(ngModel)]="leaveMaster.permissions">
+                            </mat-form-field>
+                            <small [hidden]="errors.permissions == ''"
+                                class="text-danger d-block">{{errors.permissions}}</small>
+                        </div>
+                        <!-- <h6 class="text-dark">
+                            Loss of Pay Setting
+                        </h6>
+                         <div class="col-12">
+                            <mat-form-field class="w-50">
+                                <mat-label class="required-label">Loss of Pay/day</mat-label>
+                                <input type="number" matInput placeholder="Enter LOP... "
+                                    [(ngModel)]="leaveMaster.lopPerDay">
+                            </mat-form-field>
+                            <small [hidden]="errors.lopPerDay == ''"
+                                class="text-danger d-block">{{errors.lopPerDay}}</small>
+                        </div>
+                        <h6 class="text-dark">
+                            Leave Carry Forward / Roll Over Settings
+                        </h6>
+                        <div class="col-12">
+                            <mat-checkbox color="primary" name="carryForward" [(ngModel)]="leaveMaster.carryForward">
+                                Enable Carry
+                                Forward / Roll Over
+                            </mat-checkbox>
+                        </div>
+                        <div class="col-12" *ngIf="leaveMaster.carryForward">
+                            <mat-form-field class="w-50">
+                                <mat-label>Maximum Carry Forward / Roll Over</mat-label>
+                                <input type="number" matInput placeholder="Enter Maximum Carry Forward... "
+                                    [(ngModel)]="leaveMaster.maximumCarryForward">
+                            </mat-form-field>
+                            <br>
+                            <small class="text-muted">Carry Forwards the Annual Leave only.</small>
+                            <small [hidden]="errors.maximumCarryForward == ''"
+                                class="text-danger d-block">{{errors.maximumCarryForward}}</small>
+                        </div>
+                         -->
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <span (click)="deleteLeaveMaster()" class="float-left text-danger pointer">
+                    <u>Delete</u> <i class="fas fa-trash-alt pl-1"></i></span>
+
+                <button type="button" class="btn btn-sm btn-outline-primary" data-dismiss="modal">Close</button>
+                <button type="button" (click)="saveLeaveMaster()" class="btn btn-sm btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>

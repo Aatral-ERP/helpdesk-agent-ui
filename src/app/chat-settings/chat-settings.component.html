@@ -1,0 +1,42 @@
+<p class="indigo-text h4 text-center">Chat Setting</p>
+
+<div *ngIf="loading" class="container d-flex justify-content-center p-1">
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+
+<div class="container" *ngIf="ChatSettings.length > 0">
+    <div *ngFor="let user of ChatSettings;let i = index;">
+        <!-- <app-chat-set (User)="userSelectionEmitted($event)" [user]="user"></app-chat-set> -->
+        <div class="card p-2 pl-4 pr-4 bq-primary">
+            <div class="row">
+                <small class="pr-2">
+                    <span>Employee Id<span class="text-muted">&nbsp;&nbsp;{{user.agent_email_id}}</span></span>
+                </small>
+                <span class="text-right ml-auto pointer">
+                    <small ><input type="checkbox" id="userfilter_{{i}}"
+                        [(ngModel)]="user.chat_enable"></small>&nbsp;&nbsp;</span>
+            </div>
+            <div class="row">
+                <small class="pr-2">
+                    <span>Agent Name<span class="text-muted">{{user.first_name}}</span></span>
+                </small>
+            </div>
+            <div class="row" *ngIf="user.desig_name!=''">
+                <small class="pr-2">
+                    <span>Designation:<span class="text-muted">{{user.designation}}</span></span>
+                </small>
+            </div>
+            
+        </div>
+    </div>
+    <div class="row text-center">
+        <div class="col">
+            <button class="btn btn-md btn-primary" (click)="save()">
+                save
+            </button>
+        </div>
+    </div>
+</div>
+

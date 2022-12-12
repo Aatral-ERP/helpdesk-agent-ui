@@ -1,0 +1,142 @@
+<div class="container p-2">
+    <div class="card">
+        <div class="card-body">
+            <p class="text-indigo h4 text-center"> Ticket Report </p>
+            <hr>
+            <div class="row">
+                <div class="col-12">
+                    <mat-label class="text-muted small">Institute</mat-label>
+                    <ng-multiselect-dropdown [placeholder]="'Select Institutes'" [data]="_institutes"
+                        [(ngModel)]="_filters.institutes" [settings]="_instituteDropdownSettings">
+                    </ng-multiselect-dropdown>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12">
+                    <mat-label class="text-muted small">Created By</mat-label>
+                    <ng-multiselect-dropdown [placeholder]="'Select Agents'" [data]="_agents"
+                        [(ngModel)]="_filters.createdAgents" [settings]="_agentsDropdownSettings">
+                    </ng-multiselect-dropdown>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-12">
+                    <mat-label class="text-muted small">Reporting To</mat-label>
+                    <ng-multiselect-dropdown [placeholder]="'Select Agents'" [data]="_agents"
+                        [(ngModel)]="_filters.reportingToAgents" [settings]="_agentsDropdownSettings">
+                    </ng-multiselect-dropdown>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-12">
+                    <mat-label class="text-muted small">Assigned To</mat-label>
+                    <ng-multiselect-dropdown [disabled]="!this.role.ticketsAdmin" [placeholder]="'Select Agents'"
+                        [data]="_agents" [(ngModel)]="_filters.agents" [settings]="_agentsDropdownSettings">
+                    </ng-multiselect-dropdown>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <mat-form-field class="w-100 pt-2">
+                        <mat-label class="text-muted">Service Under</mat-label>
+                        <mat-select id="document" name="serviceUnder" [(ngModel)]="_filters.serviceUnder" multiple>
+                            <mat-option value="" disabled>--select--</mat-option>
+                            <mat-option value="Warranty">Warranty</mat-option>
+                            <mat-option value="AMC"> AMC</mat-option>
+                            <mat-option value="ServiceCall">ServiceCall </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <mat-form-field class="w-100 pt-2">
+                        <mat-label class="text-muted">Category/Label</mat-label>
+                        <mat-select name="serviceTypes" [(ngModel)]="_filters.serviceType" multiple>
+                            <mat-option value="">--select--</mat-option>
+                            <mat-option *ngFor="let st of _serviceTypes" value="{{st}}">{{st}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <mat-form-field class="w-100 pt-2">
+                        <mat-label class="text-muted">Ticket Priority</mat-label>
+                        <mat-select id="document" name="ticketPriority" [(ngModel)]="_filters.ticketPriority" multiple>
+                            <mat-option value="" disabled>--select--</mat-option>
+                            <mat-option *ngFor="let tp of _ticketPriority" value="{{tp}}">{{tp}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <mat-form-field class="w-100 pt-2">
+                        <mat-label class="text-muted">Ticket Status</mat-label>
+                        <mat-select id="document" name="ticketPriority" [(ngModel)]="_filters.ticketStatus" multiple>
+                            <mat-option value="" disabled>--select--</mat-option>
+                            <mat-option *ngFor="let ts of _ticketStatus" value="{{ts}}">{{ts}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class=" col-lg-3 col-md-3 col-sm-12">
+                    <mat-form-field class="w-100">
+                        <mat-label class="text-muted">Ticket Id #</mat-label>
+                        <input matInput type="number" placeHolder="Enter Ticket Id" name="ticketId" maxlength=500
+                            [(ngModel)]="_filters.ticketId" />
+                    </mat-form-field>
+                </div>
+
+                <div class=" col-lg-3 col-md-3 col-sm-12">
+                    <mat-form-field class="w-100">
+                        <mat-label class="text-muted" for=""> Due Date </mat-label>
+                        <input matInput (focus)="dueDateObjectdp.openCalendar()"
+                            placeholder="Select From - To Date range" angular-mydatepicker name="dates"
+                            (dateChanged)="_filters.fromDueDate = $event.dateRange.beginJsDate;_filters.toDueDate = $event.dateRange.endJsDate;"
+                            [(ngModel)]="_filters.dueDateObject" [options]="myDatePickerOptions"
+                            #dueDateObjectdp="angular-mydatepicker" autocomplete="off" />
+                    </mat-form-field>
+                </div>
+
+                <div class=" col-lg-3 col-md-3 col-sm-12">
+                    <mat-form-field class="w-100">
+                        <mat-label class="text-muted" for=""> Created Date </mat-label>
+                        <input matInput (focus)="createdDateObjectdp.openCalendar()"
+                            placeholder="Select From - To Date range" angular-mydatepicker name="dates"
+                            (dateChanged)="_filters.fromCreatedDate = $event.dateRange.beginJsDate;_filters.toCreatedDate = $event.dateRange.endJsDate;"
+                            [(ngModel)]="_filters.createdDateObject" [options]="myDatePickerOptions"
+                            #createdDateObjectdp="angular-mydatepicker" autocomplete="off" />
+                    </mat-form-field>
+                </div>
+
+                <div class=" col-lg-3 col-md-3 col-sm-12">
+                    <mat-form-field class="w-100">
+                        <mat-label class="text-muted" for=""> Last Modified Date </mat-label>
+                        <input matInput (focus)="lastModifiedDateObjectdp.openCalendar()"
+                            placeholder="Select From - To Date range" angular-mydatepicker name="dates"
+                            (dateChanged)="_filters.fromLastModifiedDate = $event.dateRange.beginJsDate;_filters.toLastModifiedDate = $event.dateRange.endJsDate;"
+                            [(ngModel)]="_filters.lastModifiedDateObject" [options]="myDatePickerOptions"
+                            #lastModifiedDateObjectdp="angular-mydatepicker" autocomplete="off" />
+                    </mat-form-field>
+                </div>
+                <!-- <div class="col-lg-3 col-md-3 col-sm-12">
+                    <mat-form-field class="w-100">
+                        <mat-label class="text-muted"> To Date </mat-label>
+                        <div class="input-group">
+                            <input (focus)="todp.openCalendar()" matInput placeholder="dd/mm/yyyy" angular-mydatepicker
+                                name="toDate" [(ngModel)]="toDate" [options]="myDatePickerOptions"
+                                #todp="angular-mydatepicker" autocomplete="off" />
+                        </div>
+                    </mat-form-field>
+                </div> -->
+                <div class="col-12 text-center">
+                    <button [disabled]="loading" (click)="submit()" class="btn btn-md btn-primary">Submit</button>
+                    <button (click)="clear()" class="btn btn-md btn-primary">Clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row p-2 mb-5" *ngIf="rowData.length > 0">
+    <div class="col">
+        <ag-grid-angular enableCellTextSelection="true" [rowData]="rowData" style="width: 100%; height: 500px;"
+            class="ag-theme-balham p-2" [columnDefs]="columnDefs" [paginationAutoPageSize]="true" [pagination]="true"
+            [frameworkComponents]="frameworkComponents" (gridReady)="onGridReady($event)">
+        </ag-grid-angular>
+    </div>
+</div>
+
+<div class="item" *ngIf="loading">
+    <ngx-skeleton-loader count="12"></ngx-skeleton-loader>
+</div>

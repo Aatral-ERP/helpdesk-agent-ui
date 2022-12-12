@@ -1,0 +1,51 @@
+<div>
+    <div class="row">
+        <div class="col">
+            Ticket id : #{{ticketServiceInvoice.ticket.ticketId}}
+            <p class="text-primary" [innerHTML]="ticketServiceInvoice.ticket.subject | base64HTML"></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <label for="invoiceNo">Invoice No</label>
+            <input id="invoiceNo" class="form-control" name="ticketServiceInvoice.invoiceNo"
+                [(ngModel)]="ticketServiceInvoice.invoiceNo">
+        </div>
+        <div class="col">
+            <label for="title">Title</label>
+            <input class="form-control" name="ticketServiceInvoice.title" [(ngModel)]="ticketServiceInvoice.title">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label for="Amount">Amount (₹)</label>
+            <input class="form-control" name="ticketServiceInvoice.amount" [(ngModel)]="ticketServiceInvoice.amount">
+        </div>
+        <div class="col">
+            <label for="GST">GST (%)</label>
+            <input class="form-control" name="ticketServiceInvoice.gst" [(ngModel)]="ticketServiceInvoice.gst">
+        </div>
+        <div class="col">
+            <label for="totalAmount">Total Amount (₹)</label>
+            <input class="form-control" name="ticketServiceInvoice.totalAmount"
+                [(ngModel)]="ticketServiceInvoice.totalAmount">
+        </div>
+    </div>
+    <label for="description">Description</label>
+    <textarea class="form-control" maxlength="3500" name="ticketServiceInvoice.description" rows="10"
+        [(ngModel)]="ticketServiceInvoice.description"
+        placeholder="Enter something about this service Invoice"></textarea>
+
+    <span (click)="downloadTicketServiceInvoice()" *ngIf="ticketServiceInvoice.id > 0"
+        class="text-primary float-left pointer">Download ServiceInvoice
+    </span>
+
+    <button (click)="AddTicketServiceInvoice()" class="btn btn-sm btn-primary float-right"
+        [disabled]="ticketServiceInvoice.title.length == 0 || addTicketServiceInvoiceProgress">
+        <div *ngIf="addTicketServiceInvoiceProgress" class="spinner-border spinner-border-sm text-white small"
+            role="status">
+            <span class="sr-only">sending...</span>
+        </div>
+        Send Invoice
+    </button>
+</div>

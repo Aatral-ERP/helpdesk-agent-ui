@@ -1,0 +1,195 @@
+<div class="container pb-5 mb-5">
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10">
+            <p class="indigo-text h3 text-center">AMC Entry</p>
+            <hr style="width:100%;text-align:left;margin-left:0">
+            <br>
+            <div class="row">
+
+                <div class="col-7">
+                    <label>Institute</label>
+                    <ng-multiselect-dropdown [placeholder]="'Select Institutes'" [data]="institute"
+                        [(ngModel)]="_selectedIns" (onSelect)="onSelectInst($event)"
+                        [settings]="_instituteDropdownSettings">
+                    </ng-multiselect-dropdown>
+                </div>
+
+                <div class="col-5">
+                    <label for="product">Products</label>
+                    <select id="product" name="product" [(ngModel)]="selectedproduct"
+                        class="custom-select form-control">
+                        <option value="">--select--</option>
+                        <option *ngFor="let pro of product" value="{{pro.product.id}}">
+                            {{pro.product.name}}</option>
+                    </select>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+
+                <div class="col-4">
+                    <label for="amcId">AMC ID / Invoice No</label>
+                    <input class="form-control input-lg" type="text" id="amcId" placeHolder="Enter AMC Id / Inv.No"
+                        name="amcId" [(ngModel)]="ad.amcId" />
+                </div>
+
+                <div class="col-4">
+                    <label for="invDate" style="margin-bottom: 5px;">Invoice Date</label>
+                    <div class="input-group">
+                        <input class="form-control" (focus)="invdp.toggleCalendar()" placeholder="Select a date"
+                            angular-mydatepicker name="invDateObject" [(ngModel)]="ad.invDateObject"
+                            (dateChanged)="ad.invDate = $event.singleDate.jsDate" [options]="myDatePickerOptions"
+                            #invdp="angular-mydatepicker" autocomplete="off" />
+
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i (click)="invdp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <label for="title">Title</label>
+                    <input class="form-control input-lg" type="text" id="title" placeHolder="Enter Title" name="title"
+                        [(ngModel)]="ad.title" />
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-4">
+                    <label for="amcAmount">AMC Amount</label>
+                    <input class="form-control input-lg" type="number" id="amcAmount" placeHolder="Enter AMC Amount"
+                        name="amcAmount" (change)="changeAmcAmount()" [(ngModel)]="ad.amcAmount" />
+                </div>
+
+                <div class="col-4">
+                    <label for="gst">GST Percentage</label>
+                    <select class="form-control input-lg" name="gstPercent" id="gstPercent"
+                        (change)="changeGstPercentage()" [(ngModel)]="gstPercent">
+                        <option value="0">0%</option>
+                        <option value="5">5%</option>
+                        <option value="12">12%</option>
+                        <option value="18">18%</option>
+                        <option value="28">28%</option>
+                    </select>
+                    <small>GST Amount Rs.{{ad.gst}}</small>
+                </div>
+                <div class="col-4">
+                    <label for="totalAmount">Total Amount</label>
+                    <input class="form-control input-lg" type="number" id="totalAmount" placeHolder="Enter Total Amount"
+                        name="totalAmount" (change)="changeTotalAmount()" [(ngModel)]="ad.totalAmount" />
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-4">
+                    <label for="fromDate" style="margin-bottom: 5px;">From Date</label>
+                    <div class="input-group">
+                        <input class="form-control" (focus)="fromdp.toggleCalendar()" placeholder="Select a date"
+                            angular-mydatepicker name="fromDateObject" [(ngModel)]="ad.fromDateObject"
+                            (dateChanged)="ad.fromDate = $event.singleDate.jsDate" [options]="myDatePickerOptions"
+                            #fromdp="angular-mydatepicker" autocomplete="off" />
+
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i (click)="fromdp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label for="toDate" style="margin-bottom: 5px;">To Date</label>
+                    <div class="input-group">
+                        <input class="form-control" (focus)="todp.toggleCalendar()" placeholder="Select a date"
+                            angular-mydatepicker name="toDateObject" [(ngModel)]="ad.toDateObject"
+                            (dateChanged)="ad.toDate = $event.singleDate.jsDate" [options]="myDatePickerOptions"
+                            #todp="angular-mydatepicker" autocomplete="off" />
+
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i (click)="todp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label for="paidDate" style="margin-bottom: 5px;">Paid Date</label>
+                    <div class="input-group">
+                        <input class="form-control" (focus)="frompdp.toggleCalendar()" placeholder="Select a date"
+                            angular-mydatepicker name="paidDateObject" [(ngModel)]="ad.paidDateObject"
+                            (dateChanged)="ad.paidDate = $event.singleDate.jsDate" [options]="myDatePickerOptions"
+                            #frompdp="angular-mydatepicker" autocomplete="off" />
+
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i (click)="frompdp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-4">
+                    <label for="payMode">PayMode</label>
+                    <select id="payMode" name="payMode" [(ngModel)]="ad.payMode" class="custom-select form-control">
+                        <option value="">--select--</option>
+                        <option value="cash">Cash</option>
+                        <option value="cheque">Cheque</option>
+                        <option value="DD">DD</option>
+                        <option value="online">Online</option>
+                        <option value="others">Others</option>
+                    </select>
+                </div>
+                <!-- <div class="col-4">
+                    <label for="serviceType">Service Type</label>
+                    <select id="serviceType" name="serviceType" [(ngModel)]="ad.serviceType"
+                        class="custom-select form-control">
+                        <option value="">--select--</option>
+                        <option value="AMC">AMC</option>
+                        <option value="Warranty">Warranty</option>
+                        <option value="Service Payment">Service Payment</option>
+                        <option value="Reinstallation">Reinstallation</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </div> -->
+
+                <div class="col-8">
+                    <label for="transactionDetails">Transaction Details</label>
+                    <input class="form-control input-lg" type="text" id="transactionDetails"
+                        placeHolder="Enter Transaction Details" name="transactionDetails"
+                        [(ngModel)]="ad.transactionDetails" />
+                </div>
+
+
+            </div>
+            <br>
+            <div class="row">
+
+                <div class="col-12">
+                    <label for="description">Description</label>
+                    <input class="form-control input-lg" type="text" id="description" placeHolder="Enter Description"
+                        maxlength="140" name="description" [(ngModel)]="ad.description" />
+                </div>
+            </div>
+            <br>
+            <div class="row text-center">
+                <div class="col">
+                    <button class="btn btn-md btn-primary" (click)="save()" [hidden]="loading==true">
+                        Save
+                    </button>&nbsp;&nbsp;
+                    <button class="btn btn-md btn-primary" type="button" disabled *ngIf="loading">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        saving...
+                    </button>
+                    <button class="btn btn-md btn-primary" (click)="clear()">
+                        Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-1"></div>
+    </div>
+</div>

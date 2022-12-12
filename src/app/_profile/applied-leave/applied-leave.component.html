@@ -1,0 +1,64 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate">
+</mat-progress-bar>
+
+<!--Table-->
+<table class="table table-hover table-fixed">
+
+    <!--Table head-->
+    <thead>
+        <tr>
+            <th style="width:10%">Leave Type</th>
+            <th style="width:10%">Status</th>
+            <th style="width:20%">Reason</th>
+            <th style="width:15%">Leave From - To date</th>
+            <th style="width:5%">No Of Days</th>
+            <th style="width:10%">Applied Date</th>
+            <th style="width:20%">Approved/Rejected by</th>
+            <th style="width:10%">Approved/Rejected Date</th>
+        </tr>
+    </thead>
+    <!--Table head-->
+
+    <!--Table body-->
+    <tbody>
+        <tr *ngFor="let la of leavesApplied">
+            <td>{{la.leaveType}}</td>
+            <td>
+                <span *ngIf="la.status == 'Approved'" class="badge badge-success">{{la.status}}</span>
+                <span *ngIf="la.status == 'Rejected'" class="badge badge-danger">{{la.status}}</span>
+                <span *ngIf="la.status == 'Applied'" class="badge badge-light">{{la.status}}</span>
+            </td>
+            <td>
+                <p [innerHTML]="la.reason"></p>
+            </td>
+            <td>
+                <div [ngSwitch]="la.leaveType">
+                    <span *ngSwitchCase="'Half Day'">
+                        {{la.leaveFrom | date:'dd/MM/yyyy'}} <br>
+                        <span>{{getWhichHalf(la.leaveFrom)}}</span>
+                    </span>
+                    <span *ngSwitchCase="'Permission'">
+                        {{la.leaveFrom | date:'dd/MM/yyyy'}}
+                        <br>
+                        {{la.leaveFrom | date:'hh:mm a'}} - {{la.leaveTo | date:'hh:mm a'}}
+                    </span>
+                    <span *ngSwitchDefault>
+                        {{la.leaveFrom | date:'dd/MM/yyyy'}} - {{la.leaveTo | date:'dd/MM/yyyy'}}
+                    </span>
+                </div>
+            </td>
+            <td>{{la.noOfDays}}</td>
+            <td>{{la.createddatetime | date:'dd/MM/yyyy'}}</td>
+            <td>{{la.approvedRejectedBy}}</td>
+            <td>
+                <span class="text-right">
+                    {{la.approvedRejectedDate | date:'MMM dd, yyyy'}}
+                </span>
+            </td>
+        </tr>
+
+    </tbody>
+    <!--Table body-->
+
+</table>
+<!--Table-->

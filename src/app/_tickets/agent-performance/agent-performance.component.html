@@ -1,0 +1,90 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+
+<div class="card">
+    <div class="card-body">
+
+        <div class="row">
+            <div class="col-2">
+                <img class="avator-thumb" src="{{getMemberImageURL(agent.emailId)}}">
+            </div>
+            <div class="col">
+                <span class="pt-2 pl-2 d-block">{{agent.firstName}}&nbsp; {{agent.lastName}} </span>
+                <span class="pl-2 d-block small text-muted">{{agent.emailId}}&nbsp;({{agent.employeeId}})</span>
+                <span class="pl-2 d-block small text-muted">{{agent.designation}} </span>
+
+                <span title="{{lastUpdatedDateTime | date:'hh:mm a'}}"
+                    class="pl-2 d-block small text-muted float-right">last refreshed {{lastUpdatedDateTime | amTimeAgo}}
+                    <i class="fas fa-refresh pl-1 pointer" (click)="getAgentPerformanceDetails()"></i>
+                </span>
+
+            </div>
+        </div>
+        <hr>
+
+        <div class="row">
+            <div class="col-12">
+                <!-- <h5 class="stat-row m-1" [ngClass]="(cc.label == 'Open Tickets') ? 'bg-warning' : 'bg-primary' "
+                    *ngFor="let cc of periodicallyClosedCounts">
+                    <span class="text-white">{{cc.label}}</span>
+                    <span class="float-right badge badge-light p-1 mr-2">{{cc.cnt}}</span>
+                </h5> -->
+                <div [ngSwitch]="cc.label" *ngFor="let cc of periodicallyClosedCounts">
+                    <h5 class="stat-row m-1 bg-warning" *ngSwitchCase="'Open Tickets'">
+                        <span class="text-white">{{cc.label}}</span>
+                        <span class="float-right badge badge-light p-1 mr-2">{{cc.cnt}}</span>
+                    </h5>
+                    <h5 class="stat-row m-1 bg-danger" *ngSwitchCase="'Open Tickets past due'">
+                        <span class="text-white">{{cc.label}}</span>
+                        <span class="float-right badge badge-light p-1 mr-2">{{cc.cnt}}</span>
+                    </h5>
+                    <h5 class="stat-row m-1 bg-primary" *ngSwitchDefault>
+                        <span class="text-white">{{cc.label}}</span>
+                        <span class="float-right badge badge-light p-1 mr-2">{{cc.cnt}}</span>
+                    </h5>
+                </div>
+            </div>
+            <div class="col-12">
+                <h6>Open Tickets Priority based</h6>
+                <ngx-charts-advanced-pie-chart class="p-0 m-0" [view]="piechartview" [scheme]="colorSchemeAtt"
+                    [results]="pendingTicketsPriorityCounts">
+                </ngx-charts-advanced-pie-chart>
+            </div>
+            <div class="col-12">
+                <h6>Open Tickets Status based</h6>
+                <ngx-charts-advanced-pie-chart class="p-0 m-0" [view]="piechartview" [scheme]="colorSchemeAtt"
+                    [results]="pendingTicketsStatusCounts">
+                </ngx-charts-advanced-pie-chart>
+            </div>
+
+            <!-- Rating -->
+
+            <div class="col-12">
+                <h4>Ratings</h4>
+                <div class="d-flex">
+                    <div class="text-center">
+                        <span class="display-4 font-weight-bolder">{{finalRatings}}</span><br>
+                        <span class="text-black-50 d-block">out of 5</span>
+                        <span class="text-black-50 d-block">({{totalTicketRatingCounts}} ratings)</span>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="row align-items-center" *ngFor="let rating of ticketRatingCounts">
+                            <div class="col-4 text-right">
+                                {{rating.rating}}<i class="fas fa-star small text-warning pl-1 pr-1"></i>
+                                <small>({{rating.percent}}%)</small>
+                            </div>
+                            <div class="col-8">
+                                <div class="progress" style="height: 2px;">
+                                    <div class="progress-bar " role="progressbar" [style.width]="rating.percent+'%'"
+                                        attr.aria-valuenow="{{rating.percent}}" aria-valuemin="0" aria-valuemax="100">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>

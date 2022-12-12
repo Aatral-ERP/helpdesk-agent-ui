@@ -1,0 +1,63 @@
+
+<h5 class="indigo-text">{{_mode}} Lead Task</h5>
+
+<mat-dialog-content class="mat-typography">
+
+    <div class="row">
+        <div class="col-12">
+            <label for="" class="required-label">Subject</label>
+            <input class="form-control" type="text" id="subject" placeHolder="Enter subject " name="subject"
+                [(ngModel)]="task.subject" />
+        </div>
+        <div class="col-12">
+            <label for="" class="required-label">Description</label>
+            <textarea rows="5" class="form-control" type="text" id="description" placeHolder="Enter description "
+                name="description" [(ngModel)]="task.description"></textarea>
+        </div>
+        <div class="col-12">
+            <label>Due Date</label>
+            <div class="input-group">
+                <input class="form-control" (focus)="dueDatepicker.open()" [matDatepicker]="dueDatepicker"
+                    placeholder="Choose a date" [(ngModel)]="task.dueDateTime">
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <i (click)="dueDatepicker.open()" class="fas fa-calendar-alt pointer"></i>
+                    </span>
+                </div>
+            </div>
+            <mat-datepicker #dueDatepicker></mat-datepicker>
+        </div>
+        <div class="col-6">
+            <label>Priority</label>
+            <select class="form-control" name="priority" id="priority" [(ngModel)]="task.priority">
+                <option value="NotPreferred">--Not Preferred--</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+            </select>
+        </div>
+        <div class="col-6">
+            <label>Status</label>
+            <select class="form-control" name="status" id="status" [(ngModel)]="task.status">
+                <option value="Created">Created</option>
+                <option value="InProgress">In Progress</option>
+                <option value="Hold">Hold</option>
+                <option value="WaitingForClientInput">Waiting for Client Input</option>
+                <option value="Closed">Closed</option>
+            </select>
+        </div>
+
+        <p class="m-5 p-5">&nbsp;</p>
+
+    </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <a (click)="closeDialog()"><u>close</u></a>
+    <button class="btn btn-sm btn-primary ml-2" (click)="saveLeadTask()">Save
+        <div *ngIf="saving" class="spinner-border spinner-border-sm pl-1" role="status">
+            &nbsp;<span class="sr-only"> Saving...</span>
+        </div>
+    </button>
+</mat-dialog-actions>

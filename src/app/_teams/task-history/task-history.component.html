@@ -1,0 +1,74 @@
+<div *ngIf="loading" class="spinner-border spinner-border-sm pl-1" role="status">
+    &nbsp;<span class="sr-only"> loading...</span>
+</div>
+<div class="row">
+    <div class="col text-muted">
+        <small [hidden]="sortingOrder == 'new-first'" (click)="sortHistory('new-first')" class="float-right pointer">Sort
+            Newest First<i class="fas fa-sort-amount-up pl-1"></i></small>
+        <small [hidden]="sortingOrder == 'old-first'" (click)="sortHistory('old-first')" class="float-right pointer">Sort
+            Oldest First<i class="fas fa-sort-amount-down pl-1"></i></small>
+    </div>
+</div>
+
+<div class="row m-1" *ngFor="let hist of history">
+    <div class="col-1">
+        <img title="{{getMemberName(hist.updatedBy)}}" class="pointer avator-thumb"
+            src="{{getMemberImageURL(hist.updatedBy)}}">
+        &nbsp;&nbsp;
+    </div>
+    <div class="col">
+        <div class="row">
+            <div class="col-12">
+                <small class="text-muted font-weight-bold">
+                    {{getMemberName(hist.updatedBy)}}</small>
+                <small class="text-muted">&nbsp;{{hist.field}} </small>
+                <small title="{{hist.createddatetime | date:'MMM dd, yyyy hh:mm a'}}"
+                    class="float-right">{{hist.createddatetime | amTimeAgo}}</small>
+
+                <div [ngSwitch]="hist.field">
+
+
+                    <div *ngSwitchCase="'Added Attachments'">
+                        <small [innerHTML]="getSemicolonReplacedHTMLText(hist.historyTo)"></small>
+                    </div>
+                    <div *ngSwitchCase="'Deleted Attachment'">
+                        <small>{{getSemicolonReplacedHTMLText(hist.historyFrom)}}</small>
+                    </div>
+
+                    <div *ngSwitchCase="'Changed Assignee' || 'Changed Reporter'">
+                        <tr class="text-muted">
+                            <td>
+                                <span *ngIf="hist.historyFrom == ''"> None </span>
+                                <span *ngIf="hist.historyFrom != ''"> {{getMemberName(hist.historyFrom)}} </span>
+                            </td>
+                            <td>
+                                <i class="fas fa-long-arrow-alt-right pl-3 pr-3"></i>
+                            </td>
+                            <td>
+                                <span *ngIf="hist.historyTo == ''"> None </span>
+                                <span *ngIf="hist.historyTo != ''"> {{getMemberName(hist.historyTo)}} </span>
+                            </td>
+                        </tr>
+                    </div>
+                    <div *ngSwitchDefault>
+                        <tr class="text-muted">
+                            <td>
+                                <span *ngIf="hist.historyFrom == ''"> None </span>
+                                <span *ngIf="hist.historyFrom != ''"> {{hist.historyFrom}} </span>
+                            </td>
+                            <td>
+                                <i class="fas fa-long-arrow-alt-right pl-3 pr-3"></i>
+                            </td>
+                            <td>
+                                <span *ngIf="hist.historyTo == ''"> None </span>
+                                <span *ngIf="hist.historyTo != ''"> {{hist.historyTo}} </span>
+                            </td>
+                        </tr>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <hr>
+</div>

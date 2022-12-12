@@ -1,0 +1,207 @@
+<div class="container-fluid">
+    <div class="container">
+        <div class="row pointer filterdiv mt-0 pt-0 bg-primary text-white justify-content-center"
+            (click)="showFilterScreen = !showFilterScreen">
+            <div class="col text-center">
+                <span> <span class="small"> Invoice Filters &nbsp;&nbsp;</span>
+                    <i [hidden]="showFilterScreen" class="fa fa-angle-up"></i>
+                    <i [hidden]="!showFilterScreen" class="fa fa-angle-down"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container pt-2" [hidden]="!showFilterScreen">
+
+        <div class="row">
+            <div class="col-12">
+                <p class="indigo-text h4 text-center"> Invoice Filter
+                </p>
+                <hr style="width:100%;text-align:left;margin-left:0">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <label>Institute</label>
+                <ng-multiselect-dropdown [placeholder]="'Select Institutes'" [data]="_institutes"
+                    [(ngModel)]="_search_filters.institutes" [settings]="_instituteDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <label>Products</label>
+                <ng-multiselect-dropdown [placeholder]="'Select Products'" [data]="_products"
+                    [(ngModel)]="_search_filters.dealProducts" [settings]="_ProductsDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <label>Create By</label>
+                <ng-multiselect-dropdown [placeholder]="'Created By'" [data]="_agents"
+                    [disabled]="!this.role.salesAdmin" [(ngModel)]="_search_filters.agents"
+                    [settings]="_AgentsDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <label>Deal Type</label>
+                <select class="form-control" name="dealType" id="dealType" [(ngModel)]="_search_filters.dealType">
+                    <option value="">--select--</option>
+                    <option value="Sales">Sales</option>
+                    <option value="AMC">AMC</option>
+                    <option value="Service">Service</option>
+                    <option value="Others">Others</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="m-1 p-1 border border-light">
+            <h6 (click)="showInvFilterScreen = !showInvFilterScreen" class="pointer text-dark font-weight-bold">
+                Invoice Filter's &nbsp;
+                <i [hidden]="showInvFilterScreen" class="fas fa-caret-right"></i>
+                <i [hidden]="!showInvFilterScreen" class="fas fa-caret-down"></i>
+            </h6>
+            <div [hidden]="!showInvFilterScreen" class="row">
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                    <label for="invoiceSubject">Invoice Subject</label>
+                    <input class="form-control" type="text" id="invoiceSubject" placeHolder="Enter Invoice Subject"
+                        name="invoiceSubject" [(ngModel)]="_search_filters.invoiceSubject" />
+                </div>
+
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                    <label for="invoiceNo">Invoice No</label>
+                    <input class="form-control" type="text" id="invoiceNo" placeHolder="Enter Invoice No "
+                        name="invoiceNo" [(ngModel)]="_search_filters.invoiceNo" />
+                </div>
+
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                    <label for="poNo">Purchase Order No</label>
+                    <input class="form-control" type="text" id="poNo" placeHolder="Enter Purchase Order No " name="poNo"
+                        [(ngModel)]="_search_filters.poNo" />
+                </div>
+
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                    <label>Invoice Status</label>
+                    <select name="invoiceStatus" [(ngModel)]="_search_filters.invoiceStatus" class="form-control">
+                        <option value="">--select--</option>
+                        <option value="created">Created</option>
+                        <option value="approved">Approved</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+
+                <div class="col-sm-6 col-md-6 col-lg-3">
+                    <label for="invoiceDateObject" style="margin-bottom: 5px;"> Invoice Date </label>
+                    <div class="input-group">
+                        <input class="form-control" (focus)="invoiceDatedp.toggleCalendar()"
+                            placeholder="choose valid date" angular-mydatepicker name="invoiceDateObject"
+                            [(ngModel)]="_search_filters.invoiceDateObject" [options]="myDatePickerOptions"
+                            (dateChanged)="_search_filters.invoiceDateFrom = $event.dateRange.beginJsDate;_search_filters.invoiceDateTo = $event.dateRange.endJsDate;"
+                            #invoiceDatedp="angular-mydatepicker" autocomplete="off" />
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i (click)="invoiceDatedp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-md-6 col-lg-3">
+                    <label for="invoiceDueDateObject" style="margin-bottom: 5px;">Invoice Due Date </label>
+                    <div class="input-group">
+                        <input class="form-control" (focus)="invoiceDueDatedp.toggleCalendar()"
+                            placeholder="choose valid date" angular-mydatepicker name="invoiceDueDateObject"
+                            [(ngModel)]="_search_filters.invoiceDueDateObject" [options]="myDatePickerOptions"
+                            (dateChanged)="_search_filters.invoiceDueDateFrom = $event.dateRange.beginJsDate;_search_filters.invoiceDueDateTo = $event.dateRange.endJsDate;"
+                            #invoiceDueDatedp="angular-mydatepicker" autocomplete="off" />
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i (click)="invoiceDueDatedp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                    <label>Paid Status</label>
+                    <select name="paidStatus" [(ngModel)]="_search_filters.paidStatus" class="form-control">
+                        <option value="">--select--</option>
+                        <option value="Not Paid">Not Paid</option>
+                        <option value="Partially Paid">Partially Paid</option>
+                        <option value="All Pending Payments">All Pending Payments</option>
+                        <option value="Overdue">Overdue</option>
+                        <option value="Paid">Paid</option>
+                    </select>
+                </div>
+
+                <div class="col-sm-6 col-md-4 col-lg-2 pr-0 mr-0">
+                    <label>GST Month</label>
+                    <select name="gstMonth" [(ngModel)]="_search_filters.gstMonth" class="form-control pr-0 mr-0">
+                        <option disabled value="">--select--</option>
+                        <option value="January">January</option>
+                        <option value="February">February</option>
+                        <option value="March">March</option>
+                        <option value="April">April</option>
+                        <option value="May">May</option>
+                        <option value="June">June</option>
+                        <option value="July">July</option>
+                        <option value="August">August</option>
+                        <option value="September">September</option>
+                        <option value="October">October</option>
+                        <option value="November">November</option>
+                        <option value="December">December</option>
+                    </select>
+                </div>
+
+                <div class="col-sm-6 col-md-2 col-lg-1 pl-0 ml-0">
+                    <label>GST Year</label>
+                    <input type="number" class="form-control pl-0 ml-0" name="gstYear"
+                        [(ngModel)]="_search_filters.gstYear">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center mt-2">
+                <button class="btn btn-md btn-primary" (click)="loadInvoices()">Submit</button>
+                <button class="btn btn-sm btn-outline-primary" (click)="clearFilters()">Clear</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row pt-2">
+        <div class="col">
+            <h5> Total Registered GST Amount : {{totalRegisteredAmount | currency:'INR'}}</h5>
+            <h5> Total Unregistered GST Amount : {{totalAmount - totalRegisteredAmount | currency:'INR'}}</h5>
+            <h5> Total GST Amount : {{totalAmount | currency:'INR'}}</h5>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-12">
+            <span class="h4 float-center mt-4"> Invoice Report</span>
+
+            <mat-button-toggle-group class="float-right" [(ngModel)]="_registered_status"
+                (ngModelChange)="registeredStatusChanged($event)" appearance="legacy" name="fontStyle"
+                aria-label="Registered Status">
+                <mat-button-toggle value="All">All</mat-button-toggle>
+                <mat-button-toggle value="Registered Only">Registered Only</mat-button-toggle>
+                <mat-button-toggle value="Unregistered Only">Unregistered Only</mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
+        <div class="col-12">
+            <ag-grid-angular enableCellTextSelection="true" *ngIf="!loading" [rowData]="rowData"
+                style="width: 100%; height: 500px;" class="ag-theme-balham p-2" [columnDefs]="columnDefs"
+                [rowSelection]="'single'" (gridReady)="onGridReady($event)" [paginationAutoPageSize]="true"
+                [pagination]="true">
+            </ag-grid-angular>
+            <div class="item" *ngIf="loading">
+                <ngx-skeleton-loader count="8"></ngx-skeleton-loader>
+            </div>
+            <button class="btn btn-sm btn-primary" *ngIf="rowData.length > 0" (click)="onBtnExport()">Export <i
+                    class="fas fa-download"></i></button>
+        </div>
+    </div>
+</div>

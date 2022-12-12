@@ -1,0 +1,341 @@
+<div class="container pb-5 mb-5">
+
+    <p class="indigo-text h3 text-center">Agent Register</p>
+    <div class="row" *ngIf="showPhotoOptions">
+        <div class="col-12">
+            <div>
+                <div class="card-body card-body-cascade text-center">
+                    <img *ngIf="agent.photo === undefined || agent.photo == null || agent.photo == ''"
+                        src="assets/images/No-image.png" alt="User Photo" class="z-depth-1 mb-3 mx-auto" height="250px;"
+                        width="240px;">
+
+                    <img *ngIf="agent.photo !== undefined && agent.photo != null && agent.photo != ''"
+                        src="{{getMemberImageURL()}}" alt="User Photo" class="z-depth-1 mb-3 mx-auto" height="250px;"
+                        width="250px;">
+
+                    <div *ngIf="photoLoading">
+                        <button class="btn btn-md btn-primary" type="button" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Updating...
+                        </button>
+                    </div>
+                    <div [hidden]="photoLoading==true">
+                        <label class="btn btn-sm btn-primary">Upload Photo &nbsp;&nbsp;
+                            <input type="file" accept="image/x-png,image/gif,image/jpeg" id="photo" name="photo"
+                                (change)="fileChange($event)" hidden>
+                        </label> &nbsp;
+                        <!-- <small *ngIf="selectedFile== null"> No Files selected</small> -->
+                        <br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-10">
+
+            <hr style="width:100%;text-align:left;margin-left:0">
+
+            <div class="row">
+                <div class="col-6">
+                    <label for="firstName">First Name</label>
+                    <input class="form-control input-lg" type="text" id="firstName" placeHolder="Enter firstName"
+                        name="firstName" [(ngModel)]="agent.firstName" />
+                </div>
+                <div class="col-6">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" class="form-control validate" id="lastName" placeHolder="Enter LastName"
+                        name="lastName" [(ngModel)]="agent.lastName" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label for="emailId">Email ID</label>
+                    <input class="form-control input-lg" type="text" id="emailId" placeHolder="Enter EmailId"
+                        name="emailId" [(ngModel)]="agent.emailId" [disabled]="mode != 'Create'" />
+                    <small *ngIf="showEmailError" class="text-danger help-text">Invalid
+                        Email ID<i class="fas fa-exclamation-triangle"></i></small>
+                </div>
+                <div class="col-6">
+                    <label for="phone">Phone</label>
+                    <input class="form-control input-lg" type="number" id="phone" placeHolder="Enter Phone" name="phone"
+                        [(ngModel)]="agent.phone" maxlength="10" />
+                    <small *ngIf="showNumberError" class="text-danger help-text">Invalid
+                        Phone Number<i class="fas fa-exclamation-triangle"></i></small>
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-3">
+                    <div class="ng-autocomplete">
+                        <label for="employeeId">Employee Id</label>
+                        <ng-autocomplete id="employeeId" placeHolder="Enter EmployeeId" [(ngModel)]="agent.employeeId"
+                            [data]="emptydata" [searchKeyword]="'name'" [disabled]="mode != 'Create'">
+                        </ng-autocomplete>
+                    </div>
+                </div>
+
+                <div class="col-3">
+                    <div class="ng-autocomplete">
+                        <label for="designation">Designation</label>
+                        <ng-autocomplete id="designation" placeHolder="Enter Designation"
+                            [(ngModel)]="agent.designation" [data]="designationList"
+                            [itemTemplate]="itemTemplateDesignation">
+                        </ng-autocomplete>
+
+                        <ng-template #itemTemplateDesignation let-item>
+                            <a [innerHTML]="item"></a>
+                        </ng-template>
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <div class="ng-autocomplete">
+                        <label for="category">Category</label>
+                        <ng-autocomplete id="category" placeHolder="Enter Category" [(ngModel)]="agent.category"
+                            [data]="categoryList" [itemTemplate]="categoryTemplateDesignation">
+                        </ng-autocomplete>
+
+                        <ng-template #categoryTemplateDesignation let-item>
+                            <a [innerHTML]="item"></a>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-3">
+                    <div class="form-group">
+                        <label for="experiencYear"> Previous Experience Year </label>
+                        <select id="experienceYear" name="experienceYear" [(ngModel)]="agent.experienceYear"
+                            class="form-control custom-select">
+                            <option value="0">0 Year</option>
+                            <option value="1">1 year</option>
+                            <option value="2">2 years</option>
+                            <option value="3">3 years</option>
+                            <option value="4">4 years</option>
+                            <option value="6">6 years</option>
+                            <option value="7">7 years</option>
+                            <option value="8">8 years</option>
+                            <option value="9">9 years</option>
+                            <option value="10">10 years</option>
+                            <option value="11">11 years</option>
+                            <option value="12">12 years</option>
+                            <option value="13">13 years</option>
+                            <option value="14">14 years</option>
+                            <option value="15">15 years</option>
+                            <option value="16">16 years</option>
+                            <option value="17">17 years</option>
+                            <option value="18">18 years</option>
+                            <option value="19">19 years</option>
+                            <option value="20">20 years</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-3">
+                    <div class="form-group">
+                        <label for="experienceMonth"> Previous Experience Month </label>
+                        <select id="experienceMonth" name="experienceMonth" [(ngModel)]="agent.experienceMonth"
+                            class="form-control custom-select">
+                            <option value="0">0 month</option>
+                            <option value="1">1 months</option>
+                            <option value="2">2 months</option>
+                            <option value="3">3 months</option>
+                            <option value="4">4 months</option>
+                            <option value="5">5 months</option>
+                            <option value="6">6 months</option>
+                            <option value="7">7 months</option>
+                            <option value="8">8 months</option>
+                            <option value="9">9 months</option>
+                            <option value="10">10 months</option>
+                            <option value="11">11 months</option>
+                            <option value="12">12 months</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-3">
+                    <label for="dob" style="margin-bottom: 5px;"> Joining Date </label>
+                    <input [(ngModel)]="agent.dateOfJoining" class="form-control" (focus)="picker.open()"
+                        [matDatepicker]="picker">
+                    <mat-datepicker #picker></mat-datepicker>
+                </div>
+
+                <div class="col-3">
+                    <div class="form-group">
+                        <label for="gender"> Gender </label>
+                        <select id="gender" name="gender" [(ngModel)]="agent.gender" class="form-control custom-select">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-3">
+                    <div class="form-group">
+                        <label for="agentType"> Leave Master </label>
+                        <select *ngIf="mode == 'Create'" id="leaveMasterId" name="leaveMasterId"
+                            [(ngModel)]="agent.leaveMasterId" class="form-control custom-select">
+                            <option value="0">--select--</option>
+                            <option *ngFor="let leave of leaveMasters" value="{{leave.id}}">{{leave.name}}</option>
+                        </select>
+                        <span *ngIf="mode != 'Create'" (click)="openLeaveMasterModal()"
+                            class="leaveMasterButton d-block pointer p-1 text-center">
+                            {{getLeaveMasterName(agent.leaveMasterId)}}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-3">
+                    <div class="form-group">
+                        <label for="agentType"> Role
+                            <i class="fas fa-plus-circle text-dark pointer pl-2" (click)="role.openCreateModal()"></i>
+                        </label>
+                        <select id="agentType" name="agentType" [(ngModel)]="agent.agentType"
+                            class="form-control custom-select">
+                            <option value="0">--select--</option>
+                            <option *ngFor="let rl of roles" value="{{rl.id}}">{{rl.name}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-3">
+                    <div class="form-group">
+                        <label for="workingStatus"> Working Status</label>
+                        <select id="workingStatus" name="workingStatus" [(ngModel)]="agent.workingStatus"
+                            class="form-control custom-select">
+                            <option value="working">Working</option>
+                            <option value="releived">Releived</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-3">
+                    <div class="form-group">
+                        <label for="isBlocked"> Block </label>
+                        <select id="isBlocked" name="isBlocked" [(ngModel)]="agent.isBlocked"
+                            class="form-control custom-select">
+                            <option value="false">No</option>
+                            <option value="true">Yes</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <label for="fullAddress">Full Address</label>
+                    <input class="form-control input-lg" type="text" id="fullAddress" placeHolder="Enter Address"
+                        name="fullAddress" [(ngModel)]="agent.fullAddress" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label for="">Notes</label>
+                    <textarea rows="2" class="form-control input-lg" id="notes" maxlength=3000 placeHolder="Enter Notes"
+                        name="notes" [(ngModel)]="agent.notes"></textarea>
+                </div>
+            </div>
+            <br>
+            <div class="row text-center">
+                <div class="col">
+                    <button class="btn btn-md btn-primary" (click)="save()" [hidden]="loading">
+                        Save
+                    </button>&nbsp;&nbsp;
+                    <button class="btn btn-md btn-primary" type="button" disabled *ngIf="loading">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Saving...
+                    </button>
+                    <button class="btn btn-md btn-primary" (click)="clear()">
+                        Clear
+                    </button>
+                    <button type="button" class="btn btn-md btn-primary" *ngIf="mode != 'Create'"
+                        (click)="openCreateModal()" data-toggle="modal" data-target="#myModal">Change password</button>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Change Password</h4>
+
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container p-1 m-1">
+                                <div class="row">
+                                    <div class="col-10">
+                                        <mat-form-field class="w-100">
+                                            <mat-label for="password" class="required-label">Password</mat-label>
+                                            <input matInput type="password" name="NPassword"
+                                                placeholder="Enter Password" id="txtNewPassword"
+                                                [(ngModel)]="changePwd">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div id="divCheckPassword"></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-sm btn-outline-primary"
+                                data-dismiss="modal">Close</button>
+                            <button type="button" (click)="savePwd()" class="btn btn-sm btn-primary">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<app-role-create #role (respEvent)="onRespEvent($event)"></app-role-create>
+
+
+<!--Section: Live preview-->
+
+<!--Modal: modal-->
+<div class="modal fade right" id="changeLeaveMasterModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true" data-backdrop="true">
+    <div class="modal-dialog modal-frame modal-right modal-full-height modal-notify modal-primary" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <!--Body-->
+            <div class="modal-body">
+
+                <div class="form-check">
+                    <input type="checkbox" id="deductTakenLeavesIfany" class="form-check-input"
+                        id="deductTakenLeavesIfany" [(ngModel)]="deductTakenLeavesIfany">
+
+                    <label for="deductTakenLeavesIfany" class="form-check-label">Deduct Already Taken Leaves If
+                        any</label>
+                </div>
+
+                <div class="row p-1 mb-1">
+                    <div class="col-12 p-1 pointer card m-1" (click)="changeLeaveMaster(lm)"
+                        *ngFor="let lm of leaveMasters">
+                        <h6 class="text-primary">{{lm.name}}</h6>
+                        <span class="d-block small">Annaul Leave : {{lm.annualLeave}}</span>
+                        <span class="d-block small">Casual Leave : {{lm.casualLeave}}</span>
+                        <span class="d-block small">Sick Leave : {{lm.sickLeave}}</span>
+                        <span class="d-block small">Other Leave : {{lm.otherLeave}}</span>
+                        <span class="d-block small">Permissions : {{lm.permissions}}</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!--/.Content-->
+    </div>
+</div>
+<!--Modal: modal-->
+
+<!--Section: Live preview-->

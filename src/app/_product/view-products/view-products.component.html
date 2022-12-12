@@ -1,0 +1,76 @@
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col">
+            <p class="indigo-text h3 text-center">Products</p>
+
+            <p class="text-primary pointer float-right">
+                <a routerLink="/product/add-product"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Product</a>
+            </p>
+        </div>
+    </div>
+
+    <div>
+        <div class="row mb-5">
+            <div class="col">
+                <ag-grid-angular *ngIf="!loading" [rowData]="productList" style="width: 100%; height: 500px;"
+                    class="ag-theme-balham p-2" [columnDefs]="columnDefs" [paginationAutoPageSize]="true"
+                    [rowSelection]="'multiple'" [frameworkComponents]="frameworkComponents"
+                    (gridReady)="onGridReady($event)" enableCellTextSelection="true">
+                </ag-grid-angular>
+
+                <div class="item" *ngIf="loading">
+                    <ngx-skeleton-loader count="12"></ngx-skeleton-loader>
+                </div>
+
+                <button *ngIf="!loading"
+                    [disabled]="gridApi !== undefined && gridApi.getSelectedRows().length == 0 && !saving_amc_desc"
+                    class="btn btn-sm btn-primary text-center" (click)="updateChangedAttendancesModal() ">
+                    Update AMC Description
+                    <span
+                        *ngIf="gridApi !== undefined && gridApi.getSelectedRows().length > 0">({{gridApi.getSelectedRows().length}}
+                        Products)</span>
+                </button>
+
+                <button class="btn btn-sm btn-primary" (click)="onBtnExport()" *ngIf="productList.length > 0">Export
+                    <i class="fas fa-download"></i></button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--Section: Live preview-->
+
+<!--Modal: modal-->
+<div class="modal fade bottom" id="update_amc_desc" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true" data-backdrop="true">
+    <div class="modal-dialog modal-frame modal-bottom modal-full-height modal-notify modal-primary" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <!--Body-->
+            <div class="modal-body">
+                <div class="row p-1 mb-1">
+                    <div class="col">
+                        <h5>AMC Description</h5>
+                        <mat-form-field class="d-block">
+                            <textarea matInput rows="5" placeholder="Enter Something..." name="_amc_desc"
+                                [(ngModel)]="_amc_desc"></textarea>
+                        </mat-form-field>
+
+                        <button [disabled]="saving_amc_desc" mat-raised-button class="m-1" color="primary"
+                            (click)="updateChangedAttendances()"> Save
+                            <div *ngIf="saving_amc_desc" class="spinner-border spinner-border-sm" role="status">
+                                <span class="sr-only"> Saving...</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/.Content-->
+    </div>
+</div>
+<!--Modal: modal-->
+
+<!--Section: Live preview-->

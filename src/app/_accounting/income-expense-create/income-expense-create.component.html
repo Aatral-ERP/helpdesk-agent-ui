@@ -1,0 +1,188 @@
+<!-- Modal -->
+<div class="modal fade" id="addIncomeExpenseScrollable" tabindex="-1" role="dialog"
+    aria-labelledby="addRoleScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addRoleScrollableTitle">Income/Expense</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container p-1 m-1">
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                            <mat-button-toggle-group class="text-center" name="type" [(ngModel)]="incomeExpense.type"
+                                aria-label="Font Style">
+                                <mat-button-toggle value="Income">Income</mat-button-toggle>
+                                <mat-button-toggle value="Expense">Expense</mat-button-toggle>
+                            </mat-button-toggle-group>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                            <mat-button-toggle-group class="text-center" name="type"
+                                [(ngModel)]="incomeExpense.relatedTo" aria-label="Font Style">
+                                <mat-button-toggle value="">Not Specified</mat-button-toggle>
+                                <!-- <mat-button-toggle value="Agent">Agent</mat-button-toggle> -->
+                                <mat-button-toggle value="Supplier">Supplier</mat-button-toggle>
+                            </mat-button-toggle-group>
+                        </div>
+
+                        <div class="col-12" *ngIf="incomeExpense.relatedTo == 'Agent'">
+                            <label>Agent</label>
+                            <ng-multiselect-dropdown [placeholder]="'Select Agent'" [data]="_agents"
+                                [(ngModel)]="_selectedAgents"
+                                (onSelect)="incomeExpense.relatedToAgentId = $event.emailId;"
+                                [settings]="_agentDropdownSettings">
+                            </ng-multiselect-dropdown>
+                        </div>
+
+                        <div class="col-12" *ngIf="incomeExpense.relatedTo == 'Supplier'">
+                            <label>Vendor</label>
+                            <ng-multiselect-dropdown [placeholder]="'Select Vendors'" [data]="_vendors"
+                                [(ngModel)]="_selectedVendor"
+                                (onSelect)="incomeExpense.relatedToSupplierId = $event.id;"
+                                [settings]="_vendorDropdownSettings">
+                            </ng-multiselect-dropdown>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                            <label class="required-label" for="amount">Amount</label>
+                            <input type="number" [(ngModel)]="incomeExpense.amount" class="form-control">
+                        </div>
+
+                        <div class="col-sm-6 col-md-6 col-lg-6">
+                            <label class="required-label" for="amount" for="entryDate">Payment Date</label>
+                            <div class="input-group">
+                                <input class="form-control"
+                                    (focus)="(incomeExpense.paymentDate == null) ? entryDatedp.toggleCalendar() : null"
+                                    placeholder="choose Entry Date" angular-mydatepicker name="paymentDateObject"
+                                    [(ngModel)]="incomeExpense.paymentDateObject"
+                                    (dateChanged)="incomeExpense.paymentDate = $event.singleDate.jsDate"
+                                    [options]="myDatePickerOptions" #entryDatedp="angular-mydatepicker"
+                                    autocomplete="off" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        <i (click)="entryDatedp.toggleCalendar()"
+                                            class="fas fa-calendar-alt pointer"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                            <label for="subject">Subject</label>
+                            <input type="text" class="form-control" id="subject" name="subject"
+                                [(ngModel)]="incomeExpense.subject" />
+                        </div>
+
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                            <label for="toWhom">To Whom</label>
+                            <input type="text" class="form-control" id="subject" name="toWhom"
+                                [(ngModel)]="incomeExpense.toWhom" />
+                        </div>
+
+                        <div class="col-sm-12 col-md-6 col-lg-6" *ngIf="incomeExpense.relatedTo == 'Supplier'">
+                            <label for="invoiceNo">Invoice No</label>
+                            <input type="text" class="form-control" id="subject" name="invoiceNo"
+                                [(ngModel)]="incomeExpense.invoiceNo" />
+                        </div>
+
+                        <div class="col-sm-6 col-md-6 col-lg-6" *ngIf="incomeExpense.relatedTo == 'Supplier'">
+                            <label for="invoiceDate">Invoice Date</label>
+                            <div class="input-group">
+                                <input class="form-control"
+                                    (focus)="(incomeExpense.invoiceDate == null) ? invoiceDatedp.toggleCalendar() : null"
+                                    placeholder="choose Entry Date" angular-mydatepicker name="invoiceDateObject"
+                                    [(ngModel)]="incomeExpense.invoiceDateObject"
+                                    (dateChanged)="incomeExpense.invoiceDate = $event.singleDate.jsDate"
+                                    [options]="myDatePickerOptions" #invoiceDatedp="angular-mydatepicker"
+                                    autocomplete="off" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        <i (click)="invoiceDatedp.toggleCalendar()"
+                                            class="fas fa-calendar-alt pointer"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                            <label for="referenceno">Reference No</label>
+                            <input type="text" class="form-control" id="referenceno" name="referenceno"
+                                [(ngModel)]="incomeExpense.referenceno" />
+                        </div>
+
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                            <label for="category">Category/Head</label>
+                            <div *ngIf="incomeExpense.type == 'Expense'">
+                                <ng-autocomplete id="category" placeHolder="Enter Category"
+                                    [(ngModel)]="incomeExpense.category" [data]="_expense_category"
+                                    [itemTemplate]="itemTemplateCategory">
+                                </ng-autocomplete>
+
+                                <ng-template #itemTemplateCategory let-item>
+                                    <a [innerHTML]="item"></a>
+                                </ng-template>
+                            </div>
+                            <div *ngIf="incomeExpense.type == 'Income'">
+                                <ng-autocomplete id="category" placeHolder="Enter Category"
+                                    [(ngModel)]="incomeExpense.category" [data]="_income_category"
+                                    [itemTemplate]="itemTemplateCategory">
+                                </ng-autocomplete>
+
+                                <ng-template #itemTemplateCategory let-item>
+                                    <a [innerHTML]="item"></a>
+                                </ng-template>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6 col-lg-3">
+                            <label for="drawnon">Drawn On</label>
+                            <input type="text" class="form-control" id="subject" name="drawnon"
+                                [(ngModel)]="incomeExpense.drawnon" />
+                        </div>
+
+                        <div class="col-sm-12 col-md-6 col-lg-3">
+                            <label for="mode">Mode Of Payment</label>
+                            <select class="form-control" name="mode" id="mode"
+                                [(ngModel)]="incomeExpense.modeOfPayment">
+                                <option value="">--select--</option>
+                                <option value="online">Online</option>
+                                <option value="cheque">Cheque</option>
+                                <option value="DD">DD</option>
+                                <option value="cash">Cash</option>
+                                <option value="others">Others</option>
+                            </select>
+                        </div>
+
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <label for="remarks">Description</label>
+                            <textarea class="form-control" name="remarks" id="remarks" cols="30" rows="4"
+                                [(ngModel)]="incomeExpense.remarks"></textarea>
+                        </div>
+                    </div>
+
+                    <p class="m-5 p-5">&nbsp;</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+
+                <span *ngIf="incomeExpense.id > 0" (click)="deleteIncomeExpense()"
+                    class="text-left text-danger pointer">Delete
+                    <i class="fas fa-trash-alt"></i>
+                </span>
+
+                <button type="button" class="btn btn-sm btn-outline-primary" data-dismiss="modal">Close</button>
+                <button type="button" (click)="saveIncomeExpense()" class="btn btn-sm btn-primary">Save</button>
+
+            </div>
+        </div>
+    </div>
+</div>

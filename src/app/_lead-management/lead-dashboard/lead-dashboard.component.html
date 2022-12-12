@@ -1,0 +1,68 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+
+<div class="container-fluid" *ngIf="!loading">
+    <div class="row">
+        <div class="col">
+            <h5 class="text-muted p-1">Lead Dashboard
+                <span class="float-right">
+                    <input hidden class="form-control" (focus)="dp.toggleCalendar()" placeholder="choose valid date"
+                        angular-mydatepicker name="dateObject" [(ngModel)]="_search_filters.dateObject"
+                        [options]="myDatePickerOptions"
+                        (dateChanged)="_search_filters.fromDate = $event.dateRange.beginJsDate;_search_filters.toDate = $event.dateRange.endJsDate;getLeadDashboardDataFromAPI();"
+                        #dp="angular-mydatepicker" autocomplete="off" />
+                    ({{_search_filters.fromDate | date:'MMM dd, yyyy'}} -
+                    {{_search_filters.toDate | date:'MMM dd, yyyy'}})
+                    <i (click)="dp.toggleCalendar()" class="far fa-calendar-alt pr-2 pointer"></i>
+                </span>
+            </h5>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-12">
+            <h5>Leads by Owners & Stages</h5>
+            <ngx-charts-bar-horizontal-stacked [results]="leadOwnerByStatusData" [view]="viewFull"
+                [scheme]="colorArrayLeadByOwnerAndStage" [gradient]="true" [xAxis]="true" [yAxis]="true" [legend]="true"
+                [legendTitle]="'Stages'" [showXAxisLabel]="true" [showYAxisLabel]="true" [xAxisLabel]="'No Of Leads'"
+                [yAxisLabel]="'Lead Owner'">
+            </ngx-charts-bar-horizontal-stacked>
+        </div>
+
+        <div class="col-lg-6 col-md-12 col-sm-12">
+            <h5>Leads by States</h5>
+            <ngx-charts-advanced-pie-chart [view]="viewHalf" [scheme]="colorArrayLeadByStates"
+                [results]="leadByStatesData">
+            </ngx-charts-advanced-pie-chart>
+        </div>
+
+        <div class="col-lg-6 col-md-12 col-sm-12">
+            <h5>Most Leads by owners</h5>
+            <ngx-charts-gauge [view]="viewHalf" [scheme]="colorArrayLeadByOwnerAndStage"
+                [results]="mostLeadsByOwnersData" [legend]="true" [legendTitle]="'Lead Owners'"
+                [legendPosition]="'right'">
+            </ngx-charts-gauge>
+        </div>
+
+        <div class="col-12">
+            <h5>Leads by Sources</h5>
+            <ngx-charts-pie-grid [view]="viewFull200" [scheme]="colorArrayLeadByOwnerAndStage"
+                [results]="leadBySourceData">
+            </ngx-charts-pie-grid>
+        </div>
+
+        <div class="col-12">
+            <h5>Leads by Category</h5>
+            <ngx-charts-number-card [view]="viewFull200" [scheme]="colorArrayLeadByStates"
+                [results]="leadByCategoryData" [cardColor]="'#7aa3e5'">
+            </ngx-charts-number-card>
+        </div>
+
+        <div class="col-12">
+            <h5>Leads by Products</h5>
+            <ngx-charts-bar-horizontal [view]="viewFull" [scheme]="colorArrayLeadByOwnerAndStage"
+                [results]="leadByProductsData" [xAxis]="true" [yAxis]="true" [legend]="true" [showXAxisLabel]="true"
+                [showYAxisLabel]="true" [xAxisLabel]="'No Of Leads'" [yAxisLabel]="'Products'">
+            </ngx-charts-bar-horizontal>
+        </div>
+    </div>
+</div>

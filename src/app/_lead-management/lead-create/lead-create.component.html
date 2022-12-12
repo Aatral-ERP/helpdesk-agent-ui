@@ -1,0 +1,373 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate">
+</mat-progress-bar>
+
+<div class="row p-2">
+    <div class="col">
+        <p class="indigo-text h4 text-center">{{_mode}} Lead
+        </p>
+        <hr style="width:100%;text-align:left;margin-left:0">
+    </div>
+</div>
+<div class="container-fluid">
+    <h5 class="text-primary">Lead Info</h5>
+    <span class="text-success pointer pl-4" (click)="showInstitute = !showInstitute"><u>Existing Client</u>
+        &nbsp;<i class='fas fa-user'></i> </span>
+    <div class="container" *ngIf="showInstitute">
+        <div class="row">
+            <div class="col">
+                <label>Institute</label>
+                <ng-multiselect-dropdown [placeholder]="'Select Institute'" [data]="_institutes"
+                    [(ngModel)]="_selectedInstitute" (onSelect)="onSelectInstitute($event)"
+                    [settings]="_instituteDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <mat-form-field class="w-100">
+                <mat-label for="owner" class="required-label">Lead Owner</mat-label>
+                <input type="text" matInput [(ngModel)]="lead.ownerName" [matAutocomplete]="autoOwner"
+                    (keyup)="checkOwner()" />
+                <mat-icon matSuffix>perm_identity</mat-icon>
+                <mat-autocomplete autoActiveFirstOption #autoOwner="matAutocomplete" (optionSelected)="checkOwner();">
+                    <mat-option *ngFor="let agent of _agents" [value]="agent.firstName+' '+agent.lastName"
+                        [hidden]="lead.ownerName === undefined || !agent.firstName.toLowerCase().includes(lead.ownerName.toLowerCase())">
+                        <span>{{agent.firstName}} {{agent.lastName}}</span>
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+            <small class="text-danger" *ngIf="_errors.owner != ''">{{_errors.owner}}
+                <i class="fas fa-exclamation-triangle pl-1"></i>
+            </small>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <mat-form-field class="w-100">
+                <mat-label for="owner" class="required-label">Company/Institute</mat-label>
+                <input type="text" matInput [(ngModel)]="lead.company" (keyup)="checkCompany()"
+                    [matAutocomplete]="leadInstitute" autocomplete="off" />
+                <mat-icon matSuffix>business</mat-icon>
+
+                <mat-autocomplete #leadInstitute="matAutocomplete">
+                    <mat-option
+                        [hidden]="lead.company === undefined || !institutes.toLowerCase().includes(lead.company.toLowerCase())"
+                        *ngFor="let institutes of _lead_institutes" [value]="institutes">
+                        {{institutes}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+
+            <small class=" text-danger " *ngIf="_errors.company !='' ">{{_errors.company}}
+                <i class="fas fa-exclamation-triangle pl-1 "></i>
+            </small>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <mat-form-field class="w-100 mb-0 pb-0">
+                <mat-label class="text-muted">Category</mat-label>
+                <input type="text" matInput class="pb-0 mb-0" [(ngModel)]="lead.category"
+                    [matAutocomplete]="autoLabelCategorys" autocomplete="off" />
+                <mat-autocomplete #autoLabelCategorys="matAutocomplete">
+                    <mat-option
+                        [hidden]="lead.category === undefined || !ld_category.toLowerCase().includes(lead.category.toLowerCase())"
+                        *ngFor="let ld_category of _lead_categorys" [value]="ld_category">
+                        {{ld_category}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <mat-form-field class="w-100 mb-0 pb-0">
+                <mat-label class="text-muted">Lead Title</mat-label>
+                <input type="text" matInput class="pb-0 mb-0" [(ngModel)]="lead.title" [matAutocomplete]="leadTitle"
+                    autocomplete="off" />
+                <mat-autocomplete #leadTitle="matAutocomplete">
+                    <mat-option
+                        [hidden]="lead.title === undefined || !titles.toLowerCase().includes(lead.title.toLowerCase())"
+                        *ngFor="let titles of _lead_titles" [value]="titles">
+                        {{titles}}
+                    </mat-option>
+                </mat-autocomplete>
+
+            </mat-form-field>
+        </div>
+
+
+
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <mat-form-field class="w-100 mb-0 pb-0">
+                <mat-label class="text-muted">Contact Person Full Name</mat-label>
+                <input type="text" matInput class="pb-0 mb-0" [(ngModel)]="lead.fullName" />
+            </mat-form-field>
+        </div>
+        <div class="col-lg-2 col-md-6 col-sm-12">
+            <mat-form-field class="w-100 mb-0 pb-0">
+                <mat-label class="text-muted">Lead Source</mat-label>
+                <input type="text" matInput class="pb-0 mb-0" [(ngModel)]="lead.leadSource"
+                    [matAutocomplete]="autoLabelSources" autocomplete="off" />
+                <mat-autocomplete #autoLabelSources="matAutocomplete">
+                    <mat-option
+                        [hidden]="lead.leadSource === undefined || !ld_source.toLowerCase().includes(lead.leadSource.toLowerCase())"
+                        *ngFor="let ld_source of _lead_sources" [value]="ld_source">
+                        {{ld_source}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+        <div class="col-lg-2 col-md-6 col-sm-12">
+            <mat-form-field class="w-100">
+                <mat-label class="text-muted">Lead Date</mat-label>
+                <input type="text" matInput class="pb-0 mb-0" [(ngModel)]="lead.leadDate" (focus)="picker.open()"
+                    [matDatepicker]="picker" />
+                <mat-icon matSuffix>today</mat-icon>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <mat-form-field class="w-100 mb-0 pb-0">
+                <mat-label class="required-label text-muted">Lead Stage</mat-label>
+                <mat-select [(ngModel)]="lead.status">
+                    <mat-option value="New Lead">New Lead</mat-option>
+                    <mat-option value="Attempted to Contact">Attempted to Contact</mat-option>
+                    <mat-option value="Already Purchased">Already Purchased</mat-option>
+                    <mat-option value="Not Required">Not Required</mat-option>
+                    <mat-option value="Contact In Future">Contact In Future</mat-option>
+                    <mat-option value="Intrested">Intrested</mat-option>
+                    <mat-option value="Under Processing">Under Processing</mat-option>
+                    <mat-option value="Imediate Requirement">Imediate Requirement</mat-option>
+                    <mat-option value="Converted to Sales">Converted to Sales</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <mat-form-field class="w-100">
+                <mat-label class="text-muted">Industry Type</mat-label>
+                <input type="text" matInput class="pb-0 mb-0" [(ngModel)]="lead.industryType"
+                    [matAutocomplete]="indTypesLabel" autocomplete="off" />
+                <mat-autocomplete #indTypesLabel="matAutocomplete">
+                    <mat-option
+                        [hidden]="lead.industryType === undefined || !ind_types.toLowerCase().includes(lead.industryType.toLowerCase())"
+                        *ngFor="let ind_types of _industry_types" [value]="ind_types">
+                        {{ind_types}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+
+        <div class="col-lg-2 col-md-6 col-sm-12">
+            <mat-form-field class="w-100 mb-0 pb-0">
+                <mat-label class="text-muted">Annual Revenue (&#8377;)</mat-label>
+                <input type="number" matInput class="pb-0 mb-0" [(ngModel)]="lead.annualRevenue" />
+            </mat-form-field>
+        </div>
+
+        <div class="col-lg-2 col-md-6 col-sm-12">
+            <mat-form-field class="w-100 mb-0 pb-0">
+                <mat-label class="text-muted">No of Employees</mat-label>
+                <input type="number" matInput class="pb-0 mb-0" [(ngModel)]="lead.noOfEmployees" />
+            </mat-form-field>
+        </div>
+    </div>
+
+    <h5 class="text-primary pt-3">Lead Address Info</h5>
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <mat-form-field class="w-100">
+                <mat-label for="owner">Street</mat-label>
+                <input type="text" matInput [(ngModel)]="lead.street" />
+            </mat-form-field>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <mat-form-field class="w-100">
+                <mat-label for="city">City</mat-label>
+                <input type="text" matInput [(ngModel)]="lead.city" [matAutocomplete]="autoCity" />
+                <mat-autocomplete autoActiveFirstOption #autoCity="matAutocomplete">
+                    <mat-option *ngFor="let city of _lead_cities" [value]="city"
+                        [hidden]="lead.city=== undefined || !city.toLowerCase().includes(lead.city.toLowerCase())">
+                        <span>{{city}}</span>
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <mat-form-field class="w-100">
+                <mat-label for="state">State</mat-label>
+                <input type="text" matInput [(ngModel)]="lead.state" [matAutocomplete]="autoState" />
+                <mat-autocomplete autoActiveFirstOption #autoState="matAutocomplete">
+                    <mat-option *ngFor="let states of _states" [value]="states.stateName"
+                        [hidden]="lead.state === undefined || !states.stateName.toLowerCase().includes(lead.state.toLowerCase())">
+                        <span>{{states.stateName}}</span>
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <mat-form-field class="w-100">
+                <mat-label for="country">Country</mat-label>
+                <input type="text" matInput [(ngModel)]="lead.country" [matAutocomplete]="autoCountry" />
+                <mat-autocomplete autoActiveFirstOption #autoCountry="matAutocomplete">
+                    <mat-option *ngFor="let country of _lead_countries" [value]="country"
+                        [hidden]="lead.country === undefined || !country.toLowerCase().includes(lead.country.toLowerCase())">
+                        <span>{{country}}</span>
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <mat-form-field class="w-100">
+                <mat-label for="owner">Pincode</mat-label>
+                <input type="text" matInput [(ngModel)]="lead.pincode" />
+            </mat-form-field>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <mat-form-field class="w-100">
+                <mat-label for="owner">Website URL</mat-label>
+                <input type="text" matInput [(ngModel)]="lead.website" (keyup)="checkURL()" />
+                <mat-icon matSuffix>link</mat-icon>
+            </mat-form-field>
+            <small class="text-danger" *ngIf="_errors.website != ''">{{_errors.website}}
+                <i class="fas fa-exclamation-triangle pl-1"></i>
+            </small>
+        </div>
+    </div>
+
+    <h5 class="text-primary pt-3">Contact Info</h5>
+    <div class="row">
+        <mat-icon class="pl-2 pointer text-primary" (click)="addContact()">add_circle</mat-icon>
+    </div>
+
+    <div class="row" *ngFor="let contact of leadContacts;let i=index">
+        <div class="col-12">
+            <h5 class="font-weight-bold">{{contact.name}}
+                <mat-icon class="pl-2 pointer" (click)="addContact(contact)">edit</mat-icon>
+
+                <mat-icon class="pl-2 pointer text-danger float-right" (click)="leadContacts.splice(i,1)">delete_forever
+                </mat-icon>
+            </h5>
+            <span class="chip-pk" *ngIf="contact.designation != null && contact.designation != ''">
+                <mat-icon matSuffix>contact_page</mat-icon> &nbsp; {{contact.designation}}
+            </span>
+            <span class="chip-pk" *ngIf="contact.phoneNo != null && contact.phoneNo != ''">
+                <mat-icon matSuffix>phone</mat-icon> &nbsp; {{contact.phoneNo}}
+            </span>
+            <span class="chip-pk" *ngIf="contact.alternatePhoneNo != null && contact.alternatePhoneNo != ''">
+                <mat-icon matSuffix>phone</mat-icon> &nbsp; {{contact.alternatePhoneNo}}
+            </span>
+            <span class="chip-pk" *ngIf="contact.emailId != null && contact.emailId != ''">
+                <mat-icon matSuffix>alternate_email</mat-icon> &nbsp; {{contact.emailId}}
+            </span>
+            <span class="chip-pk" *ngIf="contact.alternateEmail != null && contact.alternateEmail != ''">
+                <mat-icon matSuffix>alternate_email</mat-icon> &nbsp; {{contact.alternateEmail}}
+            </span>
+            <mat-checkbox color="primary" disabled [(ngModel)]="contact.active">Send Email Updates</mat-checkbox>
+        </div>
+    </div>
+
+    <h5 class="text-primary pt-3">Products Intrested In</h5>
+    <div class="row">
+        <div class="col">
+            <mat-form-field class="w-100">
+                <mat-label for="product">Enter Product Name</mat-label>
+                <input type="text" matInput [(ngModel)]="_productSTR" [matAutocomplete]="productsAuto"
+                    (keyup.enter)="productSelected($event.target.value)" />
+                <mat-autocomplete #productsAuto="matAutocomplete" [displayWith]="displayNull"
+                    (optionSelected)="productSelected($event.option.value);">
+                    <mat-option *ngFor="let prod of _products" [value]="prod.name"
+                        [hidden]="_productSTR === undefined || !prod.name.toLowerCase().includes(_productSTR.toLowerCase())">
+                        {{prod.name}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+            <span class="chip-pk" *ngFor="let prod of getProductsAsArray()">{{prod}}
+                <i class="fas fa-times pointer pl-1" (click)="removeProduct(prod)"></i>
+            </span>
+        </div>
+    </div>
+
+    <h5 class="text-primary pt-3">Description about Lead/Industry</h5>
+    <div class="row">
+        <div class="col">
+            <mat-form-field class="w-100">
+                <mat-label for="owner">Description</mat-label>
+                <textarea rows="8" matInput [(ngModel)]="lead.description"></textarea>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <h5 class="text-primary pt-3" *ngIf="_mode == 'Create'">Attachments</h5>
+    <div class="row" *ngIf="_mode == 'Create'">
+        <div class="col-12 pt-2">
+            <div class="row m-1 border border-light" *ngFor="let file of files;let i = index;">
+                <div class="col p-0 m-0">
+                    <mat-progress-bar style="height: 3px;" mode="determinate" [value]="file.progress">
+                    </mat-progress-bar>
+                    <div class="row">
+                        <div class="col">
+                            <span class="text-dark pl-2 text-nowrap-2">{{file.file.name}}</span>
+                            <br>
+                            <span class="text-muted small pl-2">{{file.status}} - {{file.file.size | filesize}} -
+                                {{file.progress}}%</span>
+                        </div>
+                        <div class="col-1">
+                            <span class="float-right pr-1"><i (click)="files.splice(i, 1);"
+                                    class="far fa-times-circle pointer"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <ngx-file-drop multiple="true" [showBrowseBtn]="false" dropZoneLabel="Drop files here."
+                (onFileDrop)="dropped($event)">
+                <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                    Drop files here or&nbsp;&nbsp;
+                    <span class="pointer" (click)="openFileSelector()"><u>Browse Files</u></span>
+                </ng-template>
+            </ngx-file-drop>
+            <small class="text-muted">File size limit is 25MB</small>
+        </div>
+    </div>
+
+    <h5 class="text-primary pt-3">Active/In-Active lead</h5>
+    <div class="row">
+        <div class="col">
+            <mat-checkbox color="primary" [(ngModel)]="lead.activeLead">Is an Active Lead</mat-checkbox>
+        </div>
+    </div>
+
+    <h5 class="text-primary pt-3">Send Email Updates</h5>
+    <div class="row">
+        <div class="col">
+            <mat-checkbox color="primary" [(ngModel)]="lead.sendEmailUpdates">Send Email Updates</mat-checkbox>
+            <a class="ml-1 text-primary" (click)="openLeadMailSettingSheet()"> <u> Using Mail Setting
+                    ({{lead.mailSetting}})</u></a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col text-center">
+            <button mat-button (click)="clear()">Clear</button>
+            <button color="primary" mat-stroked-button (click)="saveLead()"
+                [disabled]="saving || (files.length > filesUploaded)">Save&nbsp;
+                <i class="fa fa-save"></i>
+                <div *ngIf="saving" class="spinner-border spinner-border-sm pl-1" role="status">
+                    &nbsp;<span class="sr-only"> Saving...</span>
+                </div>
+            </button>
+        </div>
+    </div>
+
+
+</div>
+
+<p class="m-5 p-5">&nbsp;</p>
+
+<ng-template let-bottomSheetRef="bottomSheetRef" #templateBottomSheet>
+    <h3>Select Mail Setting</h3>
+    <span *ngIf="_leadMailSettingsLoading">Loading...</span>
+    <mat-nav-list>
+        <a *ngFor="let setting of _leadMailSettings" mat-list-item (click)="closeLeadMailSettingSheet(setting)">
+            <span mat-line>{{setting.configName}}</span>
+            <small mat-line>{{setting.username}}</small>
+        </a>
+    </mat-nav-list>
+</ng-template>

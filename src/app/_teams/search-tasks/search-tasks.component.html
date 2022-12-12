@@ -1,0 +1,231 @@
+<div class="row pt-1">
+    <div class="col">
+        <h4 class="text-dark">Search Tasks
+            <!-- <span [hidden]="member !== undefined && member.memberRole != 'Administrator'"
+                class="font-weight-light pl-3 pointer">Save this
+                filter</span> -->
+
+            <button mat-stroked-button class="float-right" [matMenuTriggerFor]="watchersMenu">
+                Filters<i class="fas fa-filter pl-1"></i>
+            </button>
+        </h4>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-4">
+        <mat-form-field class="ml-1 w-100">
+            <mat-label>Subject</mat-label>
+            <input matInput placeholder="Enter Subject... " [(ngModel)]="_filter.subject">
+        </mat-form-field>
+    </div>
+    <div class="col-4">
+        <mat-form-field class="ml-1 w-100">
+            <mat-label class="text-muted small">Institute Name</mat-label>
+            <input type="text" placeholder="Enter Institute Name... " matInput class="pb-0 mb-0"
+                [(ngModel)]="_filter.instituteName" [matAutocomplete]="autoInstitutes" />
+            <mat-autocomplete #autoInstitutes="matAutocomplete">
+                <mat-option [hidden]="!inst.instituteName.toLowerCase().includes(_filter.instituteName)"
+                    *ngFor="let inst of _institutes" [value]="inst.instituteName">
+                    {{inst.instituteName}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+    </div>
+    <div class="col-2">
+        <mat-form-field class="ml-1 w-100">
+            <mat-label class="text-muted small">Task Id</mat-label>
+            <input matInput placeholder="Enter Task Id... " [(ngModel)]="_filter.taskId">
+        </mat-form-field>
+    </div>
+    <div class="col-2">
+        <mat-form-field class="ml-1 w-100">
+            <mat-label>Status</mat-label>
+            <mat-select class="ml-1" [(ngModel)]="_filter.status" multiple>
+                <mat-option *ngFor="let _status of _workflows" [value]="_status">{{_status}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="col-2">
+        <mat-form-field class="ml-1 w-100">
+            <mat-label>Priority</mat-label>
+            <mat-select class="ml-1" [(ngModel)]="_filter.priority" multiple>
+                <mat-option value="High"> High </mat-option>
+                <mat-option value="Medium"> Medium </mat-option>
+                <mat-option value="Low"> Low </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="col-2">
+        <mat-form-field class="ml-1 w-100">
+            <mat-label>Assignee</mat-label>
+            <mat-select [disabled]="member !== undefined && member.memberRole == 'Member'" class="ml-1" [(ngModel)]="_filter.assignee" multiple>
+                <mat-option *ngFor="let mem of allTeamMembers" [value]="mem.memberEmailId">
+                    {{getMemberName(mem.memberEmailId)}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="col-2">
+        <mat-form-field class="ml-1 w-100">
+            <mat-label>Reporter</mat-label>
+            <mat-select class="ml-1" [(ngModel)]="_filter.reporter" multiple>
+                <mat-option *ngFor="let mem of allTeamMembers" [value]="mem.memberEmailId">
+                    {{getMemberName(mem.memberEmailId)}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="col-2">
+        <mat-form-field class="ml-1 w-100">
+            <mat-label>Lables</mat-label>
+            <mat-select class="ml-1" [(ngModel)]="_filter.labels" multiple>
+                <mat-option *ngFor="let label of _labels" [value]="label">
+                    {{label}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="col-2">
+        <mat-form-field class="ml-1 w-100">
+            <mat-label>Created By</mat-label>
+            <mat-select class="ml-1" [(ngModel)]="_filter.createdBy" multiple>
+                <mat-option *ngFor="let mem of allTeamMembers" [value]="mem.memberEmailId">
+                    {{getMemberName(mem.memberEmailId)}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="col-2">
+        <mat-form-field class="ml-1 w-100">
+            <mat-label>Last Updated By</mat-label>
+            <mat-select class="ml-1" [(ngModel)]="_filter.lastUpdatedBy" multiple>
+                <mat-option *ngFor="let mem of allTeamMembers" [value]="mem.memberEmailId">
+                    {{getMemberName(mem.memberEmailId)}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <!-- <div class="col-2">
+        <mat-form-field class="ml-1 w-100">
+            <mat-label>Watchers</mat-label>
+            <mat-select class="ml-1" [(ngModel)]="_filter.watchers" multiple>
+                <mat-option *ngFor="let watcher of _watchers" [value]="watcher">
+                    {{getMemberName(watcher)}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div> -->
+
+</div>
+
+<div class="row">
+    <div class="col-2">
+        <mat-form-field class="ml-1 w-100">
+            <mat-label>Due Date from</mat-label>
+            <input matInput [matDatepicker]="dueFrompicker" placeholder="Choose from date"
+                [(ngModel)]="_filter.dueDateTimeFrom">
+            <mat-datepicker-toggle matSuffix [for]="dueFrompicker"></mat-datepicker-toggle>
+            <mat-datepicker #dueFrompicker></mat-datepicker>
+        </mat-form-field>
+    </div>
+    <div class="col-2">
+        <mat-form-field class="ml-1 w-100">
+            <mat-label>Due Date to</mat-label>
+            <input matInput [matDatepicker]="dueTopicker" placeholder="Choose to date"
+                [(ngModel)]="_filter.dueDateTimeTo">
+            <mat-datepicker-toggle matSuffix [for]="dueTopicker"></mat-datepicker-toggle>
+            <mat-datepicker #dueTopicker></mat-datepicker>
+        </mat-form-field>
+    </div>
+    <div class="col-2">
+        <mat-form-field class="ml-1 w-100">
+            <mat-label>Created Date from</mat-label>
+            <input matInput [matDatepicker]="cdFrompicker" placeholder="Choose from date"
+                [(ngModel)]="_filter.createddatetimeFrom">
+            <mat-datepicker-toggle matSuffix [for]="cdFrompicker"></mat-datepicker-toggle>
+            <mat-datepicker #cdFrompicker></mat-datepicker>
+        </mat-form-field>
+    </div>
+    <div class="col-2">
+        <mat-form-field class="ml-1 w-100">
+            <mat-label>Created Date to</mat-label>
+            <input matInput [matDatepicker]="cdTopicker" placeholder="Choose to date"
+                [(ngModel)]="_filter.createddatetimeTo">
+            <mat-datepicker-toggle matSuffix [for]="cdTopicker"></mat-datepicker-toggle>
+            <mat-datepicker #cdTopicker></mat-datepicker>
+        </mat-form-field>
+    </div>
+    <div class="col-2">
+        <mat-form-field class="ml-1 w-100">
+            <mat-label>Last update Date from</mat-label>
+            <input matInput [matDatepicker]="ludFrompicker" placeholder="Choose from date"
+                [(ngModel)]="_filter.lastupdatedatetimeFrom">
+            <mat-datepicker-toggle matSuffix [for]="ludFrompicker"></mat-datepicker-toggle>
+            <mat-datepicker #ludFrompicker></mat-datepicker>
+        </mat-form-field>
+    </div>
+    <div class="col-2">
+        <mat-form-field class="ml-1 w-100">
+            <mat-label>Last update Date to</mat-label>
+            <input matInput [matDatepicker]="ludTopicker" placeholder="Choose to date"
+                [(ngModel)]="_filter.lastupdatedatetimeTo">
+            <mat-datepicker-toggle matSuffix [for]="ludTopicker"></mat-datepicker-toggle>
+            <mat-datepicker #ludTopicker></mat-datepicker>
+        </mat-form-field>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col">
+        <button mat-flat-button class="m-1" color="primary" (click)="searchTeamTasks()">Search</button>
+        <button mat-stroked-button class="m-1" color="primary" (click)="clearFilter()">clear</button>
+    </div>
+</div>
+
+<mat-progress-bar *ngIf="loading" mode="indeterminate">
+</mat-progress-bar>
+
+<div class="row p-2 mb-5" *ngIf="tasks.length > 0">
+    <div class="col">
+        <ag-grid-angular enableCellTextSelection="true" [rowData]="tasks" style="width: 100%; height: 500px;"
+            class="ag-theme-balham p-2" [columnDefs]="columnDefs" [frameworkComponents]="frameworkComponents"
+            [paginationAutoPageSize]="true" [pagination]="true">
+        </ag-grid-angular>
+    </div>
+</div>
+
+<mat-menu #watchersMenu="matMenu">
+    <p class="d-block text-muted small">&nbsp;Common&nbsp;Filters</p>
+    <div class="row p-1">
+        <div class="col-12">
+
+            <p class=" d-block filterMenu" mat-menu-item (click)="ChangeFilter('My Open Issues')">My Open
+                Issues</p>
+
+            <p class=" d-block filterMenu" mat-menu-item (click)="ChangeFilter('My Closed Issues')">My
+                Closed Issues
+            </p>
+
+            <p class=" d-block filterMenu" mat-menu-item (click)="ChangeFilter('All My Issues')">All My
+                Issues</p>
+
+            <div *ngIf="member !== undefined && member.memberRole != 'Member'">
+
+                <hr>
+
+                <p class="d-block text-muted small">&nbsp;Administrator&nbsp;Filters</p>
+
+                <p class=" d-block filterMenu" mat-menu-item (click)="ChangeFilter('Reporting to Me')">
+                    Reporting to Me</p>
+
+                <p class=" d-block filterMenu" mat-menu-item (click)="ChangeFilter('All Open Issues')">All Open
+                    Issues</p>
+
+                <p class=" d-block filterMenu" mat-menu-item (click)="ChangeFilter('All Closed Issues')">All
+                    Closed Issues
+                </p>
+
+            </div>
+        </div>
+    </div>
+</mat-menu>

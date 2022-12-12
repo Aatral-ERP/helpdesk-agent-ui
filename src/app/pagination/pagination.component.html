@@ -1,0 +1,26 @@
+<nav aria-label="Page navigation example">
+    <ul class="pagination pg-blue justify-content-center">
+        <li class="page-item" (click)="currentPage = 1 ; emitPageNoChange('1')"
+            [ngClass]="currentPage == 1 ? 'disabled' : ''">
+            <a class="page-link" tabindex="-1">First</a>
+        </li>
+        <li class="page-item" (click)="currentPage = currentPage - 1 ; emitPageNoChange(currentPage)"
+            [ngClass]="currentPage == 1 ? 'disabled' : ''">
+            <a class="page-link" tabindex="-1">Previous</a>
+        </li>
+
+        <li class="page-item" (click)="currentPage = pageNo.pageNo ; emitPageNoChange(pageNo.pageNo)"
+            [ngClass]="pageNo.pageNo == currentPage ? 'active' : ''" *ngFor="let pageNo of pageNos"
+            [hidden]="!pageNo.show"><a class="page-link">{{pageNo.pageNo}}</a>
+        </li>
+
+        <li class="page-item" (click)="currentPage = currentPage + 1 ; emitPageNoChange(currentPage)"
+            [ngClass]="currentPage == totalPages ? 'disabled' : ''">
+            <a class="page-link">Next</a>
+        </li>
+        <li class="page-item" (click)="currentPage = totalPages ; emitPageNoChange(totalPages)"
+            [ngClass]="currentPage == totalPages ? 'disabled' : ''">
+            <a class="page-link" tabindex="-1">Last</a>
+        </li>
+    </ul>
+</nav>

@@ -1,0 +1,101 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate">
+</mat-progress-bar>
+
+
+<h6 class="font-weight-bold pt-3">Manage Workflow</h6>
+
+<button mat-stroked-button color="primary" class="m-2 float-center" (click)="openAddWorkflowModal()">
+    Add Workflow &nbsp;<i class=" fas fa-plus-circle"></i>
+</button>
+
+<div class="example-box" cdkDrag [cdkDragDisabled]="true">
+    To Do
+</div>
+
+<div [hidden]="items.length == 0" cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+    <div class="example-box" *ngFor="let item of items;let i = index" cdkDrag>
+        {{item}} <span class="float-right text-danger pointer">
+            <i (click)="openDeleteStatusModal(item)" class="fas fa-trash-alt"></i>
+        </span>
+    </div>
+</div>
+
+<div class="example-box" cdkDrag [cdkDragDisabled]="true">
+    Done
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="openAddWorkflowModalId" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Workflow Status</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <label for="">Choose After Status</label>
+                        <select name="" id="" class="form-control" [(ngModel)]="afterItem">
+                            <option value="To Do">To Do</option>
+                            <option *ngFor="let item of items" [value]="item">{{item}}</option>
+                        </select>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="">Enter Workflow Status</label>
+                        <input type="text" class="form-control" [(ngModel)]="newWorkflow">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a type="button" class="pointer text-primary" data-dismiss="modal">Close</a>
+                <button mat-stroked-button color="primary" class="p-1" (click)="addWorkflowStatus()">Add
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="deleteWorkflowStatusModalId" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Workflow Status</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <h6>Before Delete '{{deleteItem}}', Move All issues to any other Status</h6>
+
+                <!-- <div class="row pt-3">
+                    <div class="col">{{deleteItem}}</div>
+                    <div class="col-2"><i class="fas fa-long-arrow-alt-right"></i></div>
+                    <div class="col">
+                        <select name="" id="" class="form-control" [(ngModel)]="deleteConfirmItem">
+                            <option value="To Do">To Do</option>
+                            <option [hidden]="item == deleteItem" *ngFor="let item of items" [value]="item">
+                                {{item}}
+                            </option>
+                            <option value="Done">Done</option>
+                        </select>
+                    </div>
+                </div> -->
+            </div>
+            <div class="modal-footer">
+                <a type="button" class="pointer text-primary" data-dismiss="modal">Close</a>
+                <button mat-stroked-button color="warn" class="p-1" (click)="confirmDelete()">
+                    Confirm Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

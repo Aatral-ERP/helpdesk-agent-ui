@@ -1,0 +1,142 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+
+<div class="container-fluid">
+    <div class="row border-bottom border-light pb-0 mb-0">
+        <div class="col">
+            <button (click)="openMailTemplateCreate()" [disabled]="!needed_loaded"
+                class="btn btn-sm btn-primary float-right">
+                <i class="fa fa-plus"></i> Create Mail Template&nbsp;&nbsp;&nbsp;&nbsp;
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row pointer filterdiv mt-0 pt-0 bg-primary text-white justify-content-center"
+            (click)="showFilterScreen = !showFilterScreen">
+            <div class="col text-center">
+                <span> <span class="small"> Mail Templates Filters &nbsp;&nbsp;</span>
+                    <i [hidden]="showFilterScreen" class="fa fa-angle-up"></i>
+                    <i [hidden]="!showFilterScreen" class="fa fa-angle-down"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container pt-2" [hidden]="!showFilterScreen">
+        <div class="row">
+            <div class="col-12">
+                <p class="indigo-text h4 text-center"> Mail Templates Filter
+                </p>
+                <hr style="width:100%;text-align:left;margin-left:0">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <mat-form-field class="w-100">
+                    <mat-label>Title</mat-label>
+                    <input type="text" matInput [(ngModel)]="_filters.title">
+                </mat-form-field>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <mat-form-field class="w-100">
+                    <mat-label>Mail Subject</mat-label>
+                    <input type="text" matInput [(ngModel)]="_filters.subject">
+                </mat-form-field>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <mat-form-field class="w-100">
+                    <mat-label>Mail Message</mat-label>
+                    <input type="text" matInput [(ngModel)]="_filters.message">
+                </mat-form-field>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <mat-form-field class="w-100 mb-0 pb-0">
+                    <mat-label>Status</mat-label>
+                    <mat-select [(ngModel)]="_filters.status" multiple>
+                        <mat-option value="New Lead">New Lead</mat-option>
+                        <mat-option value="Attempted to Contact">Attempted to Contact</mat-option>
+                        <mat-option value="Already Purchased">Already Purchased</mat-option>
+                        <mat-option value="Not Required">Not Required</mat-option>
+                        <mat-option value="Contact In Future">Contact In Future</mat-option>
+                        <mat-option value="Intrested">Intrested</mat-option>
+                        <mat-option value="Under Processing">Under Processing</mat-option>
+                        <mat-option value="Imediate Requirement">Imediate Requirement</mat-option>
+                        <mat-option value="Converted to Sales">Converted to Sales</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <mat-form-field class="w-100 mb-0 pb-0">
+                    <mat-label class="text-muted">Category</mat-label>
+                    <mat-select [(ngModel)]="_filters.categories" multiple>
+                        <mat-option *ngFor="let ld_category of _lead_categorys" [value]="ld_category">
+                            {{ld_category}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <mat-form-field class="w-100">
+                    <mat-label class="text-muted">Industry Type</mat-label>
+                    <mat-select [(ngModel)]="_filters.industryTypes" multiple>
+                        <mat-option *ngFor="let ld_ind_type of _industry_types" [value]="ld_ind_type">
+                            {{ld_ind_type}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <mat-form-field class="w-100">
+                    <mat-label class="text-muted">State</mat-label>
+                    <mat-select [(ngModel)]="_filters.states" multiple>
+                        <mat-option *ngFor="let _state of _lead_states" [value]="_state">
+                            {{_state}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <mat-form-field class="w-100 mb-0 pb-0 ml-1">
+                    <mat-label>Sending At</mat-label>
+                    <mat-select [(ngModel)]="_filters.frequency" multiple>
+                        <mat-option value="Daily">Daily</mat-option>
+                        <mat-option value="Weekly">Weekly</mat-option>
+                        <mat-option value="Bi-Weekly">Bi-Weekly</mat-option>
+                        <mat-option value="Monthly">Monthly</mat-option>
+                        <mat-option value="Bi-Monthly">Bi-Monthly</mat-option>
+                        <mat-option value="Quarterly">Quarterly</mat-option>
+                        <mat-option value="Bi-Yearly">Bi-Yearly</mat-option>
+                        <mat-option value="Yearly">Yearly</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center mt-2">
+                <button class="btn btn-md btn-primary" (click)="searchLeadMailTemplates()">Submit</button>
+                <button class="btn btn-sm btn-outline-primary" (click)="clearFilters()">Clear</button>
+            </div>
+        </div>
+
+    </div>
+
+    <p class="h4 text-center mt-4"> Mail Template Report </p>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <ag-grid-angular enableCellTextSelection="true" *ngIf="!loading" [rowData]="templates"
+                    style="width: 100%; height: 500px;" class="ag-theme-balham p-2" [columnDefs]="columnDefs"
+                    [frameworkComponents]="frameworkComponents" [paginationAutoPageSize]="true" [pagination]="true">
+                </ag-grid-angular>
+
+                <div class="item" *ngIf="loading">
+                    <ngx-skeleton-loader count="8"></ngx-skeleton-loader>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

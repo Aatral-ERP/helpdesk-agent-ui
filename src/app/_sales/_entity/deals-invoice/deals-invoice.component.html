@@ -1,0 +1,103 @@
+<div class="container">
+
+    <div *ngIf="!loading" class="alert alert-info text-center" role="alert" [hidden]="invoices.length > 0">
+        No Invoices Found...
+    </div>
+
+    <h5 class="font-weight-bold">Invoices</h5>
+
+    <div class="row">
+        <div class="col">
+
+            <span *ngIf="deal !== undefined">Grand Total Of Deal : {{deal.grandTotal | currency:'INR'}}</span>
+
+            <button class="btn btn-md float-right" (click)="convertAsInvoice()">Create Invoice &nbsp;
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+    </div>
+
+    <ngx-skeleton-loader *ngIf="loading" count="3" appearance="line"></ngx-skeleton-loader>
+
+    <div *ngFor="let si of invoices" class="card-header">
+        <a routerLink="/sales/invoices/overview/{{si.id}}/invoice" target="_blank">Invoice No : #{{si.invoiceNo}} <i
+                class='fas fa-external-link-alt pl-1'></i></a>
+
+        <span class="font-weight-light">
+            dated. {{si.invoiceDate | date:'MMM dd, yyyy'}}
+        </span> &nbsp;&nbsp;
+        <mat-chip>
+            {{si.dealType}}
+            <span
+                *ngIf="si.dealType == 'AMC' && si.amcFromDate != null && si.amcToDate != null">&nbsp;&nbsp;{{si.amcFromDate
+                | date:'MMM d, yyyy'}}
+                to {{si.amcToDate | date:'MMM d, yyyy'}}</span>
+        </mat-chip>
+        &nbsp;&nbsp;
+        <span class="text-primary pointer" (click)="EditDealInvoice(si.id)"><u>Edit</u>
+            &nbsp;<i class='fas fa-edit'></i> </span> &nbsp;&nbsp;
+        <span class="text-primary float-right">{{si.grandTotal | currency:'INR'}}</span>
+    </div>
+
+    <br>
+
+    <h5 class="font-weight-bold">Upcoming Invoice Reminders</h5>
+
+    <div class="row">
+        <div class="col-12">
+            <button class="btn btn-md float-right" (click)="showInvoiceReminder()">Create Invoice Reminder &nbsp;
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+        <div class="col-12" *ngIf="showNewReminder">
+            <div class="row">
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <label class="required-label" for="dob" style="margin-bottom: 5px;"> Invoice Reminder Date </label>
+                    <div class="input-group">
+                        <input [(ngModel)]="newReminder.reminderDate" class="form-control" (focus)="picker3.open()"
+                            [matDatepicker]="picker3">
+                        <mat-datepicker #picker3></mat-datepicker>
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i (click)="picker3.open()" class="fas fa-calendar-alt pointer"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <label class="required-label" for="description" style="margin-bottom: 5px;"> Description (Optional)
+                    </label>
+                    <div class="input-group">
+                        <textarea name="description" class="form-control" id="description" rows="5"
+                            [(ngModel)]="newReminder.description"></textarea>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <button class="btn btn-sm btn-primary" (click)="saveInvoiceReminder()">Save Invoice
+                        Reminder</button>
+                    <button class="btn btn-sm btn-primary-outline" (click)="clearReminder()">Clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ngx-skeleton-loader *ngIf="loading" count="3" appearance="line"></ngx-skeleton-loader>
+
+    <div *ngFor="let rem of reminders" class="card-header">
+        <span class="font-weight-light">
+            #{{rem.id}} dated. {{rem.reminderDate | date:'MMM dd, yyyy'}}
+
+        </span> &nbsp;&nbsp;
+        &nbsp;&nbsp;
+        <span class="text-primary pointer" (click)="EditDealInvoiceReminder(rem)"><u>Edit</u>
+            &nbsp;<i class='fas fa-edit'></i> </span> &nbsp;&nbsp;
+        <span class="text-muted float-right">
+            <span class="chip-pk" *ngIf="rem.invoiceId > 0"> Invoice No - #{{rem.invoiceNo}}
+                <i class="far fa-check-circle text-success"></i>
+            </span>
+            {{rem.createddatetime | date:'MMM dd, yyyy'}} &nbsp; <i class="far fa-trash-alt text-danger pointer"
+                (click)="deleteInvoiceReminder(rem)"></i>
+        </span>
+
+    </div>
+</div>

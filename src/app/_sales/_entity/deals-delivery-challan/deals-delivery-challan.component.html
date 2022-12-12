@@ -1,0 +1,173 @@
+<div class="container-fluid noQuoteSpan">
+    <h5 class="indigo-text">
+        <span *ngIf="dc.id == 0">Create Delivery Challan</span>
+        <span *ngIf="dc.id > 0">Edit Delivery Challan</span>
+    </h5>
+
+    <div class="row">
+        <div class="col-12">
+            <label>Invoice No (optional) </label>
+            <select name="invoiceId" [(ngModel)]="dc.invoiceId" class="form-control">
+                <option value="0">--select--</option>
+                <option *ngFor="let ic of invoices" [value]="ic.id">{{ic.invoiceNo}} dt. {{ic.invoiceDate |
+                    date:'dd/MM/yyyy'}}</option>
+            </select>
+        </div>
+    </div>
+
+    <p class="p-2">&nbsp;</p>
+
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-12">
+            <h5 class="font-weight-bold">Product Details</h5>
+        </div>
+        <div class="col-lg-6 col-md-12 col-sm-12">
+            <span class="small text-primary pointer" *ngIf="dc.id == 0"
+                (click)="prefillFromPendingDCProducts()"><u>Fetch
+                    Pending DC Products from Deal</u></span>
+        </div>
+        <!-- <div class="col-lg-3 col-md-3 col-sm-12">
+            <button (click)="openAddProductModal()" class="btn btn-md btn-primary float-right">Add Product
+                <i class="fa fa-plus"></i>
+            </button>
+        </div> -->
+    </div>
+
+    <!-- <div class="row" *ngIf="dc.products.length == 0">
+        <div class="col noProductSpan p-3 m-1">
+            <span (click)="openAddProductModal()" class="pointer text-primary">Add Products <i
+                    class="fa fa-plus"></i></span>
+        </div>
+    </div> -->
+
+    <div class="table-responsive">
+        <table id="example" class="table table-bordered" *ngIf="dc.products.length > 0">
+            <thead>
+                <tr>
+                    <th style="width: 5%" scope="col">#</th>
+                    <th style="width: 75%" scope="col">Product</th>
+                    <th style="width: 20%" scope="col">Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let prod of dc.products;let i = index;">
+                    <th scope="row">{{i+1}} <br>
+                        <i (click)="dc.products.splice(i, 1);" class="far fa-trash-alt text-danger pointer"></i>
+                    </th>
+                    <td>{{prod.name}}
+                        <br>
+                        <textarea class="editFocus" name="prod.description" id="description" cols="60%" rows="3"
+                            [(ngModel)]="prod.description"></textarea>
+
+                    </td>
+                    <td><input type="number" class="form-control editFocus" name="quantity" [(ngModel)]="prod.quantity"
+                            (change)="onChangeQuantity(prod)">
+                        <small class="text-muted">Pending Quantity : {{maxQuantity(prod.productId) | number}}
+                            <small *ngIf="prod.uom != null && prod.uom != ''">({{prod.uom}})</small>
+                        </small>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="row" *ngIf="dc.products.length > 0">
+        <div class="col">
+            <button class="btn btn-md btn-outline-primary" (click)="clear()">Clear</button>
+
+            <button [disabled]="_saving" (click)="saveDC()" class="btn btn-md btn-primary">Save&nbsp;
+                <i class="fa fa-save"></i>
+            </button>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row justify-content-center text-center" *ngIf="dc.id > 0">
+
+        <div class="col-12">
+            <span class="text-primary pointer" *ngIf="dc.filename != null && dc.filename != ''">
+                <span (click)="viewDCPDF()">
+                    {{dc.filename}}
+                </span> &nbsp;&nbsp;&nbsp;
+                <i class="fas fa-download" (click)="downloadDCPDF()"></i>
+            </span>
+
+            <span *ngIf="dc.filename == ''" (click)="showDCTemplateOptions = !showDCTemplateOptions"
+                class="pointer text-primary">Generate Delivery Challan PDF &nbsp;
+                <i class="fas fa-file-pdf"></i></span><br>
+
+            <span *ngIf="dc.filename != ''" (click)="showDCTemplateOptions = !showDCTemplateOptions"
+                class="pointer text-primary">Re-Generate Delivery Challan PDF &nbsp;
+                <i class="fas fa-file-pdf"></i></span><br>
+        </div>
+        <div class="col-12" [hidden]="!showDCTemplateOptions">
+
+            <h6 class="text-muted text-center">Choose a Template</h6>
+            <div class="row">
+                <div class="col-12">
+                    <button class="text-center m-1" (click)="generateDCPDF('DC_Template_1')" mat-flat-button
+                        color="primary">DC_Template_1</button>
+                    <button class="text-center m-1" (click)="generateDCPDF('DC_Template_2')" mat-flat-button
+                        color="warn">DC_Template_2</button>
+                    <button class="text-center m-1" (click)="generateDCPDF('DC_Template_3')" mat-flat-button
+                        color="primary">DC_Template_3</button>
+                </div>
+            </div>
+            <small (click)="showDCTemplateOptions = !showDCTemplateOptions"
+                class="text-muted text-center pointer">Close</small>
+        </div>
+    </div>
+
+    <mat-progress-bar *ngIf="generatingPDF" mode="indeterminate">
+    </mat-progress-bar>
+</div>
+
+<div class="modal fade right" id="productaddmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true" data-backdrop="true">
+    <div class="modal-dialog modal-frame modal-right modal-full-height modal-notify modal-primary" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <!--Body-->
+            <div class="modal-body">
+
+                <div class="row p-1 mb-1">
+                    <div class="col">
+                        <mat-form-field class="d-block">
+                            <input matInput placeholder="Enter Product Name to filter" name="productName"
+                                [(ngModel)]="productName" (ngModelChange)="filterProduct($event)">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-12" [hidden]="!_is_products_loading">
+                        <div class="item" *ngFor="let i of [].constructor(5)">
+                            <ngx-skeleton-loader count="1" animation="pulse" appearance="line">
+                            </ngx-skeleton-loader>
+                            <ngx-skeleton-loader count="1" animation="pulse" appearance="line" [theme]="{
+                                        height: '50px'
+                                      }">
+                            </ngx-skeleton-loader>
+                        </div>
+                    </div>
+
+                    <div class="col-12" [hidden]="_is_products_loading || !prod.finishedProduct"
+                        *ngFor="let prod of _productsShow">
+
+                        <div (click)="addProduct(prod)" class="pointer productCard cardPurple mt-1">
+                            <h5>{{prod.name}}</h5>
+                            <small class="productDesc"> <span [innerHTML]="prod.description"></span>
+                            </small>
+                            Deal Type : {{deal.dealType}}
+                            <button class="addProductButton">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/.Content-->
+    </div>
+</div>

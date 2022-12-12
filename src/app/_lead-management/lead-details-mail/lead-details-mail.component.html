@@ -1,0 +1,80 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+
+<div class="container-fluid">
+
+    <!-- Button trigger openMailTemplateModal -->
+    <button type="button" (click)="searchLeadMailTemplates()" class="btn btn-primary">
+        Send Mail Usig Templates
+    </button>
+
+    <div class="row">
+        <div class="col-12" *ngFor="let sentStatus of mailSentStatus">
+            <mat-accordion>
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Mail Sent Id #{{sentStatus.status.id}}
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            Status : {{sentStatus.status.status}} on {{sentStatus.status.createddatetime | date:'medium'}}
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <div class="row">
+                        <div class="col-12">
+                            <h5>
+                                Subject : {{sentStatus.status.subject}}
+                            </h5>
+                        </div>
+                        <div class="col-12">
+                            Mail sent to: <span class="text-muted">{{sentStatus.status.mailTo}}</span> <br>
+                            Mail CC: <span class="text-muted">{{sentStatus.status.mailCC}}</span>
+                        </div>
+                        <div class="col-12">
+                            <h5>
+                                <span class="text-muted" [innerHTML]="sentStatus.status.message"></span>
+                            </h5>
+                        </div>
+                        <div class="col-12">
+                            <h6>Attachments : {{sentStatus.status.files}}</h6>
+                        </div>
+                        <div class="col-12">
+                            <span class="font-italic">sent using mail template id
+                                #{{sentStatus.status.templateId}}</span>
+                        </div>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="openMailTemplateModal" tabindex="-1" role="dialog"
+    aria-labelledby="openMailTemplateModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="openMailTemplateModalTitle">Select Tamplate to send mail</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <span *ngIf="loadingTemplates" class="text-center text-muted d-block">Loading templates...</span>
+
+                <ul class="list-group list-group-flush">
+                    <li (click)="sentLeadMailByTemplate(template)" class="pointer list-group-item list-group-item-action"
+                        *ngFor="let template of templates">
+                        <span class="text-dark">{{template.title}}</span> -
+                        <span class="text-muted">{{template.subject}}</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

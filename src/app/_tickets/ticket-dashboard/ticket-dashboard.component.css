@@ -1,0 +1,20 @@
+.workflows-cols {
+    min-width: 383px;
+    max-width: 383px;
+    border-radius: 5px 5px 5px 5px;
+    padding: 2px 2px 2px 2px;
+}
+
+.scrollable {
+    overflow-y: auto;
+    width: 100%;
+    min-height: 560px;
+    max-height: 560px;
+}
+
+.container-fluid {
+    width: 100%;
+    overflow-x: auto;
+    min-height: 75%;
+    max-height: 75%;
+}

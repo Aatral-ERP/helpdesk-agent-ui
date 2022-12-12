@@ -1,0 +1,64 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate">
+</mat-progress-bar>
+
+<h6 class="font-weight-bold pt-3">Email Notification Settings</h6>
+
+<div class="row">
+    <div class="col">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Action</th>
+                        <th>Lead</th>
+                        <th>Reporter</th>
+                        <th>Assignee</th>
+                        <th>Institute</th>
+                        <th>Watchers</th>
+                        <th>All Viewers</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let setting of teamEmailSettings">
+                        <td>{{setting.action}}</td>
+                        <td>
+                            <mat-checkbox color="primary" class="pl-3 d-block" [disabled]="loading"
+                                [(ngModel)]="setting.lead">
+                            </mat-checkbox>
+                        </td>
+                        <td>
+                            <mat-checkbox color="primary" class="pl-3 d-block" [disabled]="loading"
+                                [(ngModel)]="setting.reporter">
+                            </mat-checkbox>
+                        </td>
+                        <td>
+                            <mat-checkbox color="primary" class="pl-3 d-block" [disabled]="loading"
+                                [(ngModel)]="setting.assignee">
+                            </mat-checkbox>
+                        </td>
+                        <td>
+                            <mat-checkbox color="primary" class="pl-3 d-block" [disabled]="loading"
+                                [(ngModel)]="setting.institute">
+                            </mat-checkbox>
+                        </td>
+                        <td>
+                            <mat-checkbox color="primary" class="pl-3 d-block" [disabled]="loading"
+                                [(ngModel)]="setting.watchers">
+                            </mat-checkbox>
+                        </td>
+                        <td>
+                            <mat-checkbox color="primary" class="pl-3 d-block" [disabled]="loading"
+                                [(ngModel)]="setting.viewers">
+                            </mat-checkbox>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <hr>
+
+            <button mat-stroked-button color="primary" class="p-1" [disabled]="loading"
+                (click)="saveTeamEmailSetting()">Save Email Settings </button>
+        </div>
+    </div>
+</div>

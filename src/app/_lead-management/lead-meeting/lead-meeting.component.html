@@ -1,0 +1,70 @@
+<h5 class="indigo-text">{{_mode}} Lead Meeting</h5>
+
+<mat-dialog-content class="mat-typography">
+
+    <div class="row">
+        <div class="col-12">
+            <label for="" class="required-label">Subject</label>
+            <input class="form-control" type="text" id="subject" placeHolder="Enter subject " name="subject"
+                [(ngModel)]="meeting.subject" />
+        </div>
+        <div class="col-12">
+            <label for="" class="required-label">Description</label>
+            <textarea rows="5" class="form-control" type="text" id="description" placeHolder="Enter description "
+                name="description" [(ngModel)]="meeting.description"></textarea>
+        </div>
+        <div class="col-12">
+            <label for="" class="required-label">Location</label>
+            <input class="form-control" type="text" id="location" placeHolder="Enter Location " name="location"
+                [(ngModel)]="meeting.location" />
+        </div>
+        <div class="col-6">
+            <label>From Date Time</label>
+            <input hidden matInput [ngxMatDatetimePicker]="frompicker" placeholder="Choose a date"
+                [(ngModel)]="meeting.fromDateTime">
+               <span class="text-muted pl-2" (click)="frompicker.open()" class="pointer">
+                <span *ngIf="meeting.fromDateTime !== undefined && meeting.fromDateTime != null">
+                    {{meeting.fromDateTime | date:'MMM dd yyyy, hh:mm a'}}
+                </span>
+                <span *ngIf="meeting.fromDateTime === undefined || meeting.fromDateTime == null">
+                    Set From Date Time
+                </span>
+            </span>
+            <i class="fas fa-calendar-alt pl-2" (click)="frompicker.open()"></i>
+
+            <mat-datepicker-toggle hidden matSuffix [for]="frompicker"></mat-datepicker-toggle>
+            <ngx-mat-datetime-picker [enableMeridian]="true" [touchUi]="true" #frompicker>
+            </ngx-mat-datetime-picker>
+        </div>
+        <div class="col-6">
+            <label>To Date Time</label>
+            <input hidden matInput [ngxMatDatetimePicker]="topicker" placeholder="Choose a date"
+                [(ngModel)]="meeting.toDateTime">
+            <span class="text-muted pl-2" (click)="topicker.open()" class="pointer">
+                <span *ngIf="meeting.toDateTime !== undefined && meeting.toDateTime != null">
+                    {{meeting.toDateTime | date:'MMM dd yyyy, hh:mm a'}}
+                </span>
+                <span *ngIf="meeting.toDateTime === undefined || meeting.toDateTime == null">
+                    Set To Date Time
+                </span>
+            </span>
+            <i class="fas fa-calendar-alt pl-2" (click)="topicker.open()"></i>
+            <mat-datepicker-toggle hidden matSuffix [for]="topicker"></mat-datepicker-toggle>
+            <ngx-mat-datetime-picker [enableMeridian]="true" [touchUi]="true" #topicker>
+            </ngx-mat-datetime-picker>
+        </div>
+
+        <p class="m-5 p-5">&nbsp;</p>
+
+    </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <a (click)="closeDialog()"><u>close</u></a>
+    <button class="btn btn-sm btn-primary ml-2" (click)="saveLeadMeeting()">Save
+        <div *ngIf="saving" class="spinner-border spinner-border-sm pl-1" role="status">
+            &nbsp;<span class="sr-only"> Saving...</span>
+        </div>
+    </button>
+</mat-dialog-actions>

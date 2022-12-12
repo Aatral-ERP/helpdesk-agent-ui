@@ -1,0 +1,108 @@
+<div class="container-fluid">
+
+    <div class="alert alert-info text-center" role="alert" [hidden]="notes.length > 0">
+        No Notes Found...
+    </div>
+
+
+    <div class="row">
+        <div class="col">
+            <span class="float-left">{{notes.length}} notes found</span>
+
+            <button class="btn btn-md float-right" (click)="showAddNewDiv = !showAddNewDiv">Add Note &nbsp;
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row justify-content-center" *ngIf="showAddNewDiv">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="text-dark font-weight-bold">Add Note</h5>
+                        <mat-form-field class="d-block">
+                            <input matInput placeholder="Title" name="newNote.noteTitle"
+                                [(ngModel)]="newNote.noteTitle">
+                        </mat-form-field>
+
+                        <mat-form-field class="d-block">
+                            <textarea matInput placeholder="Leave a note" name="newNote.note" rows=4
+                                [(ngModel)]="newNote.note"></textarea>
+                        </mat-form-field>
+
+                        <div class="row p-2 m-1 border border-light"
+                            *ngFor="let att of newNoteAttachments;let i = index">
+                            <div class="col-1">
+                                <i (click)="newNoteAttachments.splice(i, 1);"
+                                    class="far fa-trash-alt text-danger pointer"></i>
+                            </div>
+                            <div class="col">
+                                <span class="text-muted">{{att.filename}}</span>
+                                <br>
+                                <small class="text-muted">{{att.size | filesize}}</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+
+                        <input multiple hidden type="file" class="form-control" #fileuploader
+                            (change)="fileChange($event.target.files)">
+
+                        <button [disabled]="newNoteAttachments.length > 4" mat-mini-fab (click)="fileuploader.click()"
+                            class="float-left" color="primary" aria-label="Example icon button with a menu icon">
+                            <mat-icon>attach_file</mat-icon>
+                        </button>
+
+                        <button [disabled]="saving" mat-raised-button class="float-right m-1" color="primary"
+                            (click)="saveNote()">Save
+                            <div *ngIf="saving" class="spinner-border spinner-border-sm" role="status">
+                                <span class="sr-only"> Saving...</span>
+                            </div>
+                        </button>
+                        <button mat-stroked-button class="float-right m-1" color="primary"
+                            (click)="showAddNewDiv = !showAddNewDiv">Cancel</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-3">
+
+        <div *ngIf="loading">
+            <div class="row" *ngFor="let i of [].constructor(3)">
+                <div class="col">
+                    <ngx-skeleton-loader class="d-block" count="1" appearance="line" [theme]="{ width:'250px'}">
+                    </ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" appearance="line" [theme]="{ height: '50px'}">
+                    </ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="1" appearance="line">
+                    </ngx-skeleton-loader>
+                    <ngx-skeleton-loader count="2" appearance="line" [theme]="{ height: '50px'}">
+                    </ngx-skeleton-loader>
+                </div>
+            </div>
+        </div>
+
+        <div class="row border border-bottom-light m-1" *ngFor="let note of notes">
+            <div class="col">
+                <p class="text-small d-block mt-1 mb-0">
+                    <small class="text-muted">
+                        {{note.noteby}}
+                    </small>
+                    <i (click)="deleteNote(note)" class="far fa-trash-alt text-danger pointer float-right"></i>
+                </p>
+                <h5 class="font-weight-bold">{{note.noteTitle}}</h5>
+                <p class="d-block">{{note.note}}</p>
+
+
+                <div class="m-1" [hidden]="att.noteId != note.id" *ngFor="let att of noteAttachments;let i = index">
+                    <app-note-attachment [NoteAttachment]="att">
+                    </app-note-attachment>
+                </div>
+                <small class="text-muted">last modified by {{note.editedby}} on
+                    {{note.lastupdatedatetime | date:'MMM d, y h:mm a'}}</small>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,39 @@
+<div class="container border border-primary">
+    <div class="row">
+        <div class="col-12">
+            #{{ticket.ticketId}} - <span [innerHTML]="ticket.subject | base64HTML"></span>
+        </div>
+        <div class="col-12">
+            <div class="md-form">
+                <textarea name="comments" class="md-textarea form-control" id="feedback" [(ngModel)]="rating.feedback"
+                    rows="5" maxlength="499"></textarea>
+                <small class="float-right">{{rating.feedback.length}} / 499</small>
+                <label for="form7">Write something here...</label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <span class="rating">
+                <input type="radio" class="rating-input" id="rating-input-1-5" name="rating" [(ngModel)]="rating.rating"
+                    value="5">
+                <label for="rating-input-1-5" class="rating-star"></label>
+                <input type="radio" class="rating-input" id="rating-input-1-4" name="rating" [(ngModel)]="rating.rating"
+                    value="4">
+                <label for="rating-input-1-4" class="rating-star"></label>
+                <input type="radio" class="rating-input" id="rating-input-1-3" name="rating" [(ngModel)]="rating.rating"
+                    value="3">
+                <label for="rating-input-1-3" class="rating-star"></label>
+                <input type="radio" class="rating-input" id="rating-input-1-2" name="rating" [(ngModel)]="rating.rating"
+                    value="2">
+                <label for="rating-input-1-2" class="rating-star"></label>
+                <input type="radio" class="rating-input" id="rating-input-1-1" name="rating" [(ngModel)]="rating.rating"
+                    value="1">
+                <label for="rating-input-1-1" class="rating-star"></label>
+            </span>
+        </div>
+        <div class="col">
+            <button class="btn btn-sm btn-primary float-right" (click)="addRating()">Add Review</button>
+        </div>
+    </div>
+</div>

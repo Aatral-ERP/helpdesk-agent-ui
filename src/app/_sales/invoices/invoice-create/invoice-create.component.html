@@ -1,0 +1,535 @@
+<div class="container-fluid">
+
+    <div class="row p-2">
+        <div class="col">
+
+            <p class="indigo-text h4 text-center">{{_mode}} Invoice
+            </p>
+
+            <hr style="width:100%;text-align:left;margin-left:0">
+
+        </div>
+    </div>
+
+    <h5 class="font-weight-bold">Invoice Info</h5>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-6">
+            <label class="required-label">Institute</label>
+            <ng-multiselect-dropdown [placeholder]="'Select Institutes'" [data]="_institutes"
+                [(ngModel)]="_selectedInstitute"
+                (onSelect)="invoice.institute = $event;loadAllInstituteContacts($event);decideGSTType($event);"
+                [settings]="_instituteDropdownSettings">
+            </ng-multiselect-dropdown>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-3">
+            <label>Contacts</label>
+            <ng-multiselect-dropdown [placeholder]="'Select Contact'" [data]="_inst_contacts"
+                [(ngModel)]="invoice.instituteContacts" [settings]="_instituteContactDropdownSettings">
+            </ng-multiselect-dropdown>
+        </div>
+
+        <div class="col-sm-8 col-md-8 col-lg-2">
+            <label class="required-label">Type</label>
+            <select class="form-control" name="dealType" id="dealType" [(ngModel)]="invoice.dealType">
+                <option value="Sales">Sales</option>
+                <option value="AMC">AMC</option>
+                <option value="Service">Service</option>
+                <option value="Others">Others</option>
+            </select>
+        </div>
+
+        <div class="col-sm-4 col-md-4 col-lg-1 ml-0 pl-0">
+            <label>Deal Id</label>
+            <input type="number" disabled class="form-control" name="dealId" [(ngModel)]="invoice.dealId">
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <label for="subject">Subject</label>
+            <input class="form-control" type="text" id="subject" placeHolder="Enter Subject" name="subject"
+                [(ngModel)]="invoice.subject" />
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <label class="required-label" for="invoiceNo">Invoice No</label>
+            <input class="form-control" type="text" id="invoiceNo" placeHolder="Enter Invoice No" name="invoiceNo"
+                [(ngModel)]="invoice.invoiceNo" />
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <label for="salesOrderNo">Sales Order No</label>
+            <input class="form-control" type="text" id="salesOrderNo" placeHolder="Enter Sales Order No"
+                name="salesOrderNo" [(ngModel)]="invoice.salesOrderNo" />
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <label for="purchaseOrderNo">Purchase Order No</label>
+            <input class="form-control" type="text" id="purchaseOrderNo" placeHolder="Enter Purchase Order No "
+                name="purchaseOrderNo" [(ngModel)]="invoice.purchaseOrderNo" />
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <label class="required-label" for="dob" style="margin-bottom: 5px;"> Invoice Date </label>
+            <div class="input-group">
+                <input [(ngModel)]="invoice.invoiceDate" class="form-control" (focus)="picker3.open()"
+                    [matDatepicker]="picker3">
+                <mat-datepicker #picker3></mat-datepicker>
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <i (click)="picker3.open()" class="fas fa-calendar-alt pointer"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <label class="required-label" for="dob" style="margin-bottom: 5px;"> Due Date
+                <i [matMenuTriggerFor]="menu" class="fas fa-cog text-right pointer"></i>
+
+                <mat-menu #menu="matMenu">
+                    <button (click)="changeDueDate('Net 15')" mat-menu-item>Net 15</button>
+                    <button (click)="changeDueDate('Net 30')" mat-menu-item>Net 30</button>
+                    <button (click)="changeDueDate('Net 45')" mat-menu-item>Net 45</button>
+                    <button (click)="changeDueDate('Net 60')" mat-menu-item>Net 60</button>
+                    <button (click)="changeDueDate('Net 90')" mat-menu-item>Net 90</button>
+                </mat-menu>
+
+            </label>
+            <div class="input-group">
+                <input [(ngModel)]="invoice.dueDate" class="form-control" (focus)="picker4.open()"
+                    [matDatepicker]="picker4">
+                <mat-datepicker #picker4></mat-datepicker>
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <i (click)="picker4.open()" class="fas fa-calendar-alt pointer"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <label>Invoice Status</label>
+            <select name="invoiceStatus" [(ngModel)]="invoice.invoiceStatus" class="form-control">
+                <option value="created">Created</option>
+                <option value="approved">Approved</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+            </select>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-2">
+            <label>GST Month</label>
+            <select name="gstMonth" [(ngModel)]="invoice.gstMonth" class="form-control">
+                <option value="">--select--</option>
+                <option value="January">January</option>
+                <option value="February">February</option>
+                <option value="March">March</option>
+                <option value="April">April</option>
+                <option value="May">May</option>
+                <option value="June">June</option>
+                <option value="July">July</option>
+                <option value="August">August</option>
+                <option value="September">September</option>
+                <option value="October">October</option>
+                <option value="November">November</option>
+                <option value="December">December</option>
+            </select>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-1 ml-0 pl-0">
+            <label>GST Year</label>
+            <input type="number" class="form-control" name="gstYear" [(ngModel)]="invoice.gstYear">
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <label>Excise Duty</label>
+            <input type="number" class="form-control" name="exciseDuty" [(ngModel)]="invoice.exciseDuty">
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <label>Sales Commission</label>
+            <input type="number" class="form-control" name="salesCommission" [(ngModel)]="invoice.salesCommission">
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <label>Shipping Cost</label>
+            <input type="number" class="form-control" name="shippingCost" [(ngModel)]="invoice.shippingCost">
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <label>Paid Amount</label>
+            <input type="number" class="form-control" name="paidAmount" [(ngModel)]="invoice.paidAmount">
+        </div>
+
+    </div>
+
+    <p class="p-2">&nbsp;</p>
+
+    <h5 class="font-weight-bold">Address Info</h5>
+
+    <div class="row justify-content-center">
+        <div class="col-sm-12 col-md-12 col-lg-6">
+            <div class="p-2 border border-light-1">
+
+                <span class="font-weight-bold h6">Billing Address</span>
+                <span *ngIf="invoice.institute.instituteId" class="text-primary pointer float-right"
+                    (click)="copyBillingAddressFromInstitute()">
+                    <u>Copy Address from Selected Institute</u>
+                </span>
+                <div class="row">
+                    <div class="col-12">
+                        <textarea class="editFocus" cols="60%" id="billingTo" rows="5"
+                            placeHolder="Enter Full Billing Address" name="billingTo"
+                            [(ngModel)]="invoice.billingTo"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-6">
+            <div class="p-2 border border-light-1">
+                <span class="font-weight-bold h6">Shipping Address</span>
+                <span *ngIf="invoice.institute.instituteId" class="text-primary pointer float-right"
+                    (click)="copyShippingAddressFromBillingAddress()">
+                    <u>Copy Address from Billing Address</u>
+                </span>
+                <div class="row">
+                    <div class="col-12">
+                        <textarea class="editFocus" cols="60%" id="shippingTo" rows="5"
+                            placeHolder="Enter Full Shipping Address" name="shippingTo"
+                            [(ngModel)]="invoice.shippingTo"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p class="p-2">&nbsp;</p>
+
+    <div class="row">
+        <div class="col-lg-6 col-md-12 col-sm-12">
+            <h5 class="font-weight-bold">Product Details
+                <span class="small text-primary pointer" *ngIf="_mode == 'Create'"
+                    (click)="prefillFromPendingInvoices()"><u>Fetch Pending Invoice Products from Deal</u></span>
+            </h5>
+        </div>
+        <div class="col-lg-4 col-md-12 col-sm-12">
+            <div *ngIf="invoice.dealType == 'Sales' || invoice.dealType == 'AMC'">
+                <div class="row">
+                    <div class="col">
+                        <label for="amcFromDate" *ngIf="invoice.dealType =='AMC'" style="margin-bottom: 5px;"> AMC From
+                            Date </label>
+                        <div class="input-group" *ngIf="invoice.dealType =='AMC'">
+                            <input (ngModelChange)="onAMCFromDateChange($event)" [(ngModel)]="invoice.amcFromDate"
+                                class="form-control" (focus)="picker.open()" [matDatepicker]="picker">
+                            <mat-datepicker #picker></mat-datepicker>
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <i (click)="picker.open()" class="fas fa-calendar-alt pointer"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <label for="amcToDate" *ngIf="invoice.dealType =='Sales'" style="margin-bottom: 5px;"> Warranty
+                            Expiry Date </label>
+                        <label for="amcToDate" *ngIf="invoice.dealType =='AMC'" style="margin-bottom: 5px;"> AMC To Date
+                        </label>
+
+                        <div class="input-group">
+                            <input [(ngModel)]="invoice.amcToDate" class="form-control" (focus)="picker2.open()"
+                                [matDatepicker]="picker2">
+                            <mat-datepicker #picker2></mat-datepicker>
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <i (click)="picker2.open()" class="fas fa-calendar-alt pointer"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="invoice.products.length > 0" class="col-lg-2 col-md-12 col-sm-12">
+            <button (click)="openAddProductModal()" class="btn btn-md btn-primary float-right">Add Product
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="invoice.products.length == 0">
+        <div class="col noProductSpan p-3 m-1">
+            <span (click)="openAddProductModal()" class="pointer text-primary">Add Products <i
+                    class="fa fa-plus"></i></span>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table id="example" class="table table-bordered" *ngIf="invoice.products.length > 0">
+            <thead>
+                <tr>
+                    <th style="width: 2%" scope="col">#</th>
+                    <th [hidden]="!_show_parts" style="width: 5%" scope="col">Part</th>
+                    <th style="width: 30%" scope="col">Product</th>
+                    <th style="width: 10%" scope="col">Price(&#8377;)</th>
+                    <th style="width: 10%" scope="col">Discount(&#8377;)
+                        <select name="discountType" id="discountType" [(ngModel)]="invoice.discountType">
+                            <option value="Percent">In %</option>
+                            <option value="Amount">In Rs.(&#8377;)</option>
+                        </select>
+                    </th>
+                    <th style="width: 8%" scope="col">Quantity</th>
+                    <th style="width: 10%" scope="col">GST
+                        <select name="gstType" id="gstType" [(ngModel)]="invoice.gstType">
+                            <option value="IGST">IGST</option>
+                            <option value="CGST/SGST">CGST/SGST</option>
+                        </select>
+                    </th>
+                    <th style="width: 10%" scope="col">Total(&#8377;)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let prod of invoice.products;let i = index;">
+                    <th scope="row">{{i+1}} <br>
+                        <i (click)="invoice.products.splice(i, 1);" class="far fa-trash-alt text-danger pointer"></i>
+                    </th>
+
+                    <td *ngIf="_show_parts">
+                        <select name="partId" id="partId" [(ngModel)]="prod.partId">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </td>
+
+                    <td>{{prod.name}}
+                        <br>
+                        <textarea class="editFocus" name="prod.description" id="description" cols="60%" rows="3"
+                            [(ngModel)]="prod.description"></textarea>
+                    </td>
+                    <td>
+                        <input type="number" class="form-control editFocus" name="price" [(ngModel)]="prod.price">
+                        <small class="text-muted">{{prod.price | currency:'INR'}}</small>
+                    </td>
+                    <td><input type="number" class="form-control editFocus" *ngIf="invoice.discountType == 'Amount'"
+                            (ngModelChange)="prod.discountPercent = onChangeDiscountAmount($event,prod.price)"
+                            name="discount" [(ngModel)]="prod.discount">
+                        <input type="number" class="form-control editFocus" *ngIf="invoice.discountType == 'Percent'"
+                            min=1 max=100 (ngModelChange)="prod.discount = onChangeDiscountPercent($event,prod.price)"
+                            name="discount" [(ngModel)]="prod.discountPercent">
+                        <small class="text-muted">{{prod.discount | currency:'INR'}}</small>
+                        <small class="text-muted">({{prod.discountPercent | number}}%)</small> {{prod.discountType}}
+                    </td>
+                    <td><input type="number" class="form-control editFocus" name="quantity" [(ngModel)]="prod.quantity">
+                        <small class="text-muted">{{prod.quantity | number}}
+                            <small *ngIf="prod.uom != null">({{prod.uom}})</small>
+                        </small>
+                    </td>
+                    <td>
+                        <select name="gstPercentage" id="gstPercentage" [(ngModel)]="prod.gstPercentage">
+                            <option value="0">0%</option>
+                            <option value="5">5%</option>
+                            <option value="12">12%</option>
+                            <option value="18">18%</option>
+                            <option value="28">28%</option>
+                        </select>
+                        <br>
+                        <span *ngIf="invoice.gstType == 'CGST/SGST'">
+                            CGST -
+                            {{su.getGSTAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage) / 2 |
+                            currency:'INR'}}
+                            ({{prod.gstPercentage / 2}}%)
+                            <br>
+                            SGST -
+                            {{su.getGSTAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage) / 2 |
+                            currency:'INR'}}
+                            ({{prod.gstPercentage / 2}}%)
+                        </span>
+                        <span *ngIf="invoice.gstType == 'IGST'">
+                            IGST -
+                            {{su.getGSTAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage) |
+                            currency:'INR'}}
+                            ({{prod.gstPercentage}})%
+                        </span>
+                    </td>
+                    <td align="right">
+                        {{su.getTotalAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage) |
+                        currency:'INR'}}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="borderless">
+                        <button (click)="openAddProductModal()" class="btn btn-md btn-primary">Add Product
+                            <i class="fa fa-plus"></i>
+                        </button>
+
+                        <button *ngIf="!_show_parts" (click)="_show_parts = true" class="btn btn-sm btn-primary">
+                            Show Parts
+                        </button>
+                        <button *ngIf="_show_parts" (click)="removeParts()" class="btn btn-sm btn-primary">
+                            Remove Parts
+                        </button>
+                        <br>
+                        <div *ngIf="_show_parts">
+                            <span *ngIf="su.getPartSubTotal(invoice.products, 1) > 0" class="d-block">Part 1 Subtotal :
+                                {{su.getPartSubTotal(invoice.products, 1) | currency:'INR'}}</span>
+                            <span *ngIf="su.getPartSubTotal(invoice.products, 2) > 0" class="d-block">Part 2 Subtotal :
+                                {{su.getPartSubTotal(invoice.products, 2) | currency:'INR'}}</span>
+                            <span *ngIf="su.getPartSubTotal(invoice.products, 3) > 0" class="d-block">Part 3 Subtotal :
+                                {{su.getPartSubTotal(invoice.products, 3) | currency:'INR'}}</span>
+                            <span *ngIf="su.getPartSubTotal(invoice.products, 4) > 0" class="d-block">Part 4 Subtotal :
+                                {{su.getPartSubTotal(invoice.products, 4) | currency:'INR'}}</span>
+                            <span *ngIf="su.getPartSubTotal(invoice.products, 5) > 0" class="d-block">Part 5 Subtotal :
+                                {{su.getPartSubTotal(invoice.products, 5) | currency:'INR'}}</span>
+                        </div>
+
+                    </td>
+                    <td colspan="2">
+                        <table class="table table-sm table-borderless text-dark">
+                            <tr>
+                                <td>
+                                    Sub Total
+                                </td>
+                                <td align="right">
+                                    {{su.getSubTotal(invoice.products) | currency:'INR'}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Discount
+                                </td>
+                                <td align="right">
+                                    {{su.getDiscount(invoice.products) | currency:'INR'}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Tax
+                                </td>
+                                <td align="right">
+                                    {{su.getTaxAmount(invoice.products) | currency:'INR'}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Adjustment
+                                </td>
+                                <td align="right">
+                                    {{su.getAdjustment(invoice.products) | currency:'INR'}}
+                                </td>
+                            </tr>
+                            <tr class="border-light border-top border-bottom">
+                                <td class="font-weight-bold">
+                                    Grand Total
+                                </td>
+                                <td class="font-weight-bold" align="right">
+                                    {{su.getGrandTotal(invoice.products) | currency:'INR'}}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row">
+        <div class="col-12 ">
+            <label for="terms">Terms & Conditions</label>
+            <textarea class="form-control" name="terms" id="terms" rows="5" [(ngModel)]="invoice.terms"></textarea>
+
+            <small class="text-primary float-right pointer" (click)="showTermsMasters = !showTermsMasters">
+                <span *ngIf="!showTermsMasters">Choose Terms and Conditions from Master</span>
+                <span *ngIf="showTermsMasters">Close</span>
+            </small>
+
+            <br>
+
+            <app-terms-and-conditions *ngIf="showTermsMasters" (OnChoose)="invoice.terms = $event" [type]="'Invoice'">
+            </app-terms-and-conditions>
+
+        </div>
+    </div>
+
+    <p class="p-5">&nbsp;</p>
+
+    <div class="footer bg-white">
+        <span class="float-right">
+
+            <!-- <a routerLink="/sales/deals/overview/{{deal.id}}/deal" class="text-primary u"> cancel </a> -->
+
+            <button class="btn btn-md btn-outline-primary" (click)="clear()">Clear</button>
+
+            <button [disabled]="saving" (click)="saveInvoice()" class="btn btn-md btn-primary">Save&nbsp;
+                <i class="fa fa-save"></i>
+                <div *ngIf="saving" class="spinner-border spinner-border-sm" role="status">
+                    &nbsp;<span class="sr-only"> Saving...</span>
+                </div>
+            </button>
+        </span>
+    </div>
+
+
+    <!--Section: Live preview-->
+
+    <!--Modal: modal-->
+    <div class="modal fade right" id="productaddmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true" data-backdrop="true">
+        <div class="modal-dialog modal-frame modal-right modal-full-height modal-notify modal-primary" role="document">
+            <!--Content-->
+            <div class="modal-content">
+                <!--Body-->
+                <div class="modal-body">
+
+                    <div class="row p-1 mb-1">
+                        <div class="col">
+                            <mat-form-field class="d-block">
+                                <input matInput placeholder="Enter Product Name to filter" name="productName"
+                                    [(ngModel)]="productName" (ngModelChange)="filterProduct($event)">
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-12" [hidden]="!_is_products_loading">
+                            <div class="item" *ngFor="let i of [].constructor(5)">
+                                <ngx-skeleton-loader count="1" animation="pulse" appearance="line">
+                                </ngx-skeleton-loader>
+                                <ngx-skeleton-loader count="1" animation="pulse" appearance="line" [theme]="{
+                                        height: '50px'
+                                      }">
+                                </ngx-skeleton-loader>
+                            </div>
+                        </div>
+
+                        <a (click)="hideProductAddModal()" routerLink="/product/add-product"><u>Create Product</u></a>
+
+                        <div class="col-12" [hidden]="_is_products_loading || !prod.finishedProduct"
+                            *ngFor="let prod of _productsShow">
+
+                            <div (click)="addProduct(prod)" class="pointer productCard cardPurple mt-1">
+                                <h5>{{prod.name}}</h5>
+                                <small class="productDesc"> <span [innerHTML]="prod.description"></span>
+                                </small>
+                                <small [hidden]="invoice.dealType == 'Sales'">{{prod.amount | currency : 'INR'}}</small>
+                                <small [hidden]="invoice.dealType == 'AMC'">{{prod.amcAmount | currency :
+                                    'INR'}}</small>
+                                <button class="addProductButton">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/.Content-->
+        </div>
+    </div>
+</div>
+<!--Modal: modal-->
+
+<!--Section: Live preview-->

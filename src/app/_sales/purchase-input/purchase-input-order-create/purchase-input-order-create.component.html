@@ -1,0 +1,306 @@
+<div class="container-fluid">
+
+    <div class="row p-2">
+        <div class="col">
+
+            <p class="indigo-text h4 text-center">{{_mode}} Purchase Input Order
+            </p>
+
+            <hr style="width:100%;text-align:left;margin-left:0">
+
+        </div>
+    </div>
+
+    <h5 class="font-weight-bold">Order Info</h5>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            <label>Vendor</label>
+            <ng-multiselect-dropdown [placeholder]="'Select Vendors'" [data]="_vendors" [(ngModel)]="_selectedVendor"
+                (onSelect)="order.vendor = $event;changeAddress()" [settings]="_vendorDropdownSettings">
+            </ng-multiselect-dropdown>
+        </div>
+
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <label>Order No</label>
+            <input class="form-control" placeholder="Enter Order No" name="orderNo" id="orderNo"
+                [(ngModel)]="order.orderNo">
+        </div>
+
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <label for="orderDate" style="margin-bottom: 5px;"> Order Date </label>
+            <!-- <input [(ngModel)]="order.orderDate" class="form-control" [owlDateTime]="dt2" [owlDateTimeTrigger]="dt2"
+                placeholder="Choose Order Date">
+            <owl-date-time [pickerType]="'calendar'" #dt2></owl-date-time> -->
+
+
+            <input [(ngModel)]="order.orderDate" class="form-control" (focus)="picker.open()" [matDatepicker]="picker">
+            <mat-datepicker #picker></mat-datepicker>
+
+        </div>
+
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <label>Reference No.</label>
+            <input class="form-control" placeholder="Enter Reference No" name="referenceNo" id="referenceNo"
+                [(ngModel)]="order.referenceNo">
+        </div>
+
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <label for="expectedDeliveryDate" style="margin-bottom: 5px;">Expected Delivery Date </label>
+
+            <input [(ngModel)]="order.expectedDeliveryDate" class="form-control" (focus)="picker2.open()"
+                [matDatepicker]="picker2">
+            <mat-datepicker #picker2></mat-datepicker>
+
+            <!-- <input [(ngModel)]="order.expectedDeliveryDate" class="form-control" [owlDateTime]="dt1"
+                [owlDateTimeTrigger]="dt1" placeholder="Choose Due Date">
+            <owl-date-time [pickerType]="'calendar'" #dt1></owl-date-time> -->
+        </div>
+    </div>
+
+    <p class="p-2">&nbsp;</p>
+
+    <h5 class="font-weight-bold">Address Info</h5>
+
+    <div class="row justify-content-center">
+        <div class="col-sm-12 col-md-12 col-lg-6">
+            <span class="font-weight-bold h6">Billing Address</span>
+            <div class="p-2 border border-light-1">
+                <textarea class="editFocus" cols="60%" id="billingTo" rows="5" placeHolder="Enter Full Billing Address"
+                    name="billingTo" [(ngModel)]="order.billingTo"></textarea>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-6">
+            <span class="font-weight-bold h6">Shipping Address</span>
+            <div class="p-2 border border-light-1">
+                <textarea class="editFocus" cols="60%" id="shippingTo" rows="5"
+                    placeHolder="Enter Full Shipping Address" name="shippingTo"
+                    [(ngModel)]="order.shippingTo"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <p class="p-2">&nbsp;</p>
+
+    <div class="row">
+        <div class="col-8">
+            <h5 class="font-weight-bold">Product Details</h5>
+        </div>
+        <div *ngIf="order.products.length > 0" class="col-4">
+            <button (click)="openAddProductModal()" class="btn btn-md btn-primary float-right">Add Product
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="order.products.length == 0">
+        <div class="col noProductSpan p-3 m-1">
+            <span (click)="openAddProductModal()" class="pointer text-primary">Add Products <i
+                    class="fa fa-plus"></i></span>
+        </div>
+    </div>
+
+
+    <div class="table-responsive">
+        <table class="table table-bordered" *ngIf="order.products.length > 0">
+            <thead>
+                <tr>
+                    <th style="width: 5%" scope="col">#</th>
+                    <th style="width: 30%" scope="col">Product</th>
+                    <th style="width: 10%" scope="col">Price(&#8377;)</th>
+                    <th style="width: 10%" scope="col">Discount(&#8377;)</th>
+                    <th style="width: 5%" scope="col">Quantity</th>
+                    <th style="width: 10%" scope="col">GST
+                        <select name="gstType" id="gstType" [(ngModel)]="order.gstType">
+                            <option value="IGST">IGST</option>
+                            <option value="CGST/SGST">CGST/SGST</option>
+                        </select>
+                    </th>
+                    <th style="width: 10%" scope="col">Total(&#8377;)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let prod of order.products;let i = index;">
+                    <th scope="row">{{i+1}} <br>
+                        <i (click)="order.products.splice(i, 1);" class="far fa-trash-alt text-danger pointer"></i>
+                    </th>
+                    <td>{{prod.name}}
+                        <br>
+                        <textarea class="editFocus" name="prod.description" id="description" cols="60%" rows="3"
+                            [(ngModel)]="prod.description"></textarea>
+
+                    </td>
+                    <td>
+                        <input type="number" class="form-control editFocus" name="editPrice" [(ngModel)]="prod.price">
+                        <small class="text-muted">{{prod.price | currency:'INR'}}</small>
+                    </td>
+                    <td><input type="number" class="form-control editFocus" name="editPrice"
+                            [(ngModel)]="prod.discount">
+                        <small class="text-muted">{{prod.discount | currency:'INR'}}</small>
+                    </td>
+                    <td><input type="number" class="form-control editFocus" name="editPrice"
+                            [(ngModel)]="prod.quantity">
+                        <small class="text-muted">{{prod.quantity | number}}</small>
+                    </td>
+                    <td>
+                        <select name="gstPercentage" id="gstPercentage" [(ngModel)]="prod.gstPercentage">
+                            <option value="0">0%</option>
+                            <option value="5">5%</option>
+                            <option value="12">12%</option>
+                            <option value="18">18%</option>
+                            <option value="28">28%</option>
+                        </select>
+                        <br>
+                        <span *ngIf="order.gstType == 'CGST/SGST'">
+                            CGST -
+                            {{su.getGSTAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage) / 2 | currency:'INR'}}
+                            ({{prod.gstPercentage / 2}}%)
+                            <br>
+                            SGST -
+                            {{su.getGSTAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage) / 2 | currency:'INR'}}
+                            ({{prod.gstPercentage / 2}}%)
+                        </span>
+                        <span *ngIf="order.gstType == 'IGST'">
+                            IGST -
+                            {{su.getGSTAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage) | currency:'INR'}}
+                            ({{prod.gstPercentage}})%
+                        </span>
+                    </td>
+                    <td align="right">
+                        {{su.getTotalAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage) | currency:'INR'}}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="borderless"></td>
+                    <td colspan="2">
+                        <table class="table table-sm table-borderless text-dark">
+                            <tr>
+                                <td>
+                                    Sub Total
+                                </td>
+                                <td align="right">
+                                    {{su.getSubTotal(order.products) | currency:'INR'}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Discount
+                                </td>
+                                <td align="right">
+                                    {{su.getDiscount(order.products) | currency:'INR'}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Tax
+                                </td>
+                                <td align="right">
+                                    {{su.getTaxAmount(order.products) | currency:'INR'}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Adjustment
+                                </td>
+                                <td align="right">
+                                    {{su.getAdjustment(order.products) | currency:'INR'}}
+                                </td>
+                            </tr>
+                            <tr class="border-light border-top border-bottom">
+                                <td class="font-weight-bold">
+                                    Grand Total
+                                </td>
+                                <td class="font-weight-bold" align="right">
+                                    {{su.getGrandTotal(order.products) | currency:'INR'}}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p class="p-2">&nbsp;</p>
+
+    <div class="row">
+        <div class="col-12">
+            <span class="font-weight-bold h6">Terms/Notes</span>
+            <div class="p-2 border border-light-1">
+                <textarea class="editFocus" cols="100%" id="terms" rows="5" name="terms"
+                    [(ngModel)]="order.terms"></textarea>
+            </div>
+        </div>
+    </div>
+
+
+    <p class="p-5">&nbsp;</p>
+
+    <div class="footer bg-white">
+        <span class="float-right">
+
+            <!-- <a routerLink="/sales/order/overview/{{deal.id}}/deal" class="text-primary u"> cancel </a> -->
+
+            <button class="btn btn-md btn-outline-primary" (click)="clear()">Clear</button>
+
+            <button (click)="savePurchaseInputOrder()" class="btn btn-md btn-primary">Save&nbsp;
+                <i class="fa fa-save"></i>
+            </button>
+        </span>
+    </div>
+
+    <!--Section: Live preview-->
+
+    <!--Modal: modal-->
+
+    <div class="modal fade right" id="productaddmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true" data-backdrop="true">
+        <div class="modal-dialog modal-frame modal-right modal-full-height modal-notify modal-primary" role="document">
+
+            <div class="modal-content">
+
+                <div class="modal-body">
+
+                    <div class="row p-1 mb-1">
+                        <div class="col">
+                            <mat-form-field class="d-block">
+                                <input matInput placeholder="Enter Product Name to filter" name="productName"
+                                    [(ngModel)]="productName">
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-12" [hidden]="!_is_products_loading">
+                            <div class="item" *ngFor="let i of [].constructor(5)">
+                                <ngx-skeleton-loader count="1" animation="pulse" appearance="line">
+                                </ngx-skeleton-loader>
+                                <ngx-skeleton-loader count="1" animation="pulse" appearance="line" [theme]="{
+                                            height: '50px'
+                                          }">
+                                </ngx-skeleton-loader>
+                            </div>
+                        </div>
+
+                        <a routerLink="/product/add-product"><u>Create Product</u></a>
+
+                        <div class="col-12" [hidden]="_is_products_loading" *ngFor="let prod of _productsShow">
+
+                            <div *ngIf="productName == '' || prod.name.toLowerCase().includes(productName.toLowerCase())"
+                                (click)="addProduct(prod)" class="pointer productCard cardPurple mt-1">
+                                <h5>{{prod.name}}</h5>
+                                <small class="productDesc"> <span [innerHTML]="prod.description"></span>
+                                </small>
+                                <button class="addProductButton">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!--Section: Live preview-->

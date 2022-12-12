@@ -1,0 +1,156 @@
+<div class="container-fluid">
+
+    <div class="row">
+    <div class="col-lg-2 mb-4"></div>
+    <div class="col-lg-8 mb-4">
+      <div class="row">
+       
+        <div class="col-12">
+            <p class="indigo-text h3 text-center">Vendor Register</p>
+            <hr style="width:100%;text-align:left;margin-left:0">
+  
+            <br>
+  
+            <div class="row">
+                <div class="col-12">
+                    <label for="vendorName"> Vendor Name</label>
+                    <input class="form-control input-lg" type="text" id="vendorName" placeHolder="Enter Vendor Name"
+                        name="vendorName" [(ngModel)]="vendorName" />
+                </div>
+              
+            </div>
+            <br>
+
+            <div class="row">
+                <div class="col-6">
+                    <label for="address1">Address1</label>
+                    <input class="form-control input-lg" type="text" id="address1" placeHolder="Enter VendorvAddress" name="vendorAddress"
+                        [(ngModel)]="address1" />
+                </div>
+
+                <div class="col-6">
+                        <label for="address2">Address2</label>
+                        <input class="form-control input-lg" type="text" id="address2" placeHolder="Enter Phone Num" name="address2"
+                            [(ngModel)]="address2"/>
+                    </div>
+             
+          </div>
+          <br>
+
+          <div class="row">
+            <div class="col-6">
+                <label for="city">City</label>
+                <input class="form-control input-lg" type="text" id="city" placeHolder="Enter City" name="city"
+                    [(ngModel)]="city" />
+            </div>
+
+            <div class="col-6">
+                    <label for="state">State</label>
+                    <input class="form-control input-lg" type="text" id="state" placeHolder="Enter State" name="state"
+                        [(ngModel)]="state"/>
+                </div>
+         
+      </div>
+      <br>
+
+      <div class="row">
+        <div class="col-6">
+            <label for="country">Country</label>
+            <input class="form-control input-lg" type="text" id="country" placeHolder="Enter Country" name="country"
+                [(ngModel)]="country" />
+        </div>
+
+        <div class="col-6">
+                <label for="pincode">Pincode</label>
+                <input class="form-control input-lg" type="number" id="pincode" placeHolder="Enter Pincode" name="pincode"
+                    [(ngModel)]="pincode" (keyup)="preventPhone($event)"/>
+            </div>
+     
+  </div>
+  <br>
+          
+            <div class="row">
+                <div class="col-6">
+                    <label for="vendorLandLine">LandLine</label>
+                    <input class="form-control input-lg" type="number" id="vendorLandLine" placeHolder="Enter Vendorv Landline" name="vendorLandLine"
+                        [(ngModel)]="vendorLandLine" (keyup)="preventPhone($event)"/>
+                </div>
+
+                <div class="col-6">
+                        <label for="vendorPhone">Phone</label>
+                        <input class="form-control input-lg" type="number" id="vendorPhone" placeHolder="Enter Phone Num" name="vendorPhone"
+                            [(ngModel)]="vendorPhone" (keyup)="preventPhone($event)"/>
+                    </div>
+             
+          </div>
+          <br>
+            
+          <div class="row">
+                <div class="col-6">
+                        <label for="vendorEmail">Email</label>
+                        <input class="form-control input-lg" type="text" id="vendorEmail" placeHolder="Enter Email"
+                            name="vendorEmail" [(ngModel)]="vendorEmail" />
+                    </div>
+              <div class="col-6">
+                  <label for="gstNo">Gst No</label>
+                  <input class="form-control input-lg" type="text" id="gstNo" placeHolder="Enter Gst No" name="gstNo"
+                      [(ngModel)]="gstNo" />
+              </div>
+              
+          </div>  
+
+          <br>
+          <div class="row">
+            <div class="col-6">
+                    <label for="accountName">Account Name</label>
+                    <input class="form-control input-lg" type="text" id="accountName" placeHolder="Enter AccountName"
+                        name="accountName" [(ngModel)]="accountName" />
+                </div>
+          <div class="col-6">
+              <label for="accountNumber">Account Number</label>
+              <input class="form-control input-lg" type="text" id="accountNumber" placeHolder="Enter Account Number" name="accountNumber"
+                  [(ngModel)]="accountNumber" />
+          </div>
+          
+      </div>  
+  <br>
+   
+
+
+  <div class="row">
+    <div class="col-4">
+            <label for="branchName">Branch Name</label>
+            <input class="form-control input-lg" type="text" id="branchName" placeHolder="Enter Branch Name"
+                name="branchName" [(ngModel)]="branchName" />
+        </div>
+  <div class="col-4">
+      <label for="ifscCode">Ifsc Code</label>
+      <input class="form-control input-lg" type="text" id="ifscCode" placeHolder="Enter Ifsc Code" name="ifscCode"
+          [(ngModel)]="ifscCode" />
+  </div>
+
+  <div class="col-4">
+    <label for="bankname">Bank Name</label>
+    <input class="form-control input-lg" type="text" id="bankname" placeHolder="Enter Bank Name" name="bankname"
+        [(ngModel)]="bankname" />
+</div>
+  
+</div>  
+<br>
+            <div class="row text-center">
+                <div class="col">
+                    <button class="btn btn-md btn-primary" (click)="save()">
+                        Update
+                    </button>&nbsp;&nbsp;
+                </div>
+            </div>
+        </div>
+        <div class="col-1"></div>
+    </div>
+  
+     
+      </div>
+      <div class="col-lg-2 mb-4"></div>
+  </div>
+  
+  </div>

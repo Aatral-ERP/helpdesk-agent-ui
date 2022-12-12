@@ -1,0 +1,278 @@
+<div class="row m-2">
+    <div class="col-12 p-1">
+        <div class="card">
+            <div class="card-header">
+                <span class="h5 font-weight-bold">Bill Details</span>
+                &nbsp;&nbsp;
+                <span class="text-primary pointer" (click)="EditBill()"><u>Edit</u>
+                    &nbsp;<i class='fas fa-edit'></i> </span>
+                &nbsp;&nbsp;
+                <span class="text-danger pointer text-right float-right" (click)="deleteBill()"><u>Delete this
+                        Bill</u>
+                    &nbsp;<i class='fas fa-trash-alt'></i> </span>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div *ngIf="loading">
+                            <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
+                            <ngx-skeleton-loader count="1" appearance="line" [theme]="{ height: '50px'}">
+                            </ngx-skeleton-loader>
+                            <div class="row" *ngFor="let i of [].constructor(2)">
+                                <div class="col">
+                                    <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
+                                </div>
+                                <div class="col">
+                                    <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="!loading">
+
+                            <mat-chip-list>
+                                <mat-chip selected>
+                                    Bill No : {{bill.billNo}}
+                                </mat-chip>
+                                <mat-chip selected>
+                                    Bill Date : {{bill.billDate | date:'mediumDate'}}
+                                </mat-chip>
+                                <mat-chip selected>
+                                    Order No : {{bill.orderNo}}
+                                </mat-chip>
+                                <mat-chip selected>
+                                    Due Date : {{bill.dueDate | date:'mediumDate'}}
+                                </mat-chip>
+                            </mat-chip-list>
+
+                            <h5 class="pt-1 text-primary font-weight-light">{{bill.vendor.vendorName}}
+                            </h5>
+
+                            <p class="text-muted pt-3">
+                                {{bill.vendor.address1}}, {{bill.vendor.address2}},
+                                {{bill.vendor.city}}, {{bill.vendor.state}},
+                                {{bill.vendor.country}} - {{bill.vendor.pincode}}.
+                            </p>
+                            <mat-chip-list>
+                                <mat-chip [hidden]="bill.vendor.vendorPhone==null || bill.vendor.vendorPhone==''"
+                                    color="primary" selected><i class="fas fa-phone pr-2"> </i>
+                                    {{bill.vendor.vendorPhone}}
+                                </mat-chip>
+
+                                <mat-chip [hidden]="bill.vendor.vendorEmail==null || bill.vendor.vendorEmail==''"
+                                    color="warn" selected><i class="far fa-envelope-open pr-2">
+                                    </i>{{bill.vendor.vendorEmail}}
+                                </mat-chip>
+                            </mat-chip-list>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 p-1">
+        <div class="card">
+            <div class="card-header">
+                <span class="h5 font-weight-bold">Address Info</span>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <h6 class="font-weight-bold">Billing Address</h6>
+
+                        <div *ngIf="loading">
+                            <ngx-skeleton-loader count="1" appearance="line" [theme]="{ height: '100px'}">
+                            </ngx-skeleton-loader>
+                        </div>
+
+                        <p class="text-muted">
+                            {{bill.billingTo}}
+                        </p>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <h6 class="font-weight-bold">Shipping Address</h6>
+
+                        <div *ngIf="loading">
+                            <ngx-skeleton-loader count="1" appearance="line" [theme]="{ height: '100px'}">
+                            </ngx-skeleton-loader>
+                        </div>
+
+                        <p class="text-muted">
+                            {{bill.shippingTo}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 p-1">
+        <div class="card">
+            <div class="card-header">
+                <span class="h5 font-weight-bold">Product Details</span>
+            </div>
+            <div class="card-body">
+
+                <div *ngIf="loading">
+                    <ngx-skeleton-loader *ngFor="let i of [].constructor(2)" count="1" appearance="line"
+                        [theme]="{ height: '100px'}">
+                    </ngx-skeleton-loader>
+                </div>
+                <div *ngIf="!loading">
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered" *ngIf="bill.products.length > 0">
+                            <thead>
+                                <tr>
+                                    <th style="width: 5%" scope="col"># </th>
+                                    <th style="width: 30%" scope="col">Product</th>
+                                    <th style="width: 8%" scope="col">Price(&#8377;)</th>
+                                    <th style="width: 8%" scope="col">Discount(&#8377;)</th>
+                                    <th style="width: 5%" scope="col">Quantity</th>
+                                    <th style="width: 14%" scope="col">GST
+                                    </th>
+                                    <th style="width: 10%" scope="col">Total(&#8377;)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let prod of bill.products;let i = index;">
+                                    <td>{{i+1}}
+                                    </td>
+                                    <td>{{prod.name}}
+                                        <br>
+                                        {{prod.description}}
+                                        <!-- <textarea disabled class="editFocus" name="prod.description" id="description"
+                                            cols="60%" rows="3" [(ngModel)]="prod.description"></textarea> -->
+                                    </td>
+                                    <td>
+                                        {{prod.price | currency:'INR'}}
+                                        <!-- <input disabled type="number" class="form-control editFocus" name="editPrice"
+                                            [(ngModel)]="prod.price"> -->
+                                    </td>
+                                    <td>
+                                        {{prod.discount | currency:'INR'}}
+                                        <!-- <input disabled type="number" class="form-control editFocus" name="editPrice"
+                                            [(ngModel)]="prod.discount"> -->
+                                    </td>
+                                    <td>
+                                        {{prod.quantity}}
+
+                                        <!-- <input disabled type="number" class="form-control editFocus" name="editPrice"
+                                            [(ngModel)]="prod.quantity"> -->
+                                    </td>
+                                    <td>
+                                        <span *ngIf="bill.gstType == 'CGST/SGST'">
+                                            CGST -
+                                            {{su.getGSTAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage) / 2 | currency:'INR'}}
+                                            ({{prod.gstPercentage / 2}}%)
+                                            <br>
+                                            SGST -
+                                            {{su.getGSTAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage) / 2 | currency:'INR'}}
+                                            ({{prod.gstPercentage / 2}}%)
+                                        </span>
+                                        <span *ngIf="bill.gstType == 'IGST'">
+                                            IGST -
+                                            {{su.getGSTAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage) | currency:'INR'}}
+                                            ({{prod.gstPercentage}})%
+                                        </span>
+                                    </td>
+                                    <td align="right">
+                                        {{su.getTotalAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage) | currency:'INR'}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" class="borderless"></td>
+                                    <td colspan="2">
+                                        <table class="table table-sm table-borderless text-dark">
+                                            <tr>
+                                                <td>
+                                                    Sub Total
+                                                </td>
+                                                <td align="right">
+                                                    {{su.getSubTotal(bill.products) | currency:'INR'}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Discount
+                                                </td>
+                                                <td align="right">
+                                                    {{su.getDiscount(bill.products) | currency:'INR'}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Tax
+                                                </td>
+                                                <td align="right">
+                                                    {{su.getTaxAmount(bill.products) | currency:'INR'}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    Adjustment
+                                                </td>
+                                                <td align="right">
+                                                    {{su.getAdjustment(bill.products) | currency:'INR'}}
+                                                </td>
+                                            </tr>
+                                            <tr class="border-light border-top border-bottom">
+                                                <td class="font-weight-bold">
+                                                    Grand Total
+                                                </td>
+                                                <td class="font-weight-bold" align="right">
+                                                    {{su.getGrandTotal(bill.products) | currency:'INR'}}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 p-1">
+        <div class="card">
+            <div class="card-header">
+                <span class="h5 font-weight-bold">Attachments</span>
+            </div>
+            <div class="card-body">
+                <ngx-skeleton-loader *ngIf="loading" count="2" appearance="line" [theme]="{ height: '50px'}">
+                </ngx-skeleton-loader>
+
+                <div class="row container justify-content-center">
+                    <div class="col-12 p-1" *ngFor="let att of billAttachments">
+                        <app-bill-attachment [BillAttachment]="att">
+                        </app-bill-attachment>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 p-1">
+        <div class="card">
+            <div class="card-header">
+                <span class="h5 font-weight-bold">Terms</span>
+            </div>
+            <div class="card-body">
+                <ngx-skeleton-loader *ngIf="loading" count="1" appearance="line" [theme]="{ height: '150px'}">
+                </ngx-skeleton-loader>
+
+                <p class="p-2">{{bill.terms}}</p>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<app-bill-payment [billId]="bill.id"></app-bill-payment>
+
+
+<div class="p-5">&nbsp;</div>

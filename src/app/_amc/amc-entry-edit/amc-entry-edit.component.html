@@ -1,0 +1,141 @@
+<div class="container-fluid">
+    <div class="row border-bottom border-light pb-0 mb-0">
+        <div class="col">
+            <a routerLink="/institute/amc-entry" class="btn btn-sm btn-primary float-right">
+                <i class="fa fa-plus"> Add AMC Entry </i>
+            </a>
+        </div>
+    </div>
+</div>
+
+
+<p class="h4 text-center"> AMC's Filters
+</p>
+<div class="container pt-2">
+    <div class="row justify-content-center">
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <label>Institute</label>
+                <ng-multiselect-dropdown [placeholder]="'Select Institutes'" [data]="_institutes"
+                    [(ngModel)]="_search_amcfilters.institutes" [settings]="_instituteDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <label>Products</label>
+                <ng-multiselect-dropdown [placeholder]="'Select Products'" [data]="_products"
+                    [(ngModel)]="_search_amcfilters.amcProducts" [settings]="_ProductsDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+
+            <div class="col-sm-12 col-md-4 col-lg-3">
+                <label>AMC ID / Invoice No</label>
+                <input class="form-control input-lg" type="text" id="amcId" placeHolder="Enter AMC ID / Invoice No"
+                    name="amcId" [(ngModel)]="_search_amcfilters.amcId" />
+            </div>
+
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                <label>AMC Invoice Date</label>
+                <div class="input-group">
+                    <input class="form-control" (focus)="invdatesdp.toggleCalendar()"
+                        placeholder="Select From - To Invoice Date range" angular-mydatepicker name="dates"
+                        (dateChanged)="dateChanged($event);_search_amcfilters.amcInvDateFrom = $event.dateRange.beginJsDate;_search_amcfilters.amcInvDateTo = $event.dateRange.endJsDate;"
+                        [(ngModel)]="_search_amcfilters.amcInvDateObject" [options]="myDatePickerOptions"
+                        #invdatesdp="angular-mydatepicker" autocomplete="off" />
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i (click)="invdatesdp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                <label>AMC Validity Expiry Date</label>
+                <div class="input-group">
+                    <input class="form-control" (focus)="validdatesdp.toggleCalendar()"
+                        placeholder="Select From - To Validity Expiry Date range" angular-mydatepicker name="dates"
+                        (dateChanged)="dateChanged($event);_search_amcfilters.amcValidDateFrom = $event.dateRange.beginJsDate;_search_amcfilters.amcValidDateTo = $event.dateRange.endJsDate;"
+                        [(ngModel)]="_search_amcfilters.amcValidDateObject" [options]="myDatePickerOptions"
+                        #validdatesdp="angular-mydatepicker" autocomplete="off" />
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i (click)="validdatesdp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                <label>AMC Paid Date</label>
+                <div class="input-group">
+                    <input class="form-control" (focus)="datesdp.toggleCalendar()"
+                        placeholder="Select From - To Date range" angular-mydatepicker name="dates"
+                        (dateChanged)="dateChanged($event);_search_amcfilters.amcPaidDateFrom = $event.dateRange.beginJsDate;_search_amcfilters.amcPaidDateTo = $event.dateRange.endJsDate;"
+                        [(ngModel)]="_search_amcfilters.amcPaidDateObject" [options]="myDatePickerOptions"
+                        #datesdp="angular-mydatepicker" autocomplete="off" />
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i (click)="datesdp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-8 col-lg-3">
+                <label>Transaction Details</label>
+                <input class="form-control input-lg" type="text" id="transDetails"
+                    placeHolder="Enter Transaction Details" name="transDetails"
+                    [(ngModel)]="_search_amcfilters.transDetails" />
+            </div>
+
+            <div class="col-sm-12 col-md-4 col-lg-3">
+                <label>Service Type</label>
+                <select class="form-control" name="serviceType" id="serviceType"
+                    [(ngModel)]="_search_amcfilters.serviceType">
+                    <option value="">--select--</option>
+                    <option value="Warranty">Warranty</option>
+                    <option value="AMC">AMC</option>
+                    <option value="Service">Service</option>
+                    <option value="Others">Others</option>
+                </select>
+            </div>
+
+            <div class="col-sm-12 col-md-4 col-lg-3">
+                <label>PayMode</label>
+                <select class="form-control" name="payMode" id="payMode" [(ngModel)]="_search_amcfilters.payMode">
+                    <option value="">--select--</option>
+                    <option value="Cash">Cash</option>
+                    <option value="Cheque">Cheque</option>
+                    <option value="DD">DD</option>
+                    <option value="Online Payment">Online Payment</option>
+                    <option value="Others">Others</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-12 text-center mt-2">
+        <button class="btn btn-md btn-primary" (click)="loadAmcDetials()">Submit</button>
+        <button class="btn btn-sm btn-outline-primary" (click)="clearFilters()">Clear</button>
+    </div>
+</div>
+<br>
+<div *ngIf="!loading" class="mt-4">
+    <div class="row justify-content-center">
+        <p class="h4 text-center"> AMC's Entries</p>
+    </div>
+    <div class="row">
+        <div class="col">
+            <ag-grid-angular enableCellTextSelection="true" [rowData]="rowData" style="width: 100%; height: 400px;"
+                class="ag-theme-balham p-2" [columnDefs]="columnDefs" [rowSelection]="'single'"
+                [paginationAutoPageSize]="true" [pagination]="true">
+            </ag-grid-angular>
+        </div>
+    </div>
+</div>
+
+<div class="item" *ngIf="loading">
+    <ngx-skeleton-loader count="10"></ngx-skeleton-loader>
+</div>

@@ -1,0 +1,39 @@
+<div class="container-fluid">
+
+
+    <div *ngIf="!loading && dealInvoices.length == 0" class="alert alert-info text-center" role="alert">
+        <span class="pl-2">No Invoice Found...</span>
+    </div>
+
+    <div *ngIf="loading" class="alert alert-info text-center" role="alert">
+        <span class="pl-2">loading...</span>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-md float-right" (click)="showAddNewDiv = !showAddNewDiv">Create Invoice &nbsp;
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+    </div>
+
+    <mat-accordion>
+        <mat-expansion-panel *ngFor="let di of dealInvoices">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <h5 class="font-weight-bold">{{di.invoiceNo}}</h5>
+                </mat-panel-title>
+                <mat-panel-description class="text-right">
+                    dated on {{di.invoiceDate | date:'MMM d, y'}}
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <app-deals-invoice class="m-2" [deal]="deal" [dealProducts]="dealProducts" [dealInvoice]="di"
+                [dealId]="dealId">
+            </app-deals-invoice>
+
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

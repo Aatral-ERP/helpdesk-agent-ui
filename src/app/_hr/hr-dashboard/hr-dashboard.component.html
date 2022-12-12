@@ -1,0 +1,75 @@
+<div class="container h-100">
+  <br><br>
+
+  <div class="row">
+    <div class="col-md-6 col-lg-3 column">
+      <a href="admin/view-working-days">
+        <div class="card gr-1 rounded mb-0">
+          <div class="txt-center">
+            <h2><b>Working Days</b></h2>
+            <h5>{{count.work_days}}</h5>
+          </div>
+          <div class="ico-card">
+            <i class="fa fa-calendar" aria-hidden="true"></i>
+          </div>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-6 col-lg-3 column">
+      <div class="card gr-2 rounded mb-0">
+        <div class="txt-center">
+          <h2><b>Attendance</b></h2>
+          <h5>{{count.present_staff}}/{{count.staffs}}&nbsp;(As per Today)</h5>
+        </div>
+
+        <div class="ico-card">
+          <i class="fa fa-user-circle" aria-hidden="true"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-3 column">
+      <a href="admin/view-product">
+        <div class="card gr-3 rounded mb-0">
+          <div class="txt-center">
+            <h2><b>Products on Hand</b></h2>
+            <h5>{{count.products}}</h5>
+          </div>
+          <div class="ico-card">
+            <i class="fa fa-empire"></i>
+          </div>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-6 col-lg-3 column">
+      <a href="admin/view-agents">
+        <div class="card gr-4 rounded mb-0">
+          <div class="txt-center">
+            <h2><b>New Hires</b></h2>
+            <h5>{{count.new_hires}}</h5>
+          </div>
+          <div class="ico-card">
+            <i class="fa fa-user-o" aria-hidden="true"></i>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-sm-10">
+      <br><br>
+      <div class="container card justify-content-center text-center">
+        <div id="carouselControls" class="carousel slide" data-ride="carousel">
+          <div class="carousel-inner p-5" [hidden]="Att.length == 0">
+            <div class="carousel-item active">
+              <h5>No of Staff's came per day</h5>
+              <ngx-charts-bar-vertical [scheme]="colorScheme" [view]="view" [results]="Att" [gradient]="gradient"
+                [xAxis]="showXAxis" [yAxis]="showYAxis" [showXAxisLabel]="showXAxisLabel" [showYAxisLabel]="false"
+                [yAxisLabel]="'working_date'" [showDataLabel]="true">
+              </ngx-charts-bar-vertical>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

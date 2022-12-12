@@ -1,0 +1,273 @@
+<div class="container-fluid">
+
+
+    <div class="alert alert-info text-center" role="alert" [hidden]="payments.length > 0">
+        No Payments Found...
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-md float-right" (click)="showAddNewDiv = !showAddNewDiv">Add Payment &nbsp;
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="row justify-content-center" *ngIf="showAddNewDiv">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="text-dark font-weight-bold">Add Payment</h5>
+
+                    <label for="subject">Subject</label>
+                    <input type="text" class="form-control" id="subject" placeholder="Enter Subject"
+                        [(ngModel)]="newPayment.subject">
+
+                    <label for="description">Description</label>
+                    <textarea type="text" rows="3" class="form-control" id="description" placeholder="Enter description"
+                        [(ngModel)]="newPayment.description">
+                    </textarea>
+
+                    <div class="row">
+
+                        <div class="col-sm-6 col-md-4 col-lg-4">
+                            <label for="referenceno">Reference No.</label>
+                            <input type="text" class="form-control" id="referenceno" placeholder="Enter Reference No"
+                                [(ngModel)]="newPayment.referenceno">
+                        </div>
+
+                        <div class="col-sm-6 col-md-4 col-lg-4">
+                            <label for="drawnon">Drawn on</label>
+                            <input type="text" class="form-control" id="drawnon" placeholder="Enter Drawn on"
+                                [(ngModel)]="newPayment.drawnon">
+                        </div>
+
+                        <div class="col-sm-3 col-md-2 col-lg-2">
+                            <label for="dob" style="margin-bottom: 5px;"> Payment Date </label>
+                            <div class="input-group">
+                                <input class="form-control" (focus)="paymentDatedp.toggleCalendar()"
+                                    placeholder="choose Payment Date" angular-mydatepicker name="paymentDateObject"
+                                    [(ngModel)]="newPayment.paymentDateObject"
+                                    (dateChanged)="newPayment.paymentDate = $event.singleDate.jsDate"
+                                    [options]="myDatePickerOptions" #paymentDatedp="angular-mydatepicker"
+                                    autocomplete="off" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        <i (click)="paymentDatedp.toggleCalendar()"
+                                            class="fas fa-calendar-alt pointer"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-3 col-md-2 col-lg-2">
+                            <label for="mode">Mode Of Payment</label>
+                            <select class="form-control" name="mode" id="mode" [(ngModel)]="newPayment.mode">
+                                <option value="">--select--</option>
+                                <option value="online">Online</option>
+                                <option value="cheque">Cheque</option>
+                                <option value="DD">DD</option>
+                                <option value="cash">Cash</option>
+                                <option value="others">Others</option>
+                            </select>
+                        </div>
+
+                        <!-- <div class="col-sm-12 col-md-4 col-lg-4">
+                            <label for="subject">Amount</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">&#8377;</span>
+                                </div>
+                                <input type="number" class="form-control" id="subject" placeholder="Enter Amount"
+                                    (change)="changeAmcAmount()" [(ngModel)]="newPayment.amount">
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-4 col-lg-4">
+                            <label for="gst">GST Percentage</label>
+                            <select class="form-control input-lg" name="gstPercent" id="gstPercent"
+                                (change)="changeGstPercentage()" [(ngModel)]="gstPercent">
+                                <option value="0">0%</option>
+                                <option value="5">5%</option>
+                                <option value="12">12%</option>
+                                <option value="18">18%</option>
+                                <option value="28">28%</option>
+                            </select>
+                            <small>GST Amount Rs.{{newPayment.gstAmount}}</small>
+                        </div> -->
+                        <div class="col-sm-12 col-md-4 col-lg-4">
+                            <label for="subject">Total Amount</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">&#8377;</span>
+                                </div>
+                                <input type="number" class="form-control" id="subject" placeholder="Enter Total Amount"
+                                    (change)="changeTotalAmount()" [(ngModel)]="newPayment.totalAmount">
+                            </div>
+                        </div>
+
+                        <div class="col-12 text-center">
+                            <button [disabled]="saving" mat-raised-button class="m-1" color="primary"
+                                (click)="savePayment()"> Save
+                                <div *ngIf="saving" class="spinner-border spinner-border-sm" role="status">
+                                    <span class="sr-only"> Saving...</span>
+                                </div>
+                            </button>
+                            <button [disabled]="saving" mat-stroked-button class="m-1" color="primary"
+                                (click)="clearFilters();showAddNewDiv = !showAddNewDiv">Cancel</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container mt-3">
+
+    <div *ngIf="loading">
+        <div class="row" *ngFor="let i of [].constructor(3)">
+            <div class="col">
+                <ngx-skeleton-loader class="d-block" count="1" appearance="line" [theme]="{ width:'250px'}">
+                </ngx-skeleton-loader>
+                <ngx-skeleton-loader count="1" appearance="line" [theme]="{ height: '50px'}">
+                </ngx-skeleton-loader>
+                <ngx-skeleton-loader count="1" appearance="line">
+                </ngx-skeleton-loader>
+                <ngx-skeleton-loader count="2" appearance="line" [theme]="{ height: '50px'}">
+                </ngx-skeleton-loader>
+            </div>
+        </div>
+    </div>
+
+    <div class="row m-1">
+        <div class="col">
+            <h5 *ngIf="payments.length > 0" class="text-dark font-weight-bold">Payments</h5>
+            <mat-accordion>
+                <mat-expansion-panel [expanded]="payment.id == expandId" *ngFor="let payment of payments">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <h5>{{payment.totalAmount | currency:'INR'}}</h5>
+                        </mat-panel-title>
+                        <mat-panel-description class="text-right">
+                            paid on {{payment.paymentDate | date:'MMM d, y'}}
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <div class="row">
+                        <div class="col">
+                            <p></p>
+                            <h5 class="text-primary">{{payment.subject}}</h5>
+                            <p class="text-muted">
+                                {{payment.description}}
+                            </p>
+
+                            <p class="text-muted">
+                                Mode Of Payment : {{payment.mode}}
+                            </p>
+
+                            <p class="text-muted">
+                                Reference No : {{payment.referenceno}}
+                            </p>
+
+                            <p class="text-muted">
+                                Drawn on : {{payment.drawnon}}
+                            </p>
+
+                            <!-- <p class="text-muted">
+                                Amount : {{payment.amount | currency:'INR'}}
+                            </p>
+                            <p class="text-muted">
+                                GST Amount : {{payment.gstAmount | currency:'INR'}}
+                            </p> -->
+                            <p class="text-muted">
+                                Total Amount : {{payment.totalAmount | currency:'INR'}}
+                            </p>
+
+                            <p *ngIf="payment.receiptfilename != '' && payment.receiptfilename != null"
+                                class="text-muted">
+                                <span>
+                                    Reciept : <span (click)="viewPDF(payment)"
+                                        class="pointer text-primary"><i>{{payment.receiptfilename}}</i></span>
+                                </span>
+
+                                <span class="float-right pointer text-primary"
+                                    (click)="showAddNewEmail = true;emailPayment = payment">
+                                    Send Receipt Email &nbsp;
+                                    <i class="far fa-envelope-open"></i>
+                                </span>
+
+                            </p>
+                            <!-- <p class="text-muted">
+                                <span>
+                                    <span (click)="saveAsAmc(payment)" class="pointer text-primary"><i> Click
+                                            to Amc Entry</i></span>
+                                </span>
+                            </p> -->
+
+                            <app-deals-email-sender class="m-1" [deal]="deal" [payment]="emailPayment"
+                                *ngIf="showAddNewEmail && emailPayment.id == payment.id"
+                                [subject]="emailPayment.subject" [message]="" [filename]="emailPayment.receiptfilename"
+                                [tab]="'Payment'" [dealId]="dealId" (resp)="resp($event)">
+                            </app-deals-email-sender>
+
+                            <p class="text-muted">
+                                <span class="float-left small">
+                                    created by {{payment.createdBy}} at
+                                    {{payment.createddatetime | date:'MMM d, y h:mm a'}}
+                                </span>
+                                <span class="float-right small">
+                                    last modified by {{payment.modifiedBy}} at
+                                    {{payment.lastupdatedatetime | date:'MMM d, y h:mm a'}}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-sm btn-indigo" (click)="editPayment(payment);">
+                        <i class="fas fa-edit text-white" aria-hidden="true"></i>&nbsp;&nbsp;Edit
+                    </button>
+                    <button class="btn btn-sm btn-red" (click)="deletePayment(payment)">
+                        <i class="fas fa-trash text-white" aria-hidden="true"></i>&nbsp;Delete
+                    </button>
+
+                    <a (click)="showReceiptTemplate = !showReceiptTemplate;receiptTemplateChange(payment);"
+                        class="text-right float-right text-primary">
+                        <i class="fas fa-receipt"></i>&nbsp;Click to Generate Receipt
+                    </a>
+
+                    <div class="row " [hidden]="!showReceiptTemplate">
+                        <div class="col-12">
+                            <h5 class="text-primary text-center">Receipt</h5>
+                            <span class="float-right">Receipt No : R-{{payment.id}}</span>
+                        </div>
+                        <div class="col-12 p-1">
+                            <textarea rows="6" class="form-control" (change)="receiptTemplateChange(payment)"
+                                [(ngModel)]="receiptTemplate"></textarea>
+                        </div>
+                        <div class="col-12 p-1 border border-light">
+                            <p class="text-dark" [innerHtml]="receiptContent"></p>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <mat-checkbox [(ngModel)]="addRoundSeal">Add Round Seal</mat-checkbox>
+                                &nbsp;&nbsp;
+                                <mat-checkbox [(ngModel)]="addFullSeal">Add Full Seal</mat-checkbox>
+                                &nbsp;&nbsp;
+                                <mat-checkbox [(ngModel)]="addSign">Add Signature</mat-checkbox>
+                                &nbsp;&nbsp;
+                                <button (click)="generateReceipt('Payment_Template_1',payment)"
+                                    class="btn btn-sm btn-primary text-right">Generate Receipt</button>
+                                &nbsp;&nbsp;
+                                <button (click)="generateReceipt('Payment_Template_2',payment)"
+                                    class="btn btn-sm btn-danger text-right">Generate Receipt Template 2</button>
+
+                            </div>
+                        </div>
+                        <mat-progress-bar *ngIf="generatingPDF" mode="indeterminate">
+                        </mat-progress-bar>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+    </div>
+</div>

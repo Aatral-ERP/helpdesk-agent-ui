@@ -1,0 +1,68 @@
+<div class="container">
+
+    <span (click)="preambleFileUpload.click()" class="pointer float-right text-primary">Upload Preamble PDF
+        &nbsp;
+        <i class="fas fa-upload"></i>
+    </span>
+
+    <input hidden type="file" #preambleFileUpload (change)="preambleFileUploadChange($event.target.files[0])">
+</div>
+<div class="container containerDiv">
+
+
+    <mat-progress-bar *ngIf="loading" mode="indeterminate">
+    </mat-progress-bar>
+    <span *ngIf="_filenames.length == 0" class="text-center text-info">
+        No Preamble Documents found.
+    </span>
+    <div class="row flex-nowrap">
+        <div [ngClass]="(_selectedFile.filename == _files.filename) ? 'border border-primary' : ''" class="col-3"
+            *ngFor="let _files of _filenames">
+            <span title="{{_files.filename}}" class="text-primary text-nowrap-2">
+                <!-- {{ (_files.filename.length > 30)? (_files.filename | slice:0:30) +'..':(_files.filename) }} -->
+                {{_files.filename}}
+            </span>
+            <p class="p-2 pl-4 pr-4 d-block">
+                <span (click)="previewURL = _files;openPreviewModal()" class="pointer float-left text-primary"><i
+                        class="fas fa-eye"></i></span>
+                <span (click)="deletePreamble(_files)" class="pointer float-right text-danger"><i
+                        class="fas fa-trash-alt"></i></span>
+            </p>
+            <div class="card p-1">
+                <pdf-viewer (click)="clicked(_files)" class="pointer" [src]="_files.url" [fit-to-page]="true"
+                    [show-all]="false" [page]="1" style="display: block;">
+                </pdf-viewer>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Section: Live preview-->
+
+<!--Modal: modal-->
+<div class="modal fade top" id="previewPreambleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true" data-backdrop="true">
+    <div class="modal-dialog modal-frame modal-top modal-notify modal-primary" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <!--Body-->
+            <div class="modal-header">
+                <span class="text-white">
+                    {{previewURL.filename}}
+                </span>
+                <span class="float-right text-light pointer" (click)="closePreviewModal()">
+                    Close <i class="fas fa-times"></i>
+                </span>
+            </div>
+            <div class="modal-body">
+                <pdf-viewer class="pointer" [src]="previewURL.url" [fit-to-page]="true" [show-all]="true"
+                    style="display: block;">
+                </pdf-viewer>
+            </div>
+        </div>
+        <!--/.Content-->
+    </div>
+</div>
+<!--Modal: modal-->
+
+<!--Section: Live preview-->

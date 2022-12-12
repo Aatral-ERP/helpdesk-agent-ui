@@ -1,0 +1,41 @@
+<p class="indigo-text h3 text-center">Quotations</p>
+<hr>
+
+<div class="table-responsive text-nowrap" *ngIf="quoteList.length > 0">
+    <!--Table-->
+    <table class="table table-striped">
+        <!--Table head-->
+        <thead>
+            <tr>
+                <th>S.No</th>
+                <th>Quote Date</th>
+                <th>Quote No</th>
+                <th>Subject</th>
+                <th>Quote Stage</th>
+                <th>validUntil</th>
+                <th>Quotation File</th>
+
+            </tr>
+        </thead>
+        <!--Table head-->
+        <!--Table body-->
+        <tbody>
+            <tr *ngFor="let quotes of quoteList ; let i=index">
+                <th scope="row">{{i+1}}</th>
+                <td class="fw-bolder">{{quotes.dealQuotation.quoteDate | date:'MMM dd,yyyy'}}</td>
+                <td class="fw-bolder">{{quotes.dealQuotation.quoteNo}}</td>
+                <td class="fw-bolder">{{quotes.dealQuotation.subject}}</td>
+                <td class="fw-bolder">{{quotes.dealQuotation.quoteStage}}</td>
+                <td class="fw-bolder">{{quotes.dealQuotation.validUntil | date:'MMM dd,yyyy'}}</td>
+                <td class="text-primary pointer"
+                    (click)="viewPDF(quotes.dealQuotation.dealId,quotes.dealQuotation.filename)">
+                    {{quotes.dealQuotation.filename}}</td>
+
+            </tr>
+        </tbody>
+        <!--Table body-->
+    </table>
+
+
+    <!--Table-->
+</div>

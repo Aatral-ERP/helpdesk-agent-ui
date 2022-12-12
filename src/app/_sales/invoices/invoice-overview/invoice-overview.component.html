@@ -1,0 +1,536 @@
+<div class="container-fluid pt-2">
+    <div class="row m-2">
+        <div class="col-12 p-1">
+            <div class="card">
+                <div class="card-header">
+                    <span class="h5 font-weight-bold">
+                        Invoice No : #{{invoice.invoiceNo}}
+                    </span>
+                    <span class="font-weight-light">
+                        dated. {{invoice.invoiceDate | date:'MMM dd, yyyy'}}
+                    </span> &nbsp;&nbsp;
+
+                    <span class="h5 font-weight-bold float-right">
+                        {{su.getGrandTotal(invoice.products) | currency:'INR'}}
+                    </span>
+                    <mat-chip>
+                        {{invoice.dealType}}
+                        <span
+                            *ngIf="invoice.dealType == 'AMC' && invoice.amcFromDate != null && invoice.amcToDate != null">&nbsp;&nbsp;{{invoice.amcFromDate
+                            | date:'MMM d, yyyy'}}
+                            to {{invoice.amcToDate | date:'MMM d, yyyy'}}</span>
+                    </mat-chip>
+                    &nbsp;&nbsp;
+                    <span class="text-primary pointer" (click)="EditDealInvoice()"><u>Edit</u>
+                        &nbsp;<i class='fas fa-edit'></i> </span> &nbsp;&nbsp;
+                    <span class="text-primary pointer">
+                        <a routerLink="/sales/deals/overview/{{invoice.dealId}}/invoice">
+                            <u> Deal #{{invoice.dealId}}</u> &nbsp;<i class='fas fa-external-link-alt pointer'></i>
+                        </a>
+                    </span> &nbsp;&nbsp;
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div *ngIf="loading">
+                                <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
+                                <ngx-skeleton-loader count="1" appearance="line" [theme]="{ height: '50px'}">
+                                </ngx-skeleton-loader>
+                                <div class="row" *ngFor="let i of [].constructor(2)">
+                                    <div class="col">
+                                        <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
+                                    </div>
+                                    <div class="col">
+                                        <ngx-skeleton-loader count="1" appearance="line"></ngx-skeleton-loader>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h5 class="text-primary">{{invoice.subject}}</h5>
+                            <mat-chip-list>
+                                <mat-chip *ngIf="invoice.dueDate != null">
+                                    Due Date : {{invoice.dueDate | date:'MMM d, yyyy'}}
+                                </mat-chip>
+                                <mat-chip *ngIf="invoice.purchaseOrderNo != null && invoice.purchaseOrderNo != ''">
+                                    PO No : {{invoice.purchaseOrderNo}}
+                                </mat-chip>
+                                <mat-chip *ngIf="invoice.salesOrderNo != null && invoice.salesOrderNo != ''">
+                                    SO No : {{invoice.salesOrderNo}}
+                                </mat-chip>
+                            </mat-chip-list>
+                            <mat-chip-list>
+                                <mat-chip
+                                    *ngIf="invoice.gstMonth != null && invoice.gstMonth != '' && invoice.gstYear != null && invoice.gstYear != ''">
+                                    GST Month Year : {{invoice.gstMonth}} {{invoice.gstYear}}
+                                </mat-chip>
+                            </mat-chip-list>
+
+                            <mat-chip-list>
+                                <mat-chip *ngIf="invoice.exciseDuty != null && invoice.exciseDuty > 0">
+                                    Excise Duty : {{invoice.exciseDuty | currency:'INR'}}
+                                </mat-chip>
+                                <mat-chip *ngIf="invoice.salesCommission != null && invoice.salesCommission > 0">
+                                    Sales Commission : {{invoice.salesCommission | currency:'INR'}}
+                                </mat-chip>
+                                <mat-chip *ngIf="invoice.shippingCost != null && invoice.shippingCost > 0">
+                                    Shipping Cost : {{invoice.shippingCost | currency:'INR'}}
+                                </mat-chip>
+                                <mat-chip *ngIf="invoice.paidAmount != null && invoice.paidAmount > 0">
+                                    paid Amount : {{invoice.paidAmount | currency:'INR'}}
+                                </mat-chip>
+                            </mat-chip-list>
+
+                            <h6 class="font-weight-bold pt-4 pb-1">
+                                Invoices Found for the Same Purchase Order No.</h6>
+
+                            <ngx-skeleton-loader [hidden]="!loading_split_invoices" count="1" appearance="line">
+                            </ngx-skeleton-loader>
+
+                            <div *ngFor="let si of _split_invoices" [hidden]="si.id == invoice.id" class="card-header">
+                                <a routerLink="/sales/invoices/overview/{{si.id}}/invoice" target="_blank">Invoice No :
+                                    #{{si.invoiceNo}} <i class='fas fa-external-link-alt pl-1'></i></a>
+
+                                <span class="font-weight-light">
+                                    dated. {{si.invoiceDate | date:'MMM dd, yyyy'}}
+                                </span> &nbsp;&nbsp;
+                                <mat-chip>
+                                    {{si.dealType}}
+                                    <span
+                                        *ngIf="si.dealType == 'AMC' && si.amcFromDate != null && si.amcToDate != null">&nbsp;&nbsp;{{invoice.amcFromDate
+                                        | date:'MMM d, yyyy'}}
+                                        to {{si.amcToDate | date:'MMM d, yyyy'}}</span>
+                                </mat-chip>
+                                &nbsp;&nbsp;
+                                <span class="text-primary pointer" (click)="EditDealInvoice()"><u>Edit</u>
+                                    &nbsp;<i class='fas fa-edit'></i> </span> &nbsp;&nbsp;
+                                <span class="text-primary float-right">{{si.grandTotal | currency:'INR'}}</span>
+                            </div>
+
+                            <h6 class="font-weight-bold pt-4 pb-1">
+                                Client Details</h6>
+
+                            <h6 class="pt-1 text-primary font-weight-light">{{invoice.institute.instituteName}}
+                                <i (click)="routeToInstitutionDetail()"
+                                    class='fas fa-external-link-alt pointer pl-2'></i>
+                            </h6>
+
+                            <p class="text-muted pt-3">
+                                {{invoice.institute.street1}},{{invoice.institute.street2}},{{invoice.institute.city}},
+                                {{invoice.institute.state}},{{invoice.institute.Country}} -
+                                {{invoice.institute.zipcode}}.
+                            </p>
+                            <mat-chip-list>
+                                <mat-chip [hidden]="invoice.institute.phone==null || invoice.institute.phone==''"
+                                    color="primary" selected><i class="fas fa-phone pr-2"> </i>
+                                    {{invoice.institute.phone}}
+                                </mat-chip>
+                                <mat-chip
+                                    [hidden]="invoice.institute.alternatePhone==null || invoice.institute.alternatePhone==''"
+                                    color="primary" selected><i class="fas fa-phone pr-2"> </i>
+                                    {{invoice.institute.alternatePhone}}
+                                </mat-chip>
+
+                                <mat-chip [hidden]="invoice.institute.emailId==null || invoice.institute.emailId==''"
+                                    color="warn" selected><i class="far fa-envelope-open pr-2">
+                                    </i>{{invoice.institute.emailId}}
+                                </mat-chip>
+                                <mat-chip
+                                    [hidden]="invoice.institute.alternateEmailId==null || invoice.institute.alternateEmailId==''"
+                                    color="warn" selected><i
+                                        class="far fa-envelope-open pr-2"></i>{{invoice.institute.alternateEmailId}}
+                                </mat-chip>
+                            </mat-chip-list>
+
+
+                            <h6 *ngIf="invoice.instituteContacts.length > 0" class="font-weight-bold pt-4 pb-1">
+                                Contacts</h6>
+                            <div class="col-12" *ngFor="let contact of invoice.instituteContacts">
+                                <p class="text-dark">{{contact.firstName}} {{contact.lastName}}</p>
+                                <mat-chip-list>
+                                    <mat-chip [hidden]="contact.phone==null || contact.phone==''" color="primary"
+                                        selected>
+                                        <i class="fas fa-phone pr-2"> </i> {{contact.phone}}
+                                    </mat-chip>
+                                    <mat-chip [hidden]="contact.alternatePhone==null || contact.alternatePhone==''"
+                                        color="primary" selected><i class="fas fa-phone pr-2"> </i>
+                                        {{contact.alternatePhone}}
+                                    </mat-chip>
+
+                                    <mat-chip [hidden]="contact.emailId==null || contact.emailId==''" color="warn"
+                                        selected>
+                                        <i class="far fa-envelope-open pr-2">
+                                        </i>{{contact.emailId}}
+                                    </mat-chip>
+                                    <mat-chip [hidden]="contact.alternateEmailId==null || contact.alternateEmailId==''"
+                                        color="warn" selected><i
+                                            class="far fa-envelope-open pr-2"></i>{{contact.alternateEmailId}}
+                                    </mat-chip>
+                                </mat-chip-list>
+                                Created By : {{invoice.createdBy}} at {{invoice.createddatetime |
+                                date:'dd/MM/yyyy' }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 p-1">
+            <div class="card">
+                <div class="card-header">
+                    <span class="h5 font-weight-bold">Address Info</span>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <h6 class="font-weight-bold">Billing Address</h6>
+
+                            <div *ngIf="loading">
+                                <ngx-skeleton-loader count="1" appearance="line" [theme]="{ height: '100px'}">
+                                </ngx-skeleton-loader>
+                            </div>
+
+                            <p class="text-muted" [innerHTML]="invoice.billingTo"> </p>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <h6 class="font-weight-bold">Shipping Address</h6>
+
+                            <div *ngIf="loading">
+                                <ngx-skeleton-loader count="1" appearance="line" [theme]="{ height: '100px'}">
+                                </ngx-skeleton-loader>
+                            </div>
+
+                            <p class="text-muted" [innerHTML]="invoice.shippingTo"> </p>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 p-1">
+            <div class="card">
+                <div class="card-header">
+                    <span class="h5 font-weight-bold">Product Details</span>
+                </div>
+                <div class="card-body">
+
+                    <div *ngIf="loading">
+                        <ngx-skeleton-loader *ngFor="let i of [].constructor(2)" count="1" appearance="line"
+                            [theme]="{ height: '100px'}">
+                        </ngx-skeleton-loader>
+                    </div>
+                    <div *ngIf="!loading">
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered" *ngIf="invoice.products.length > 0">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 5%" scope="col"># </th>
+                                        <th style="width: 30%" scope="col">Product</th>
+                                        <th style="width: 8%" scope="col">Price(&#8377;)</th>
+                                        <th style="width: 8%" scope="col">Discount(&#8377;)</th>
+                                        <th style="width: 5%" scope="col">Quantity</th>
+                                        <th style="width: 14%" scope="col">GST
+                                        </th>
+                                        <th style="width: 10%" scope="col">Total(&#8377;)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let prod of invoice.products;let i = index;">
+                                        <td>{{i+1}}
+                                        </td>
+                                        <td>{{prod.name}}
+                                            <br>
+                                            <span [innerHTML]="prod.description"></span>
+                                        </td>
+                                        <td>
+                                            {{prod.price | currency:'INR'}}
+                                        </td>
+                                        <td>
+                                            {{prod.discount | currency:'INR'}}
+                                        </td>
+                                        <td>
+                                            {{prod.quantity}}
+                                        </td>
+                                        <td>
+                                            <span *ngIf="invoice.gstType == 'CGST/SGST'">
+                                                CGST -
+                                                {{su.getGSTAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage)
+                                                / 2 | currency:'INR'}}
+                                                ({{prod.gstPercentage / 2}}%)
+                                                <br>
+                                                SGST -
+                                                {{su.getGSTAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage)
+                                                / 2 | currency:'INR'}}
+                                                ({{prod.gstPercentage / 2}}%)
+                                            </span>
+                                            <span *ngIf="invoice.gstType == 'IGST'">
+                                                IGST -
+                                                {{su.getGSTAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage)
+                                                | currency:'INR'}}
+                                                ({{prod.gstPercentage}})%
+                                            </span>
+                                        </td>
+                                        <td align="right">
+                                            {{su.getTotalAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage)
+                                            | currency:'INR'}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5" class="borderless"></td>
+                                        <td colspan="2">
+                                            <table class="table table-sm table-borderless text-dark">
+                                                <tr>
+                                                    <td>
+                                                        Sub Total
+                                                    </td>
+                                                    <td align="right">
+                                                        {{su.getSubTotal(invoice.products) | currency:'INR'}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        Discount
+                                                    </td>
+                                                    <td align="right">
+                                                        {{su.getDiscount(invoice.products) | currency:'INR'}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        Tax
+                                                    </td>
+                                                    <td align="right">
+                                                        {{su.getTaxAmount(invoice.products) | currency:'INR'}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        Adjustment
+                                                    </td>
+                                                    <td align="right">
+                                                        {{su.getAdjustment(invoice.products) | currency:'INR'}}
+                                                    </td>
+                                                </tr>
+                                                <tr class="border-light border-top border-bottom">
+                                                    <td class="font-weight-bold">
+                                                        Grand Total
+                                                    </td>
+                                                    <td class="font-weight-bold" align="right">
+                                                        {{su.getGrandTotal(invoice.products) | currency:'INR'}}
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 p-1">
+            <div class="card">
+                <div class="card-header">
+                    <span class="h5 font-weight-bold">Terms</span>
+                </div>
+                <div class="card-body">
+                    <ngx-skeleton-loader *ngIf="loading" count="1" appearance="line" [theme]="{ height: '150px'}">
+                    </ngx-skeleton-loader>
+
+                    <p class="p-2">{{invoice.terms}}</p>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div *ngIf="invoice.id > 0" class="row noQuoteSpan mt-5 justify-content-center">
+
+        <div class="col-12 p-3 m-1">
+            <span class="text-primary pointer" *ngIf="invoice.filename != null && invoice.filename != ''">
+                <span (click)="viewPDF()">
+                    {{invoice.filename}}
+                </span> &nbsp;&nbsp;&nbsp;
+                <i class="fas fa-download" (click)="downloadPDF()"></i>
+            </span>
+
+            <span *ngIf="invoice.filename == ''" (click)="showPDFTemplateOptions = !showPDFTemplateOptions"
+                class="pointer text-primary">Generate Invoice PDF &nbsp;
+                <i class="fas fa-file-pdf"></i></span><br>
+
+            <span *ngIf="invoice.filename != ''" (click)="showPDFTemplateOptions = !showPDFTemplateOptions"
+                class="pointer text-primary">Re-Generate Invoice PDF &nbsp;
+                <i class="fas fa-file-pdf"></i></span><br>
+
+            <span (click)="invoiceFileUpload.click()" class="pointer text-primary">
+                Upload Generated Invoice PDF &nbsp;
+                <i class="fas fa-upload"></i></span>
+            <br><br>
+
+            <span (click)="reminder = false;showAddNewEmail = !showAddNewEmail" class="pointer text-primary">Send
+                Email &nbsp;
+                <i class="far fa-envelope-open"></i></span><br>
+
+            <span (click)="reminder = true;showAddNewEmail = !showAddNewEmail" class="pointer text-primary">Send
+                Reminder Email &nbsp;
+                <i class="far fa-envelope-open"></i></span><br>
+
+            <span *ngIf="invoice.filename != ''" (click)="openShareWhatsAppModal()" class="pointer text-success">Share
+                on WhatsApp &nbsp;
+                <i class="fab fa-whatsapp"></i></span>
+            <br><br>
+
+            <input hidden type="file" #satisfactoryFileUpload
+                (change)="satisfactoryFileUploadChange($event.target.files[0])">
+
+            <input hidden type="file" #workCompletionFileUpload
+                (change)="workCompletionFileUploadChange($event.target.files[0])">
+
+            <input hidden type="file" #invoiceFileUpload (change)="invoiceFileUploadChange($event.target.files[0])">
+
+            <span class="text-primary pointer"
+                *ngIf="invoice.satisfactoryCertificate != null && invoice.satisfactoryCertificate != ''">
+                <span (click)="viewSatisfactoryCertificatePDF()">
+                    {{invoice.satisfactoryCertificate}}
+                </span> &nbsp;&nbsp;&nbsp;
+                <i class="fas fa-download" (click)="downloadSatisfactoryCertificatePDF()"></i>
+            </span>
+            <br>
+            <span (click)="satisfactoryFileUpload.click()" class="pointer text-primary">
+                Upload Satisfactory Certificate PDF &nbsp;
+                <i class="fas fa-upload"></i></span>
+            <br>
+            <br>
+
+            <span class="text-primary pointer"
+                *ngIf="invoice.workCompletionCertificate != null && invoice.workCompletionCertificate != ''">
+                <span (click)="viewWorkCompletionCertificatePDF()">
+                    {{invoice.workCompletionCertificate}}
+                </span> &nbsp;&nbsp;&nbsp;
+                <i class="fas fa-download" (click)="downloadWorkCompletionCertificatePDF()"></i>
+            </span>
+            <br>
+            <span (click)="workCompletionFileUpload.click()" class="pointer text-primary">
+                Upload Work Completion Certificate PDF &nbsp;
+                <i class="fas fa-upload"></i></span>
+            <br>
+            <br>
+
+            <span class="text-primary pointer" *ngIf="invoice.dcfilename != null && invoice.dcfilename != ''">
+                <span (click)="viewDCPDF()">
+                    {{invoice.dcfilename}}
+                </span> &nbsp;&nbsp;&nbsp;
+                <i class="fas fa-download" (click)="downloadDCPDF()"></i>
+            </span>
+
+            <span *ngIf="invoice.dcfilename == ''" (click)="showDCTemplateOptions = !showDCTemplateOptions"
+                class="pointer text-primary">Generate Delivery Challan PDF &nbsp;
+                <i class="fas fa-file-pdf"></i></span><br>
+
+            <span *ngIf="invoice.dcfilename != ''" (click)="showDCTemplateOptions = !showDCTemplateOptions"
+                class="pointer text-primary">Re-Generate Delivery Challan PDF &nbsp;
+                <i class="fas fa-file-pdf"></i></span><br>
+
+        </div>
+
+        <div class="col-12" [hidden]="!showPDFTemplateOptions">
+            <h6 class="text-muted text-center">Choose a Template</h6>
+            <div class="row">
+                <div class="col-12">
+                    <mat-checkbox [(ngModel)]="addRoundSeal">Add Round Seal</mat-checkbox>
+                    &nbsp;&nbsp;
+                    <mat-checkbox [(ngModel)]="addFullSeal">Add Full Seal</mat-checkbox>
+                    &nbsp;&nbsp;
+                    <mat-checkbox [(ngModel)]="addSign">Add Signature</mat-checkbox>
+                    &nbsp;&nbsp;
+                    <mat-checkbox [(ngModel)]="detailedPricing">Detailed Pricing</mat-checkbox>
+                    &nbsp;&nbsp;
+                    <mat-radio-group aria-label="Select an option" [(ngModel)]="exportType">
+                        <mat-radio-button value="PDF">PDF&nbsp;&nbsp;</mat-radio-button>
+                        <mat-radio-button value="RTF">Editable RTF&nbsp;&nbsp;</mat-radio-button>
+                    </mat-radio-group>
+                    &nbsp;&nbsp;
+                    <input type="text" size="25" class="designationinput" name="designation"
+                        [(ngModel)]="designation" />
+                </div>
+
+                <div class="col-12">
+                    <button class="text-center m-1" (click)="generateInvoicePDF('Invoice_Template_1')" mat-flat-button
+                        color="primary">Invoice_Template_1</button>
+                    <button class="text-center m-1" (click)="generateInvoicePDF('Invoice_Template_2')" mat-flat-button
+                        color="warn">Invoice_Template_2</button>
+                    <button class="text-center m-1" (click)="generateInvoicePDF('Invoice_Template_3')" mat-flat-button
+                        color="accent">Invoice_Template_3</button>
+                </div>
+            </div>
+            <small (click)="showPDFTemplateOptions = !showPDFTemplateOptions"
+                class="text-muted text-center pointer">Close</small>
+        </div>
+
+        <div class="col-12" [hidden]="!showDCTemplateOptions">
+            <h6 class="text-muted text-center">Choose a Template</h6>
+            <div class="row">
+                <div class="col-12">
+                    <button class="text-center m-1" (click)="generateDCPDF('DC_Template_1')" mat-flat-button
+                        color="primary">DC_Template_1</button>
+                    <button class="text-center m-1" (click)="generateDCPDF('DC_Template_2')" mat-flat-button
+                        color="warn">DC_Template_2</button>
+                    <button class="text-center m-1" (click)="generateDCPDF('DC_Template_3')" mat-flat-button
+                        color="primary">DC_Template_3</button>
+                </div>
+            </div>
+            <small (click)="showDCTemplateOptions = !showDCTemplateOptions"
+                class="text-muted text-center pointer">Close</small>
+        </div>
+
+        <mat-progress-bar *ngIf="generatingPDF" mode="indeterminate">
+        </mat-progress-bar>
+
+    </div>
+
+    <app-invoices-email-sender class="m-1" [invoice]="invoice" *ngIf="showAddNewEmail" [subject]="invoice.subject"
+        [message]="" [filename]="invoice.filename" [tab]="'Invoice'" [invoiceId]="invoiceId" [reminder]="reminder"
+        (resp)="resp($event)">
+    </app-invoices-email-sender>
+
+    <p class="m-5 p-5">&nbsp;</p>
+
+    <div class="modal fade bottom" id="whatsappShareModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true" data-backdrop="true">
+        <div class="modal-dialog modal-frame modal-bottom modal-full-height modal-notify modal-primary" role="document">
+            <!--Content-->
+            <div class="modal-content">
+                <!--Body-->
+                <div class="modal-body">
+
+                    <h4 class="text-dark">WhatsApp share</h4>
+
+                    <form class="example-form">
+                        <mat-form-field class="=====example-full-width w-100">
+                            <mat-label>To</mat-label>
+                            <input matInput class="w-100" placeholder="Enter a WhatsApp number" name="shareWhatsappTo"
+                                [(ngModel)]="shareWhatsappTo">
+                        </mat-form-field>
+
+                        <mat-form-field class="example-full-width w-100">
+                            <mat-label>Leave a comment</mat-label>
+                            <textarea matInput class="w-100" rows="6" placeholder="Enter Something"
+                                name="shareWhatsappText" [(ngModel)]="shareWhatsappText"></textarea>
+                        </mat-form-field>
+                    </form>
+
+                    <button mat-stroked-button color="success" (click)="shareWhatsApp()">
+                        Sent
+                    </button>
+
+                </div>
+            </div>
+            <!--/.Content-->
+        </div>
+    </div>
+</div>

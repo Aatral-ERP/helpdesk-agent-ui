@@ -1,0 +1,42 @@
+<div class="container">
+
+    <h6 class="text-muted text-center" *ngIf="amcDetails.length == 0">No Bills found...</h6>
+
+    <div class="card m-3" *ngFor="let amc of amcDetails">
+        <div class="card-header">
+            #{{amc.amcId}}
+            (AMC from {{amc.fromDate | date:'mediumDate'}} to {{amc.toDate | date:'mediumDate'}})
+
+            <span class="float-right">Paid Date : {{amc.paidDate | date:'mediumDate'}}</span>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col">
+                    <span class="text-primary">{{amc.title}}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    {{amc.product}}
+                </div>
+            </div>
+            <p class="text-muted">
+                {{amc.description}}
+            </p>
+
+            <p class="m-0">Amount : {{amc.amcAmount | currency:'INR'}}</p>
+            <p class="m-0">GST : {{amc.gst | currency:'INR'}}</p>
+            <p class="m-0">Total Amount : {{amc.totalAmount | currency:'INR'}}</p>
+            <p class="m-0">PayMode : {{amc.payMode}}</p>
+            <p class="m-0">Transaction Details : {{amc.transactionDetails}}</p>
+
+            <p class="m-0" *ngIf="amc.receiptfileName != null">
+                <small (click)="downloadTicketServiceInvoice(amc.receiptfileName)"
+                    class="float-right badge badge-light text-muted pointer">
+                    &nbsp;&nbsp; Download {{amc.receiptfileName}}&nbsp;&nbsp;
+                    <i class="fa fa-download"> </i>
+                </small>
+            </p>
+        </div>
+    </div>
+</div>

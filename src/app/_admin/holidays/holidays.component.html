@@ -1,0 +1,48 @@
+<div class="container-fluid">
+    <br><br>
+    <div class="row">
+
+        <div class="col-sm-12 col-md-12 col-lg-6">
+            <label for="holidayDate" style="margin-bottom: 5px;"> Holiday Date </label>
+            <div class="input-group">
+                <input class="form-control" (focus)="holidayDatedp.toggleCalendar()" placeholder="choose Holiday date"
+                    angular-mydatepicker name="holidayDateObject" [(ngModel)]="holidayDateObject"
+                    (dateChanged)="holidayDate = $event.singleDate.jsDate" [options]="myDatePickerOptions"
+                    #holidayDatedp="angular-mydatepicker" autocomplete="off" />
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <i (click)="holidayDatedp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-12 col-lg-6">
+            <label for="subject">Reason</label>
+            <input class="form-control" type="text" id="reason" placeHolder="Enter Reason" name="reason"
+                [(ngModel)]="reason" />
+        </div>
+
+        <div class="col-sm-12 col-md-4 col-lg-6">
+            <label>Holiday Type</label>
+            <select name="leaveType" [(ngModel)]="leaveType" class="form-control">
+                <option value="CLOSED HOLIDAY">CLOSED HOLIDAY</option>
+                <option value="RESTRICTED HOLIDAY">RESTRICTED HOLIDAY</option>
+            </select>
+        </div>
+
+        <br><br>
+        <div class="col-12 text-center">
+
+            <button [disabled]="saving" class="btn btn-md btn-primary" (click)="saveHoliday()">
+                Save
+                <span [hidden]="!saving" class="spinner-border spinner-border-sm" role="status"
+                    aria-hidden="true"></span>
+            </button>
+            <button class="btn btn-sm btn-outline-primary" (click)="clearFilters()">Clear</button>
+
+        </div>
+
+
+    </div>
+</div>

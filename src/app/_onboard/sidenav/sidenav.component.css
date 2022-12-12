@@ -1,0 +1,72 @@
+.example-container {
+  width: 100%;
+}
+
+.fill-remaining-space {
+  /* This fills the remaining space, by using flexbox. 
+       Every toolbar row uses a flexbox row layout. */
+  flex: 1 1 auto;
+}
+
+button {
+  background: transparent;
+  outline: none;
+}
+
+mat-sidenav {
+  border-right: 0.5px solid lightgrey;
+  max-width: 300px;
+  min-width: 250px;
+}
+
+mat-tree-node {
+  padding: 0;
+  margin: 0;
+  min-height: 30px;
+  outline: none;
+}
+
+mat-sidenav-content {
+  min-height: 900px;
+  padding: 0;
+  margin: 0;
+}
+
+.theme-black {
+  background: #151b26;
+}
+
+.white-text-light {
+  color: #cbd4db;
+}
+
+.sidebar2, .container-fluid {
+  padding: 0px !important;
+  /* background-color: #1a1f27;
+  padding: 0px !important;
+  box-shadow: 2px 2px 5px #262a35;
+  z-index: 1000;
+  height: 20%; 
+  position: fixed;*/
+}
+
+.logo {
+  min-height: 100px;
+  color: #afb1b5;
+}
+
+.logo>img {
+  margin-top: 00px;
+  padding: 0px;
+  border: 2px solid #F17153;
+  border-radius: 100%;
+  background-color: #fff;
+}
+
+.mat-icon {
+  font-size: medium;
+}
+
+::ng-deep .mat-menu-panel {
+  max-width: none !important;
+}

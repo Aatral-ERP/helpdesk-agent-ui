@@ -1,0 +1,62 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-1">&nbsp;</div>
+        <div class="col-9">
+            <div class="card m-3">
+                <div class="card-header">
+                    <span class="card-body card-body-cascade text-center">
+                        <img *ngIf="agents.photo == null || agents.photo === undefined || agents.photo == ''"
+                            src="assets/images/No-image.png" alt="User Photo" class="z-depth-1 mb-3 mx-auto"
+                            height="40px;" width="40px;">
+
+                        <img *ngIf="agents.photo != null && agents.photo !== undefined && agents.photo != ''"
+                            src="{{'data:image/png;base64,' + agents.photo}}" alt="User Photo"
+                            class="z-depth-1 mb-3 mx-auto" height="40px;" width="40px;">
+
+                    </span>
+                    <span class="text-primary">{{agents.firstName}}&nbsp;{{agents.lastName}} &nbsp;:
+                        &nbsp;</span>{{agents.employeeId}}
+                </div>
+                <div class="card-body">
+
+                    <p class="m-0 ">Gender : {{agents.gender}}</p>
+                    <p class="m-0">Email-ID : {{agents.emailId}}</p>
+                    <p class="m-0">Phone Number : {{agents.phone}}</p>
+                    <p class="m-0">Designation : {{agents.designation}}</p>
+                    <p class="m-0">Full Address : {{agents.fullAddress}}</p>
+                    <p class="m-0">Joining Date : {{agents.dateOfJoining}}</p>
+
+                    <p class="m-0">Experience : {{agents.experienceYear}} Years {{agents.experienceMonth}} Months</p>
+                    <!-- <p class="m-0">Salary : {{agents.monthlySalary}}</p>
+                    <p class="m-0">Casual Leave : {{agents.leavePermit}}</p> -->
+                    <!-- <p *ngIf="agents.agentType ==0" class="m-0">Admin Type :Staff</p>
+                    <p *ngIf="agents.agentType ==1" class="m-0">Admin Type :Admin</p> -->
+                    <p class="m-0">
+                        <span class="text-success" *ngIf="!agents.isBlocked">Login Access</span>
+                        <span class="text-danger" *ngIf="agents.isBlocked">Login Blocked</span>
+                    </p>
+                    <br>
+
+                    <div class="row">
+                        <div class="col-md-2">
+                            <!-- <button class="btn btn-sm btn-indigo"
+                                (click)="editAgent(agents.employeeId, agents.firstName, agents.lastName, agents.emailId, agents.password, agents.designation, agents.fullAddress, agents.gender, agents.phone, agents.blocked,agents.company,
+                                agents.agentType,agents.experienceYear,agents.experienceMonth,agents.leavePermit,agents.monthlySalary,agents.dateOfJoining,agents.salaryDate,agents.accountDetails,agents.photo,agents.notes,agents.workingStatus)">
+                                <i class="fas fa-edit text-white" aria-hidden="true"></i>&nbsp;&nbsp;Edit
+                            </button> -->
+                            <button class="btn btn-sm btn-indigo" (click)="editAgentDetails(agents.employeeId)">
+                                <i class="fas fa-edit text-white" aria-hidden="true"></i>&nbsp;&nbsp;Edit
+                            </button>
+                        </div>
+
+                        <div class="col-md-2">
+                            <button class="btn btn-sm btn-red" (click)="deleteAgent(agents.employeeId)">
+                                <i class="fas fa-trash text-white" aria-hidden="true"></i>&nbsp;Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

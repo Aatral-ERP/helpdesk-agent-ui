@@ -1,0 +1,158 @@
+<div class="container-fluid">
+    <div class="container">
+        <div class="row pointer filterdiv mt-0 pt-0 bg-primary text-white justify-content-center"
+            (click)="showFilterScreen = !showFilterScreen">
+            <div class="col text-center">
+                <span> <span class="small"> Payments Filters &nbsp;&nbsp;</span>
+                    <i [hidden]="showFilterScreen" class="fa fa-angle-up"></i>
+                    <i [hidden]="!showFilterScreen" class="fa fa-angle-down"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container pt-2" [hidden]="!showFilterScreen">
+
+        <div class="row">
+            <div class="col-12">
+                <p class="indigo-text h4 text-center"> Payments Filter
+                </p>
+                <hr style="width:100%;text-align:left;margin-left:0">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <label>Institute</label>
+                <ng-multiselect-dropdown [placeholder]="'Select Institutes'" [data]="_institutes"
+                    [(ngModel)]="_search_filters.institutes" [settings]="_instituteDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <label>Products</label>
+                <ng-multiselect-dropdown [placeholder]="'Select Products'" [data]="_products"
+                    [(ngModel)]="_search_filters.dealProducts" [settings]="_ProductsDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <label>Create By</label>
+                <ng-multiselect-dropdown [placeholder]="'Created By'" [data]="_agents"
+                    [disabled]="!this.role.salesAdmin" [(ngModel)]="_search_filters.agents"
+                    [settings]="_AgentsDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <label>Deal Type</label>
+                <select class="form-control" name="dealType" id="dealType" [(ngModel)]="_search_filters.dealType">
+                    <option value="">--select--</option>
+                    <option value="Sales">Sales</option>
+                    <option value="AMC">AMC</option>
+                    <option value="Service">Service</option>
+                    <option value="Others">Others</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="m-1 p-1 border border-light">
+            <h6 (click)="showPayFilterScreen = !showPayFilterScreen" class="pointer text-dark font-weight-bold">
+                Payments Filter's &nbsp;
+                <i [hidden]="showPayFilterScreen" class="fas fa-caret-right"></i>
+                <i [hidden]="!showPayFilterScreen" class="fas fa-caret-down"></i>
+            </h6>
+            <div [hidden]="!showPayFilterScreen" class="row">
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                    <label for="paymentSubject">Payments Subject</label>
+                    <input class="form-control" type="text" id="paymentSubject" placeHolder="Enter Invoice Subject"
+                        name="paymentSubject" [(ngModel)]="_search_filters.paymentSubject" />
+                </div>
+
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                    <label for="paymentReceiptNo">Receipt No</label>
+                    <input class="form-control" type="text" id="paymentReceiptNo"
+                        placeHolder="Enter Payment Receipt No " name="paymentReceiptNo"
+                        [(ngModel)]="_search_filters.paymentReceiptNo" />
+                </div>
+
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                    <label for="paymentReferenceNo">Reference No</label>
+                    <input class="form-control" type="text" id="paymentReferenceNo"
+                        placeHolder="Enter Payment Reference No " name="paymentReferenceNo"
+                        [(ngModel)]="_search_filters.paymentReferenceNo" />
+                </div>
+
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                    <label for="mode">Mode Of Payment</label>
+                    <select class="form-control" name="mode" id="mode" [(ngModel)]="_search_filters.paymentMode">
+                        <option value="">--select--</option>
+                        <option value="online">Online</option>
+                        <option value="cheque">Cheque</option>
+                        <option value="cash">Cash</option>
+                        <option value="others">Others</option>
+                    </select>
+                </div>
+
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                    <label for="paymentDrawnOn">Payment Drawn On</label>
+                    <input class="form-control" type="text" id="paymentDrawnOn"
+                        placeHolder="Enter Payment Reference No " name="paymentDrawnOn"
+                        [(ngModel)]="_search_filters.paymentDrawnOn" />
+                </div>
+
+                <div class="col-sm-12 col-md-6 col-lg-3">
+                    <label for="paymentAmount">Payment Amount
+                        <i title="Eg. 1000 for Exact Filter &#013;100-999 for filter in between 100 and 999"
+                            class="fas fa-info-circle"></i></label>
+                    <input class="form-control" type="text" id="paymentAmount" placeHolder="Enter Payment Reference No "
+                        name="paymentAmount" [(ngModel)]="_search_filters.paymentAmount" />
+                </div>
+
+                <div class="col-sm-6 col-md-6 col-lg-3">
+                    <label for="paymentDateObject" style="margin-bottom: 5px;"> Payment Date </label>
+                    <div class="input-group">
+                        <input class="form-control" (focus)="paymentDatedp.toggleCalendar()"
+                            placeholder="choose valid date" angular-mydatepicker name="invoiceDateObject"
+                            [(ngModel)]="_search_filters.paymentDateObject" [options]="myDatePickerOptions"
+                            (dateChanged)="_search_filters.paymentDateFrom = $event.dateRange.beginJsDate;_search_filters.paymentDateTo = $event.dateRange.endJsDate;"
+                            #paymentDatedp="angular-mydatepicker" autocomplete="off" />
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i (click)="paymentDatedp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center mt-2">
+                <button class="btn btn-md btn-primary" (click)="loadPayments()">Submit</button>
+                <button class="btn btn-sm btn-outline-primary" (click)="clearFilters()">Clear</button>
+            </div>
+        </div>
+    </div>
+
+    <p class="h4 text-center mt-4"> Payments Report
+    </p>
+    <div>
+        <div class="row mb-5">
+            <div class="col">
+                <ag-grid-angular enableCellTextSelection="true" *ngIf="!loading" [rowData]="rowData"
+                    style="width: 100%; height: 500px;" class="ag-theme-balham p-2" [columnDefs]="columnDefs"
+                    [rowSelection]="'single'" (gridReady)="onGridReady($event)" [paginationAutoPageSize]="true"
+                    [pagination]="true">
+                </ag-grid-angular>
+                <div class="item" *ngIf="loading">
+                    <ngx-skeleton-loader count="8"></ngx-skeleton-loader>
+                </div>
+                <button class="btn btn-sm btn-primary" *ngIf="rowData.length > 0" (click)="onBtnExport()">Export <i
+                        class="fas fa-download"></i></button>
+            </div>
+        </div>
+    </div>
+
+</div>

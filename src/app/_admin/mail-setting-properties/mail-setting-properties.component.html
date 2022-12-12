@@ -1,0 +1,56 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate">
+</mat-progress-bar>
+
+<div class="container" *ngIf="property !== undefined">
+
+    <div class="row">
+        <div class="col-12">
+            <mat-checkbox color="primary" [(ngModel)]="property.active">
+                Send Emails ({{property.configFor}})
+            </mat-checkbox>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="property.active">
+        <div class="col-12">
+            <label class="required-label">Email Id</label>
+            <input type="text" name="username" class="form-control" placeholder="Eg., someone@gmail.com"
+                [(ngModel)]="property.username">
+        </div>
+        <div class="col-12">
+
+            <label class="required-label">Password</label>
+            <input rows="10" name="password" class="form-control" [(ngModel)]="property.password">
+        </div>
+        <div class="col-12">
+            <label class="required-label">Host</label>
+            <input rows="10" name="host" class="form-control" placeholder="Eg., smtp.gmail.com"
+                [(ngModel)]="property.host">
+        </div>
+        <div class="col-12">
+            <label class="required-label">Port</label>
+            <input type="number" rows="10" class="form-control" name="port" placeholder="Eg., 25 or 587"
+                [(ngModel)]="property.port">
+        </div>
+        <div class="col-12">
+            <label class="required-label">protocol</label>
+            <input rows="10" name="protocol" class="form-control" placeholder="Eg., smtp..."
+                [(ngModel)]="property.protocol">
+        </div>
+    </div>
+
+    <div class="row text-center">
+        <div class="col-12">
+            <button [disabled]="loading" class="btn btn-md btn-primary" (click)="saveSettings()">
+                Update
+                <div *ngIf="saving_update" class="spinner-border spinner-border-sm" role="status">
+                    <span class="sr-only"> Updating...</span>
+                </div>
+            </button>&nbsp;&nbsp;
+            <button class="btn btn-md btn-primary" (click)="openMailSenderDialog(property.configName)"
+                *ngIf="property.id > 0" [disabled]="loading"> Send Test Mail
+            </button>&nbsp;&nbsp;
+        </div>
+    </div>
+</div>
+<p class="m-5 p-5">&nbsp;</p>

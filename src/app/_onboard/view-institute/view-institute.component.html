@@ -1,0 +1,91 @@
+<div class="container p-2 mb-5">
+    <div class="card">
+        <div class="card-body">
+            <p class="h4 text-center"> Institute Report</p>
+            <hr style="width:100%;text-align:left;margin-left:0">
+            <div class="row justify-content-center">
+                <div class="col-6">
+                    <label>Institute Name</label>
+                    <ng-multiselect-dropdown [placeholder]="'Select Institutes'" [data]="_institutes"
+                        [(ngModel)]="_search_instfilters.institutes" [settings]="_instituteDropdownSettings">
+                    </ng-multiselect-dropdown>
+                </div>
+                <div class="col-2">
+                    <label for="shortTerm">Short Term</label>
+                    <input class="form-control input-lg" type="text" id="shortTerm" placeHolder="Enter Ins.Short-Term"
+                        name="shortTerm" [(ngModel)]="_search_instfilters.shortTerm" />
+                </div>
+                <div class="col-2">
+                    <label for="instituteId">Institute Id</label>
+                    <input class="form-control input-lg" type="text" id="instituteId" placeHolder="Enter institute ID"
+                        name="instituteId" [(ngModel)]="_search_instfilters.instituteId" />
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-3">
+                    <div class="form-group">
+                        <label for="instituteType"> Institute Type </label>
+                        <select id="instituteType" name="instituteType" [(ngModel)]="_search_instfilters.instituteType"
+                            class="form-control custom-select">
+                            <option value="">ALL</option>
+                            <option value="{{instituteType.institute_type}}"
+                                *ngFor="let instituteType of instituteTypeList">{{instituteType.institute_type}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <label for="emailId">EmailId</label>
+                    <input class="form-control input-lg" type="text" id="emailId" placeHolder="Enter EmailId"
+                        name="emailId" [(ngModel)]="_search_instfilters.emailId" />
+                </div>
+                <div class="col-4">
+                    <label for="phone">Phone Number</label>
+                    <input class="form-control input-lg" type="text" id="city" placeHolder="Enter Phone Number"
+                        name="phone" [(ngModel)]="_search_instfilters.phone" />
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-3">
+                    <label for="city">City</label>
+                    <input class="form-control input-lg" type="text" id="city" placeHolder="Enter city" name="city"
+                        [(ngModel)]="_search_instfilters.city" />
+                </div>
+                <div class="col-3">
+                    <label for="alternateEmailId">Atl.EmailId</label>
+                    <input class="form-control input-lg" type="text" id="alternateEmailId"
+                        placeHolder="Enter Atl.EmailId" name="alternateEmailId"
+                        [(ngModel)]="_search_instfilters.alternateEmailId" />
+                </div>
+                <div class="col-4">
+                    <label for="alternatePhone">Atl.Phone Number</label>
+                    <input class="form-control input-lg" type="text" id="alternatePhone"
+                        placeHolder="Enter Atl.Phone Number" name="alternatePhone"
+                        [(ngModel)]="_search_instfilters.alternatePhone" />
+                </div>
+            </div>
+
+            <div class="row mt-5">
+                <div class="col text-center">
+                    <button class="btn btn-md btn-primary" (click)="search()">Submit</button>&nbsp;&nbsp;
+                    <button class="btn btn-md btn-primary" (click)="clear()">Clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="showGrid">
+    <div class="row">
+        <div class="col">
+            <ag-grid-angular [rowData]="rowData" style="width: 100%; height: 400px;" class="ag-theme-balham p-2"
+                [columnDefs]="columnDefs" [rowSelection]="'single'" [paginationAutoPageSize]="true" [pagination]="true"
+                (selectionChanged)="onGridSelectionChanged()" (gridReady)="onGridReady($event)">
+            </ag-grid-angular>
+        </div>
+    </div>
+    <button class="btn btn-sm btn-primary" *ngIf="rowData.length > 0" (click)="onBtnExport()">Export <i
+        class="fas fa-download"></i></button>
+</div>

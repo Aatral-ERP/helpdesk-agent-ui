@@ -1,0 +1,200 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate">
+</mat-progress-bar>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <h5 class="text-muted p-1">Accounts Dashboard
+            </h5>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="!loading">
+        <div class="col-lg-6 col-md-12 col-sm-12">
+            <div class="border border-light">
+                <div class="row">
+                    <div class="col">
+                        <span class="h5 text-muted font-weight-bold float-left">Income/Expense</span>
+                        <p class="p-2">
+                            <span class="text-primary font-weight-light float-right">
+                                {{currentIncomeExpenseTerm}}
+
+                                <i [matMenuTriggerFor]="menu" class="fas fa-cog pointer pl-2"></i>
+
+                                <mat-menu #menu="matMenu">
+                                    <button *ngFor="let term of incomeExpenseTerms"
+                                        (click)="currentIncomeExpenseTerm = term" mat-menu-item>{{term}}</button>
+                                </mat-menu>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row p-2 pt-5 pb-5" *ngFor="let data of _income_expense_data"
+                    [hidden]="data.label != currentIncomeExpenseTerm">
+                    <div class="col-6">
+                        <div class="row pt-2">
+                            <div class="col">
+                                <p class="text-primary h2 float-left">
+                                    INCOME
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row pb-2">
+                            <div class="col">
+                                <p class="text-dark h1 float-left">
+                                    {{data.income | currency:'INR'}}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row pt-4">
+                            <div class="col">
+                                <p class="text-danger h2 float-left">
+                                    EXPENSE
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row pb-2">
+                            <div class="col">
+                                <p class="text-dark h1 float-left">
+                                    {{data.expense | currency:'INR'}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 float-right">
+                        <div class="row mt-5 pt-3">
+                            <div class="col">
+                                <p class="text-success h2 float-right">
+                                    NET PROFIT
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row pb-2">
+                            <div class="col">
+                                <p class="text-dark h1 float-right">
+                                    {{data.income - data.expense | currency:'INR'}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12 col-sm-12">
+
+            <span class="float-right">
+                Last 6 Months
+            </span>
+            <ngx-charts-bar-vertical-2d [view]="halfpage" [scheme]="colorScheme"
+                [results]="_last_6months_income_expense_data" [gradient]="true" [xAxis]="true" [yAxis]="true"
+                [legend]="true" [showXAxisLabel]="false" [showYAxisLabel]="true" [xAxisLabel]="'Month Year'"
+                [yAxisLabel]="'Amount'" [legendPosition]="'below'" [legendTitle]="''">
+            </ngx-charts-bar-vertical-2d>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-12">
+
+            <h5 class="text-muted">Recent Income Expenses
+
+                <input hidden class="form-control" (focus)="dp.toggleCalendar()" placeholder="choose valid date"
+                    angular-mydatepicker name="dateObject" [(ngModel)]="_search_filters.dateObject"
+                    [options]="myDatePickerOptions"
+                    (dateChanged)="_search_filters.dateFrom = $event.dateRange.beginJsDate;_search_filters.dateTo = $event.dateRange.endJsDate;getIncomeExpenseReport();"
+                    #dp="angular-mydatepicker" autocomplete="off" />
+                ({{_search_filters.dateFrom | date:'MMM dd, yyyy'}} -
+                {{_search_filters.dateTo | date:'MMM dd, yyyy'}})
+                <i (click)="dp.toggleCalendar()" class="far fa-calendar-alt pr-2 pointer"></i>
+
+                <button (click)="incomeExpenseCreate.openCreateModal()" class="btn btn-sm btn-primary float-right">
+                    <span class="h6">Add Income/Expenses</span>
+                    &nbsp;&nbsp;&nbsp; <i class="fas fa-plus-circle"></i></button>
+            </h5>
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            <h6 class="text-dark font-weight-bold">Income ({{incomeTotal | currency:'INR'}})</h6>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Amount</th>
+                            <th>Pay Date</th>
+                            <th>Inv No.</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let in of incomes">
+                            <td>{{in.subject}}
+                            </td>
+                            <td>{{in.amount | currency:'INR'}}</td>
+                            <td>{{in.payment_date | date:'MMM dd, yyyy'}}</td>
+                            <td>{{in.invoice_no}}
+                                <br>
+                                <span class="badge badge-info p-1">{{in.category}}</span>
+                            </td>
+                            <td>
+                                <a *ngIf="in.income_type == 'Deal'" target="_blank"
+                                    href="./sales/deals/overview/{{in.deal_id}}/payments?expand={{in.id}}">
+                                    <i class="fas fa-edit text-primary"></i>
+                                </a>
+                                <a *ngIf="in.income_type == 'Unspecified'"
+                                    (click)="incomeExpenseCreate.getEditModal(in.id)">
+                                    <i class="fas fa-edit text-primary"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            <h6 class="text-dark font-weight-bold">Expenses ({{expenseTotal | currency:'INR'}})
+                <span class="text-success float-right">Net Profit : {{incomeTotal - expenseTotal | currency:'INR'}}</span>
+            </h6>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Amount</th>
+                            <th>Pay Date</th>
+                            <th>Bill No.</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let ex of expenses">
+                            <td>{{ex.subject}}</td>
+                            <td>{{ex.amount | currency:'INR'}}</td>
+                            <td>{{ex.payment_date | date:'MMM dd, yyyy'}}</td>
+                            <td>{{ex.bill_no}}<br>
+                                <span class="badge badge-info p-1">{{ex.category}}</span>
+                            </td>
+                            <td>
+                                <a *ngIf="ex.expense_type == 'Purchase Input'" target="_blank"
+                                    href="./purchase-inputs/bills/overview/{{ex.bill_id}}">
+                                    <i class="fas fa-edit text-primary"></i>
+                                </a>
+                                <a *ngIf="ex.expense_type == 'Unspecified'"
+                                    (click)="incomeExpenseCreate.getEditModal(ex.id)">
+                                    <i class="fas fa-edit text-primary"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <app-income-expense-create (respEvent)="onRespEvent($event)" #incomeExpenseCreate></app-income-expense-create>
+
+
+</div>

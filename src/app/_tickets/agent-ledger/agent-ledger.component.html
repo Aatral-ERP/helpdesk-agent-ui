@@ -1,0 +1,130 @@
+<div class="container-fluid">
+    <h5 class="text-primary text-center">My Office Expenses Legder</h5>
+    <div class="alert alert-info text-center p-2" role="alert" [hidden]="ledger.length > 0">
+
+        <span *ngIf="!loading" class="pl-2">No Expense Legder Found...</span>
+        <span *ngIf="loading" class="pl-2">loading...</span>
+
+    </div>
+
+    <div class="row border-bottom border-light pb-0 mb-0">
+        <div class="col-12">
+            <p>
+                <span class="float-right text-primary pr-5 pointer" *ngIf="!showNewLedger"
+                    (click)="openNewLedger();">Add Expense</span>
+                <span class="float-right text-primary pr-5 pointer" *ngIf="showNewLedger"
+                    (click)="showNewLedger = !showNewLedger">cancel</span>
+            </p>
+        </div>
+    </div>
+
+    <div class="row p-1 mb-4 border border-light" *ngIf="showNewLedger">
+        <h5 class="text-primary">
+            Add Expense
+        </h5>
+        <div class="col-12 p-3 mb-1 border border-light" *ngIf="showNewLedger">
+            <label for="">Subject/Description</label>
+            <input type="text" class="form-control" [(ngModel)]="newLedger.subject">
+        </div>
+
+        <div class="col-3">
+            <mat-button-toggle-group appearance="legacy" name="addMode" [(ngModel)]="addMode">
+                <mat-button-toggle (click)="newLedger.debit = 0" value="Credit">Credit</mat-button-toggle>
+                <mat-button-toggle (click)="newLedger.credit = 0" value="Debit">Debit</mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
+
+        <div class="col-3" *ngIf="addMode == 'Credit'">
+            <label for="">Credit Amount</label>
+            <input type=number class="form-control" [(ngModel)]="newLedger.credit">
+        </div>
+
+        <div class="col-3" *ngIf="addMode == 'Debit'">
+            <label for="">Debit Amount</label>
+            <input type=number class="form-control" [(ngModel)]="newLedger.debit">
+        </div>
+
+        <div class="col-6">
+            <label for="">Expense/Entry Date</label>
+
+            <div class="input-group">
+                <input [(ngModel)]="newLedger.paymentDate" class="form-control" (focus)="picker2.open()"
+                    [matDatepicker]="picker2">
+                <mat-datepicker #picker2></mat-datepicker>
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <i (click)="picker2.open()" class="fas fa-calendar-alt pointer"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <button [disabled]="saving" class="btn btn-sm btn-primary float-right" (click)="addLedger()">Save&nbsp;
+                <div *ngIf="saving" class="spinner-border spinner-border-sm" role="status">
+                    <span class="sr-only"> Saving...</span>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <h3 class="text-primary">Closing Balance : {{totalCredit - totalDebit | currency:'INR'}}</h3>
+    <div class="row p-2">
+        <div class="col">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th style="width: 5%;">Trans Id</th>
+                            <th style="width: 10%;">Date</th>
+                            <th style="width: 40%;">Subject</th>
+                            <th style="width: 10%;">Credit</th>
+                            <th style="width: 10%;">Debit</th>
+                            <th style="width: 10%;">Balance</th>
+                            <th style="width: 10%;">Attachment</th>
+                            <th style="width: 5%;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let led of ledger">
+                            <td>
+                                <i title="Download Transactoin as Image" (click)="downlaodTransasImage(led)"
+                                    class="fa fa-download text-primary pointer">{{led.id}}</i>
+                            </td>
+                            <td>{{led.paymentDate | date:'MMM dd, yyyy'}}
+                            </td>
+                            <td>{{led.subject}} </td>
+                            <td>
+                                <span *ngIf="led.credit > 0">{{led.credit | currency:'INR'}}</span>
+                            </td>
+                            <td>
+                                <span *ngIf="led.debit > 0">{{led.debit | currency:'INR'}}</span>
+                            </td>
+                            <td>{{led.balance | currency:'INR'}} </td>
+                            <td>
+
+                                <i title="Upload Ledger proof" (click)="photoUpload.click()"
+                                    class="fa fa-upload text-primary pointer mr-1"></i>
+
+                                <small (click)="viewLegderProof('view',led)" class="pointer"
+                                    *ngIf="led.filename != null && led.filename != ''">{{led.filename}}</small>
+
+                                <i title="Download Transactoin as Image" (click)="viewLegderProof('download',led)"
+                                    *ngIf="led.filename != null && led.filename != ''"
+                                    class="fa fa-download text-primary pointer ml-1"></i>
+
+                                <input type="file" #photoUpload id="photo" name="photo"
+                                    (change)="fileChange($event,led)" hidden>
+
+                            </td>
+                            <td>
+                                <i [hidden]="!isEditable(led)" (click)="editLedger(led)"
+                                    class="fas fa-edit text-primary pointer"></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

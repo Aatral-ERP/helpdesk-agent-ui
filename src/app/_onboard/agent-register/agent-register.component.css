@@ -1,0 +1,11 @@
+.ng-autocomplete {
+    width: 100%;
+}
+
+.leaveMasterButton {
+    max-width: 90%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: 0.5px dotted rgb(104, 219, 240);
+}

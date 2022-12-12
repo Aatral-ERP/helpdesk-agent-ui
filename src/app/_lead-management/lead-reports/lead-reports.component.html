@@ -1,0 +1,190 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate">
+</mat-progress-bar>
+
+<div class="container-fluid">
+    <div class="row border-bottom border-light pb-0 mb-0">
+        <div class="col">
+            <a routerLink="/lead-management/create/upload" class="btn btn-md btn-primary float-right">
+                <i class="fa fa-plus"> Upload Lead Details </i>
+            </a>
+            <a routerLink="/lead-management/create" class="btn btn-md btn-primary float-right pr-2">
+                <i class="fa fa-plus"> Create Lead </i>
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row pointer filterdiv mt-0 pt-0 bg-primary text-white justify-content-center"
+            (click)="showFilterScreen = !showFilterScreen">
+            <div class="col text-center">
+                <span> <span class="small"> Leads Filters &nbsp;&nbsp;</span>
+                    <i [hidden]="showFilterScreen" class="fa fa-angle-up"></i>
+                    <i [hidden]="!showFilterScreen" class="fa fa-angle-down"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container pt-2" [hidden]="!showFilterScreen">
+
+        <div class="row">
+            <div class="col-12">
+                <p class="indigo-text h4 text-center"> Leads Filter
+                </p>
+                <hr style="width:100%;text-align:left;margin-left:0">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <label class="small">Company/Institute</label>
+                <ng-multiselect-dropdown [placeholder]="'Select Company/Institutes'" [data]="_companies"
+                    [(ngModel)]="_filters.companies" [settings]="_commonDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <label class="small">Products</label>
+                <ng-multiselect-dropdown [placeholder]="'Select Products'" [data]="_products"
+                    [(ngModel)]="_filters.products" [settings]="_commonDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <label class="small">Lead Owner</label>
+                <ng-multiselect-dropdown [placeholder]="'Lead Owner'" [data]="_agents"
+                    [disabled]="!role.leadManagementAdmin" [(ngModel)]="_filters.owners"
+                    [settings]="_AgentsDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-3">
+                <label class="small">Industry Type</label>
+                <ng-multiselect-dropdown [placeholder]="'Select Industry Types'" [data]="_industry_types"
+                    [(ngModel)]="_filters.industryTypes" [settings]="_commonDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-3">
+                <label class="small">Categories</label>
+                <ng-multiselect-dropdown [placeholder]="'Select Categories'" [data]="_lead_categories"
+                    [(ngModel)]="_filters.categories" [settings]="_commonDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+
+            <div class="col-sm-12 col-md-12 col-lg-6">
+                <label class="small">Lead Title</label>
+                <input class="form-control" type="text" id="title" placeHolder="Enter title " name="title"
+                    [(ngModel)]="_filters.title" />
+            </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-3">
+                <label class="small">Lead Sources</label>
+                <ng-multiselect-dropdown [placeholder]="'Select Lead Sources'" [data]="_lead_sources"
+                    [(ngModel)]="_filters.leadSources" [settings]="_commonDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-3">
+                <label class="small">Lead Stages</label>
+                <ng-multiselect-dropdown [placeholder]="'Select Lead Stages'" [data]="_lead_status"
+                    [(ngModel)]="_filters.status" [settings]="_commonDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-3">
+                <label class="small">City</label>
+                <input class="form-control" type="text" id="city" placeHolder="Enter city " name="city"
+                    [(ngModel)]="_filters.city" />
+            </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-3">
+                <label class="small">State</label>
+                <input class="form-control" type="text" id="state" placeHolder="Enter state " name="state"
+                    [(ngModel)]="_filters.state" />
+            </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-3">
+                <label class="small">Country</label>
+                <input class="form-control" type="text" id="country" placeHolder="Enter country " name="country"
+                    [(ngModel)]="_filters.country" />
+            </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-3">
+                <label class="small">Pincode</label>
+                <input class="form-control" type="text" id="pincode" placeHolder="Enter pincode " name="pincode"
+                    [(ngModel)]="_filters.pincode" />
+            </div>
+
+            <div class="col-sm-6 col-md-6 col-lg-3">
+                <label for="leadDateObject" style="margin-bottom: 5px;"> Lead Date </label>
+                <div class="input-group">
+                    <input class="form-control" (focus)="LDdp.toggleCalendar()" placeholder="choose Lead from - to date"
+                        angular-mydatepicker name="leadDateObject" [(ngModel)]="_filters.leadDateObject"
+                        [options]="myDatePickerOptions"
+                        (dateChanged)="_filters.leadDateFrom = $event.dateRange.beginJsDate;_filters.leadDateTo = $event.dateRange.endJsDate;"
+                        #LDdp="angular-mydatepicker" autocomplete="off" />
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i (click)="LDdp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-md-6 col-lg-3">
+                <label for="lastUpdatedDateObject" style="margin-bottom: 5px;"> Last Updated Date </label>
+                <div class="input-group">
+                    <input class="form-control" (focus)="LUdp.toggleCalendar()"
+                        placeholder="choose Last Updated from - to date" angular-mydatepicker
+                        name="lastUpdatedDateObject" [(ngModel)]="_filters.lastUpdatedDateObject"
+                        [options]="myDatePickerOptions"
+                        (dateChanged)="_filters.lastUpdatedDateFrom = $event.dateRange.beginJsDate;_filters.lastUpdatedDateTo = $event.dateRange.endJsDate;"
+                        #LUdp="angular-mydatepicker" autocomplete="off" />
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i (click)="LUdp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-md-6 col-lg-3">
+                <label style="margin-bottom: 5px;"> Active/In-Active Status </label>
+                <mat-button-toggle-group [(ngModel)]="_filters.activeStatus" appearance="legacy"
+                    aria-label="Active/In-Active Status">
+                    <mat-button-toggle value="">All</mat-button-toggle>
+                    <mat-button-toggle value="Active">Active</mat-button-toggle>
+                    <mat-button-toggle value="In-Active">In-Active</mat-button-toggle>
+                </mat-button-toggle-group>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center mt-2">
+                <button class="btn btn-md btn-primary" (click)="loadLeads()">Submit</button>
+                <button class="btn btn-sm btn-outline-primary" (click)="clearFilters()">Clear</button>
+            </div>
+        </div>
+    </div>
+
+    <p class="h4 text-center mt-4"> Leads Report
+    </p>
+    <div>
+        <div class="row mb-5">
+            <div class="col">
+                <ag-grid-angular enableCellTextSelection="true" *ngIf="!loading" [rowData]="leads"
+                    style="width: 100%; height: 500px;" class="ag-theme-balham p-2" [columnDefs]="columnDefs"
+                    (gridReady)="onGridReady($event)" [paginationAutoPageSize]="true" [pagination]="true">
+                </ag-grid-angular>
+                <div class="item" *ngIf="loading">
+                    <ngx-skeleton-loader count="8"></ngx-skeleton-loader>
+                </div>
+                <button class="btn btn-sm btn-primary" *ngIf="leads.length > 0" (click)="onBtnExport()">Export <i
+                        class="fas fa-download"></i></button>
+            </div>
+        </div>
+    </div>
+
+</div>

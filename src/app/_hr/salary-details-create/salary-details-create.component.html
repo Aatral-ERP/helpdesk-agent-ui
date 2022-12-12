@@ -1,0 +1,179 @@
+<div class="container-fluid">
+
+    <div class="row justify-content-center">
+        <p class="indigo-text h3 text-center">Staff's Salary Details</p>
+        <hr style="width:100%;text-align:left;margin-left:0">
+    </div>
+    <br>
+    <div class="m-1 p-1 border border-light">
+        <h5 class="text-dark font-weight-bold">Staff Details</h5>
+        <div class="row">
+            <div class="col-12">
+                <label>Staffs</label>
+                <ng-multiselect-dropdown [placeholder]="'Select staffs'" [data]="_agents" [(ngModel)]="_selectedAgent"
+                    (onSelect)="sd.employeeId = $event.employeeId" [settings]="_AgentsDropdownSettings">
+                </ng-multiselect-dropdown>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <label>PF Number</label>
+                <ng-autocomplete id="title" placeHolder="Enter PFNumber" [(ngModel)]="sd.pfNumber">
+                </ng-autocomplete>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <label>PAN Number</label>
+                <ng-autocomplete id="title" placeHolder="Enter PAN Number" [(ngModel)]="sd.panNumber">
+                </ng-autocomplete>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <label>UAN Number</label>
+                <ng-autocomplete id="title" placeHolder="Enter UAN Number" [(ngModel)]="sd.uanNumber">
+                </ng-autocomplete>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <label>ESIC Number</label>
+                <ng-autocomplete id="title" placeHolder="Enter ESIC Number" [(ngModel)]="sd.esicNumber">
+                </ng-autocomplete>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <label>Mode Of Payment</label>
+                <ng-autocomplete id="title" [data]="needed_modeofpayment" placeHolder="Enter Mode Of Payment"
+                    [itemTemplate]="itemTemplatemodeofpayment" [(ngModel)]="sd.modeOfPayment">
+                </ng-autocomplete>
+
+                <ng-template #itemTemplatemodeofpayment let-item>
+                    <a [innerHTML]="item"></a>
+                </ng-template>
+            </div>
+
+        </div>
+    </div>
+    <div class="m-1 p-1 border border-light">
+        <h5 class="text-dark font-weight-bold">Bank Details</h5>
+        <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <label>Bank Name</label>
+                <ng-autocomplete id="title" [data]="needed_bankname" [searchKeyword]="keyword"
+                    (inputChanged)="onBankNameChanged($event)" placeHolder="Enter Bank Name"
+                    [itemTemplate]="itemTemplatebankName" [(ngModel)]="sd.bankName">
+                </ng-autocomplete>
+
+                <ng-template #itemTemplatebankName let-item>
+                    <a [innerHTML]="item"></a>
+                </ng-template>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <label>Account Number</label>
+                <ng-autocomplete id="accountNumber" placeHolder="Enter Account Number" [(ngModel)]="sd.accountNumber">
+                </ng-autocomplete>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <label>IFSC Code</label>
+                <ng-autocomplete id="ifscCode" placeHolder="Enter ifsc Code" [(ngModel)]="sd.ifscCode">
+                </ng-autocomplete>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center pl-3 pr-3">
+        <div class="col-lg-6 col-md-12 col-sm-12 border border-light">
+            <h5 class="text-dark font-weight-bold">Earnings Details</h5>
+            <div class="row" *ngFor="let earning of sd.properties;let i = index;"
+                [hidden]="earning.propertyType != 'earning'">
+                <div class="col-lg-7 col-md-7 col-sm-11">
+                    <ng-autocomplete placeHolder="Enter Earning" [(ngModel)]="earning.property">
+                    </ng-autocomplete>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-11">
+                    <ng-autocomplete placeHolder="Enter Amount" [(ngModel)]="earning.amount">
+                    </ng-autocomplete>
+                </div>
+                <div class="col-1">
+                    <i class="fas fa-trash-alt text-danger pointer" (click)="sd.properties.splice(i, 1);"></i>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-8">
+                    <h6 class="text-dark font-weight-bold pt-2">Total Earnings :
+                        {{getTotalEarnings() | currency:'INR'}}
+                    </h6>
+                </div>
+                <div class="col-4">
+                    <a class="btn btn-sm text-dark instEditButton float-right" (click)="addProperty('earning')">
+                        Add Earning
+                        <i class="fas fa-plus-circle text-right">&nbsp;&nbsp;&nbsp;</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12 col-sm-12 border border-light">
+            <h5 class="text-dark font-weight-bold">Deductions Details</h5>
+            <div class="row" *ngFor="let deduction of sd.properties;let i = index;"
+                [hidden]="deduction.propertyType != 'deduction'">
+                <div class="col-lg-7 col-md-7 col-sm-11">
+                    <ng-autocomplete placeHolder="Enter Deduction" [(ngModel)]="deduction.property">
+                    </ng-autocomplete>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-11">
+                    <ng-autocomplete placeHolder="Enter Amount" [(ngModel)]="deduction.amount">
+                    </ng-autocomplete>
+                </div>
+                <div class="col-1">
+                    <i class="fas fa-trash-alt text-danger pointer" (click)="sd.properties.splice(i, 1);"></i>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-8">
+                    <h6 class="text-dark font-weight-bold pt-2">
+                        Total Deductions : {{getTotalDeductions() | currency:'INR'}}
+                    </h6><br>
+                    <h6 class="text-dark font-weight-bold pt-2">
+                        Net Pay : {{ getTotalEarnings() -  getTotalDeductions() | currency:'INR'}}
+                    </h6>
+                </div>
+                <div class="col-4">
+                    <a class="btn btn-sm text-dark instEditButton float-right" (click)="addProperty('deduction')">
+                        Add Deductions
+                        <i class="fas fa-plus-circle text-right pointer">&nbsp;&nbsp;&nbsp;</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="m-1 p-1 border border-light">
+        <h5 class="text-dark font-weight-bold">Other Details</h5>
+        <div class="row">
+            <!-- <div class="col-lg-3 col-md-4 col-sm-12">
+                <label>Casual Leave(s)</label>
+                <ng-autocomplete id="casualLeave" type="number" placeHolder="Enter Casual Leave"
+                    [(ngModel)]="sd.casualLeave">
+                </ng-autocomplete>
+            </div> -->
+            <div class="col-lg-3 col-md-4 col-sm-12">
+                <label>Lose Of Pay/day
+                    <i title="Click this to Auto-Calculate the LOP from Total Earnings i.e., TotalEarning/30 days"
+                        class="fas fa-calculator pointer" (click)="calculateLOP()"></i>
+                </label>
+                <ng-autocomplete id="lopPerDay" type="number" placeHolder="Enter LOP /day" [(ngModel)]="sd.lopPerDay">
+                </ng-autocomplete>
+            </div>
+        </div>
+    </div>
+
+</div>
+<br>
+<div class="col-12 text-center">
+    <button [disabled]="saving" class="btn btn-md btn-primary" (click)="saveSalaryDetails()">Save</button>
+    <button class="btn btn-sm btn-outline-primary" (click)="clear()">Clear</button>
+    <button class="btn btn-sm btn-outline-danger" (click)="deleteSalaryDetails()">Delete</button>
+</div>

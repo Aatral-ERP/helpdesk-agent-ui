@@ -1,0 +1,194 @@
+<div class="container-fluid">
+
+    <div class="alert alert-info text-center" role="alert" [hidden]="po.id > 0">
+        <span *ngIf="!loading" class="pl-2">No Purchase Order Found...</span>
+        <span *ngIf="loading" class="pl-2">loading...</span>
+    </div>
+
+    <h5 class="font-weight-bold">Purchase Order Info</h5>
+
+    <div class="row">
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <label for="subject">Subject</label>
+            <input class="form-control" type="text" id="subject" placeHolder="Enter Subject" name="subject"
+                [(ngModel)]="po.subject" />
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <label for="purchaseOrderNo">Purchase Order No.</label>
+            <input class="form-control" type="text" id="purchaseOrderNo" placeHolder="Enter Invoice No"
+                name="purchaseOrderNo" [(ngModel)]="po.purchaseOrderNo" />
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <label for="trackingNo">Tracking No.</label>
+            <input class="form-control" type="text" id="trackingNo" placeHolder="Enter Tracking No" name="trackingNo"
+                [(ngModel)]="po.trackingNo" />
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <label for="requisitionNo">Requisition No.</label>
+            <input class="form-control" type="text" id="requisitionNo" placeHolder="Enter Requisition No "
+                name="requisitionNo" [(ngModel)]="po.requisitionNo" />
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <label for="dob" style="margin-bottom: 5px;"> PO Date </label>
+            <div class="input-group">
+                <input class="form-control" (focus)="purchaseOrderdp.toggleCalendar()"
+                    placeholder="choose Purchase Order Date" angular-mydatepicker name="purchaseOrderDateObject"
+                    [(ngModel)]="po.purchaseOrderDateObject"
+                    (dateChanged)="po.purchaseOrderDate = $event.singleDate.jsDate" [options]="myDatePickerOptions"
+                    #purchaseOrderdp="angular-mydatepicker" autocomplete="off" />
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <i (click)="purchaseOrderdp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <label for="dob" style="margin-bottom: 5px;"> Due Date </label>
+            <div class="input-group">
+                <input class="form-control" (focus)="dueDatedp.toggleCalendar()" placeholder="choose Invoice Date"
+                    angular-mydatepicker name="dueDateObject" [(ngModel)]="po.dueDateObject"
+                    (dateChanged)="po.dueDate = $event.singleDate.jsDate" [options]="myDatePickerOptions"
+                    #dueDatedp="angular-mydatepicker" autocomplete="off" />
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <i (click)="dueDatedp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <label>Status</label>
+            <select name="status" [(ngModel)]="po.status" class="form-control">
+                <option value="created">Created</option>
+                <option value="approved">Approved</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+            </select>
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <label>Excise Duty</label>
+            <input type="number" class="form-control" name="exciseDuty" [(ngModel)]="po.exciseDuty">
+        </div>
+
+        <div class="col-sm-6 col-md-4 col-lg-3">
+            <label>Sales Commission</label>
+            <input type="number" class="form-control" name="salesCommission" [(ngModel)]="po.salesCommission">
+        </div>
+
+        <div class="col-12 ">
+            <label for="terms">Terms & Conditions</label>
+            <textarea class="form-control" name="terms" id="terms" rows="5" [(ngModel)]="po.terms"></textarea>
+
+            <p>
+                <span *ngIf="deal.grandTotal != null" class="d-block text-muted">Total Amount is
+                    {{deal.grandTotal | currency:'INR'}}
+                </span>
+            </p>
+
+            <p><small *ngIf="po.createddatetime != null" class="d-block text-muted small">Created by
+                    {{po.createdBy}} at
+                    {{po.createddatetime | date:'medium'}}</small>
+            </p>
+            <p>
+                <small *ngIf="po.lastupdatedatetime != null" class="d-block text-muted small">Last Modified by
+                    {{po.modifiedBy}} at
+                    {{po.lastupdatedatetime | date:'medium'}}
+                </small>
+            </p>
+        </div>
+
+        <div class="col-12 text-center">
+
+            <button [disabled]="saving" class="btn btn-md btn-primary" (click)="saveDealPurchaseOrder()">Save
+                <span [hidden]="!saving" class="spinner-border spinner-border-sm" role="status"
+                    aria-hidden="true"></span></button>
+            <button class="btn btn-sm btn-outline-primary" (click)="clearFilters()">Clear</button>
+
+        </div>
+    </div>
+
+    <div *ngIf="po.id > 0" class="row noQuoteSpan mt-5 justify-content-center">
+
+        <!-- <div class="col-12 p-3 m-1">
+            <span *ngIf="po.filename == ''" (click)="showPDFTemplateOptions = !showPDFTemplateOptions"
+                class="pointer text-primary">Generate
+                Quotation PDF &nbsp;
+                <i class="fas fa-file-pdf"></i></span>
+        </div> -->
+
+        <div class="col-12 p-3 m-1">
+
+            <h6 class="text-primary pointer">
+
+                <span (click)="viewPDF()">
+                    {{po.filename}}
+                </span>
+                &nbsp;&nbsp;&nbsp;
+                <i class="fas fa-download" (click)="downloadPDF()"></i>
+
+            </h6><br>
+
+            <!-- <h6 (click)="viewPDF()" class="text-primary pointer">
+                {{po.filename}} </h6><br> -->
+
+            <span (click)="fileUpload.click()" class="pointer text-primary">
+                Upload Purchase Order PDF &nbsp;
+                <i class="fas fa-upload"></i></span> <br>
+
+            <span (click)="openShareWhatsAppModal()" class="pointer text-success">Share
+                on WhatsApp &nbsp;
+                <i class="fab fa-whatsapp"></i></span><br>
+
+            <input hidden type="file" #fileUpload (change)="UploadGeneratedPurchaseOrderPDF($event.target.files[0])">
+        </div>
+
+        <mat-progress-bar *ngIf="generatingPDF" mode="indeterminate">
+        </mat-progress-bar>
+
+    </div>
+
+    <p class="m-5 p-5">&nbsp;</p>
+
+    <div class="modal fade bottom" id="whatsappShareModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true" data-backdrop="true">
+        <div class="modal-dialog modal-frame modal-bottom modal-full-height modal-notify modal-primary" role="document">
+            <!--Content-->
+            <div class="modal-content">
+                <!--Body-->
+                <div class="modal-body">
+
+                    <h4 class="text-dark">WhatsApp share</h4>
+
+                    <form class="example-form">
+                        <mat-form-field class="=====example-full-width w-100">
+                            <mat-label>To</mat-label>
+                            <input matInput class="w-100" placeholder="Enter a WhatsApp number" name="shareWhatsappTo"
+                                [(ngModel)]="shareWhatsappTo">
+                        </mat-form-field>
+
+                        <mat-form-field class="example-full-width w-100">
+                            <mat-label>Leave a comment</mat-label>
+                            <textarea matInput class="w-100" rows="6" placeholder="Enter Something"
+                                name="shareWhatsappText" [(ngModel)]="shareWhatsappText"></textarea>
+                        </mat-form-field>
+                    </form>
+
+                    <button mat-stroked-button color="success" (click)="shareWhatsApp()">
+                        Sent
+                    </button>
+
+                </div>
+            </div>
+            <!--/.Content-->
+        </div>
+    </div>
+</div>

@@ -1,0 +1,262 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate">
+</mat-progress-bar>
+
+<h5 class="text-center text-primary">Raw Material Request</h5>
+
+<div class="row">
+    <div class="col">
+        <button class="btn btn-sm btn-primary float-right" (click)="showNewRequest = !showNewRequest">
+            <i class="fas fa-plus"></i>&nbsp;
+            New Raw Material Request
+        </button>
+    </div>
+</div>
+<div class="container border border-light" *ngIf="showNewRequest">
+    <div class="row">
+        <div class="col-12">
+            <h5 class="text-dark font-weight-bold">
+
+                <span *ngIf="rawMaterialRequest.id == 0 ">New Raw Material Request</span>
+                <span *ngIf="rawMaterialRequest.id > 0 ">Edit Raw Material Request - #{{rawMaterialRequest.id}}</span>
+
+            </h5>
+        </div>
+
+        <div class="col-12">
+            <input type="text" class="form-control" name="subject" [(ngModel)]="rawMaterialRequest.subject">
+        </div>
+
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <label>Manufacturing Product</label>
+            <ng-multiselect-dropdown [placeholder]="'Select Product'" [data]=" _products" [(ngModel)]="_selectedProduct"
+                (onDeSelect)="onProductDeSelect()" (onSelect)="onProductSelect($event);"
+                [settings]="_ProductsDropdownSettings">
+            </ng-multiselect-dropdown>
+        </div>
+
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <label>Request To</label>
+            <ng-multiselect-dropdown [placeholder]="'Select Request To'" [data]=" _agents" [(ngModel)]="_selectedAgent"
+                (onSelect)="rawMaterialRequest.requestTo = $event.emailId;" [settings]="_AgentsDropdownSettings">
+            </ng-multiselect-dropdown>
+        </div>
+    </div>
+
+    <div class="row p-2 justify-content-center" *ngIf="rawMaterialRequestProducts.length > 0">
+        <div class="col">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th style="width: 2%" scope="col">#</th>
+                            <th style="width: 40%" scope="col">Product</th>
+                            <th style="width: 30%" scope="col">Description</th>
+                            <th style="width: 10%" scope="col">In Stock</th>
+                            <th style="width: 10%" scope="col">Request Quantity</th>
+                        </tr>
+                    </thead>
+
+                    <tr *ngFor="let raw of rawMaterialRequestProducts;let i = index;">
+                        <td>
+                            {{i+1}}
+                        </td>
+                        <td>
+                            {{raw.mappedProductName}}
+                        </td>
+                        <td>
+                            <input type="text" class="form-control editFocus" name="description"
+                                [(ngModel)]="raw.description">
+                        </td>
+                        <td align="center">
+                            {{getInStock(raw.mappedProductId)}}
+                        </td>
+                        <td>
+                            <input type="number" class="form-control editFocus" name="quantity"
+                                [(ngModel)]="raw.quantity">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <label>Remarks</label>
+            <textarea class="form-control" name="remarks" id="remarks" rows="4"
+                [(ngModel)]="rawMaterialRequest.remarks"></textarea>
+        </div>
+
+        <div class="col-12">
+            <button [disabled]="saving" (click)="sendRawMaterialsRequest()" class="btn btn-md btn-primary float-right">
+                Send Requests
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="row m-1" *ngIf="rawMaterialRequestsByMe.length > 0">
+        <div class="col">
+            <h5 class="text-dark font-weight-bold">Requests by you</h5>
+            <mat-accordion>
+                <mat-expansion-panel [expanded]="request.rawMaterialRequest.id == expandId"
+                    *ngFor="let request of rawMaterialRequestsByMe">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <span class="text-primary">{{request.rawMaterialRequest.subject}}</span>
+                        </mat-panel-title>
+                        <mat-panel-description class="text-right">
+                            {{request.rawMaterialRequest.requestTo}}
+
+                            <span *ngIf="request.rawMaterialRequest.status == 'Requested'"
+                                class="badge badge-warning">Waiting For Approval</span>
+                            <span *ngIf="request.rawMaterialRequest.status == 'Approved'"
+                                class="badge badge-success">Approved</span>
+                            <span *ngIf="request.rawMaterialRequest.status == 'Rejected'"
+                                class="badge badge-danger"><del>Rejected</del></span>
+
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <h5 class="text-dark">{{request.rawMaterialRequest.productName}}</h5>
+                        </div>
+                        <div class="col-12">
+                            <h5 class="text-dark">Raw Materials</h5>
+                        </div>
+                        <div class="col">
+                            <div *ngFor="let prod of request.rawMaterialRequestProducts;let i = index;">
+                                <p class="text-muted">
+                                    {{i+1}}. {{prod.mappedProductName}} - Qty : {{prod.quantity}}
+                                    <br>
+                                    {{prod.description}}
+                                </p>
+                                <hr>
+                            </div>
+
+                            <p class="text-muted">
+                                <span class="float-left small">
+                                    requested at
+                                    {{request.rawMaterialRequest.createddatetime | date:'MMM d, yyyy h:mm a'}}
+                                </span>
+                            </p>
+                        </div>
+                        <div class="col-12" *ngIf="request.rawMaterialRequest.status != 'Requested'">
+                            <h5 class="text-dark">Approve/Reject Remarks</h5>
+                            <span [innerHTML]="request.rawMaterialRequest.approveRejectRemarks"></span>
+                            <!-- {{request.rawMaterialRequest.approveRejectRemarks}} -->
+                        </div>
+                    </div>
+
+                    <div *ngIf="request.rawMaterialRequest.status == 'Requested'">
+                        <button class="btn btn-sm btn-indigo" (click)="editRequest(request);">
+                            <i class="fas fa-edit text-white" aria-hidden="true"></i>&nbsp;&nbsp;Edit
+                        </button>
+                        <button class="btn btn-sm btn-red" (click)="deleteRequest(request)">
+                            <i class="fas fa-trash text-white" aria-hidden="true"></i>&nbsp;Delete
+                        </button>
+                    </div>
+                    <span class="text-success" *ngIf="request.rawMaterialRequest.status == 'Approved'">
+                        {{request.rawMaterialRequest.status}} at
+                        {{request.rawMaterialRequest.approvedDate | date:'MMM dd, yyyy hh:mm a'}}
+                    </span>
+                    <span class="text-danger" *ngIf="request.rawMaterialRequest.status == 'Rejected'">
+                        {{request.rawMaterialRequest.status}} at
+                        {{request.rawMaterialRequest.approvedDate | date:'MMM dd, yyyy hh:mm a'}}
+                    </span>
+
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+    </div>
+
+    <div class="row m-1" *ngIf="rawMaterialRequestsToMe.length > 0">
+        <div class="col">
+            <h5 class="text-dark font-weight-bold">Requests to you</h5>
+
+            <mat-accordion>
+                <mat-expansion-panel [expanded]="request.rawMaterialRequest.id == expandId"
+                    *ngFor="let request of rawMaterialRequestsToMe">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <span class="text-primary">{{request.rawMaterialRequest.subject}}</span>
+                        </mat-panel-title>
+                        <mat-panel-description class="text-right">
+                            {{request.rawMaterialRequest.requestBy}}
+
+                            <span *ngIf="request.rawMaterialRequest.status == 'Requested'"
+                                class="badge badge-warning">Requested</span>
+                            <span *ngIf="request.rawMaterialRequest.status == 'Approved'"
+                                class="badge badge-success">Approved</span>
+                            <span *ngIf="request.rawMaterialRequest.status == 'Rejected'"
+                                class="badge badge-danger"><del>Rejected</del></span>
+
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <h5 class="text-dark">{{request.rawMaterialRequest.productName}}</h5>
+                        </div>
+                        <div class="col-12">
+                            <h5 class="text-dark">Raw Materials</h5>
+                        </div>
+                        <div class="col">
+
+                            <div *ngFor="let prod of request.rawMaterialRequestProducts;let i = index;">
+                                <p class="text-muted">
+                                    {{i+1}}. {{prod.mappedProductName}} - Qty : {{prod.quantity}}
+                                    <br>
+                                    {{prod.description}}
+                                </p>
+                                <hr>
+                            </div>
+
+                            <p class="text-muted">
+                                <span class="float-left small">
+                                    requested at
+                                    {{request.rawMaterialRequest.createddatetime | date:'MMM d, yyyy h:mm a'}}
+                                </span>
+                            </p>
+                        </div>
+                        <div class="col-12" *ngIf="request.rawMaterialRequest.status == 'Requested'">
+                            <label>Approve/Reject Remarks</label>
+                            <textarea class="form-control" name="approveRejectRemarks" id="approveRejectRemarks"
+                                rows="4" [(ngModel)]="request.rawMaterialRequest.approveRejectRemarks"></textarea>
+                        </div>
+
+
+                        <div class="col-12" *ngIf="request.rawMaterialRequest.status != 'Requested'">
+                            <h5 class="text-dark">Approve/Reject Remarks</h5>
+                            <span [innerHTML]="request.rawMaterialRequest.approveRejectRemarks"></span>
+                        </div>
+                    </div>
+
+                    <div *ngIf="request.rawMaterialRequest.status == 'Requested'">
+                        <button class="btn btn-sm btn-indigo" (click)="approveRequest(request);">
+                            <i class="fas fa-edit text-white" aria-hidden="true"></i>&nbsp;&nbsp;Approve
+                        </button>
+                        <button class="btn btn-sm btn-red" (click)="rejectRequest(request)">
+                            <i class="fas fa-trash text-white" aria-hidden="true"></i>&nbsp;Reject
+                        </button>
+                    </div>
+                    <span class="text-success" *ngIf="request.rawMaterialRequest.status == 'Approved'">
+                        {{request.rawMaterialRequest.status}}
+                        at {{request.rawMaterialRequest.approvedDate | date:'MMM dd, yyyy hh:mm a'}}
+                    </span>
+                    <span class="text-danger"
+                        title="{{request.rawMaterialRequest.approvedDate | date:'MMM dd, yyyy hh:mm a'}}"
+                        *ngIf="request.rawMaterialRequest.status == 'Rejected'">
+                        {{request.rawMaterialRequest.status}} at
+                        {{request.rawMaterialRequest.approvedDate | date:'MMM dd, yyyy hh:mm a'}}
+                    </span>
+
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+    </div>
+</div>

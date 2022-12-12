@@ -1,0 +1,154 @@
+<div class="container p-2 mb-5">
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10">
+            <p class="indigo-text h4 text-center" style="font-family: bookman old style;">Amc Report</p>
+            <hr style="width:100%;text-align:left;margin-left:0">
+            <div class="row justify-content-center">
+                <div class="col-10">
+                    <br>
+                    <div class="row justify-content-center">
+                        <div class="col-6">
+                            <label for="instituteName">Institute Name</label>
+                            <select id="instituteName" name="instituteName" [(ngModel)]="selectedinstitute"
+                                class="custom-select form-control">
+                                <option value="">--select--</option>
+                                <option *ngFor="let institute of institute" value="{{institute.institute_name}}">
+                                    {{institute.institute_name}}</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label for="product">ServiceType</label>
+                            <select id="product" name="product" [(ngModel)]="product"
+                                class="custom-select form-control">
+                                <option value="">--select--</option>
+                                <option value="AMC">AMC</option>
+                                <option value="Warranty">Warranty</option>
+                                <option value="Service Payment">Service Payment</option>
+                                <option value="Reinstallation">Reinstallation</option>
+                                <option value="New Module Needed">New Module Needed</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row justify-content-center">
+                        <div class="col-4">
+                            <label for="validFromDate">Vailid-From Date</label>
+
+                            <input class="form-control" (focus)="fromdp.toggleCalendar()" placeholder="Select a date"
+                                angular-mydatepicker name="validFromDate" [(ngModel)]="validFromDate"
+                                [options]="myDatePickerOptions" #fromdp="angular-mydatepicker" autocomplete="off" />
+
+                            <div class="input-group-append">
+                                <i *ngIf="fromdp.isDateValid()" (click)="fromdp.clearDate()"
+                                    class="far fa-times-circle"></i>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <label for="validToDate">Vailid-To Date</label>
+                            <input class="form-control" (focus)="todp.toggleCalendar()" placeholder="Select a date"
+                                angular-mydatepicker name="validToDate" [(ngModel)]="validToDate"
+                                [options]="myDatePickerOptions" #todp="angular-mydatepicker" autocomplete="off" />
+
+                            <div class="input-group-append">
+                                <i *ngIf="todp.isDateValid()" (click)="todp.clearDate()"
+                                    class="far fa-times-circle"></i>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <label for="paymode">PayMode</label>
+                            <!-- <input class="form-control input-lg" type="text" id="paymode" placeHolder="Enter PayMode"
+                                name="paymode" [(ngModel)]="paymode" /> -->
+                            <select id="paymode" name="paymode" [(ngModel)]="paymode"
+                                class="custom-select form-control">
+                                <option value="">--select--</option>
+                                <option value="Cash">Cash</option>
+                                <option value="Cheque">Cheque</option>
+                                <option value="Online Payment">Online Payment</option>
+                                <option value="Others">Others</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row justify-content-center">
+                        <div class="col-4">
+                            <label for="paidFromDate">Paid-From Date</label>
+
+                            <input class="form-control" (focus)="frompdp.toggleCalendar()" placeholder="Select a date"
+                                angular-mydatepicker name="paidFromDate" [(ngModel)]="paidFromDate"
+                                [options]="myDatePickerOptions" #frompdp="angular-mydatepicker" autocomplete="off" />
+
+                            <div class="input-group-append">
+                                <i *ngIf="frompdp.isDateValid()" (click)="frompdp.clearDate()"
+                                    class="far fa-times-circle"></i>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <label for="paidToDate">Paid-To Date</label>
+
+                            <input class="form-control" (focus)="topdp.toggleCalendar()" placeholder="Select a date"
+                                angular-mydatepicker name="paidToDate" [(ngModel)]="paidToDate"
+                                [options]="myDatePickerOptions" #topdp="angular-mydatepicker" autocomplete="off" />
+
+                            <div class="input-group-append">
+                                <i *ngIf="topdp.isDateValid()" (click)="topdp.clearDate()"
+                                    class="far fa-times-circle"></i>
+                            </div>
+                        </div>
+                        <div class="col-4"></div>
+                    </div>
+                    <br>
+                    <div class="row text-center">
+                        <div class="col">
+                            <button class="btn btn-md btn-primary" (click)="report()">
+                                Get&nbsp;Report
+                            </button>&nbsp;&nbsp;
+                            <button class="btn btn-md btn-primary" (click)="clear()">
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="table-responsive text-nowrap" *ngIf="amcList.length > 0">
+        <!--Table-->
+        <table class="table table-striped">
+            <!--Table head-->
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>AMC No</th>
+                    <th>Institute Name</th>
+                    <th>Invoice Date</th>
+                    <th>Paid Amount</th>
+                    <th>Paid Date</th>
+                    <th>Validity From-Date</th>
+                    <th>Validity To-Date</th>
+                    <th>PayMode</th>
+                    <th>Products</th>
+                </tr>
+            </thead>
+            <!--Table head-->
+            <!--Table body-->
+            <tbody>
+                <tr *ngFor="let amc of amcList ; let i=index">
+                    <th scope="row">{{i+1}}</th>
+                    <td>{{amc.amc_id}}</td>
+                    <td>{{amc.institute_name}}</td>
+                    <td>{{amc.inv_date | date:'dd/MM/yyyy'}}</td>
+                    <td>{{amc.amc_amount}}</td>
+                    <td>{{amc.paid_date | date:'dd/MM/yyyy'}}</td>
+                    <td>{{amc.from_date | date:'dd/MM/yyyy'}}</td>
+                    <td>{{amc.to_date | date:'dd/MM/yyyy'}}</td>
+                    <td>{{amc.pay_mode}}</td>
+                    <td>{{amc.name}}</td>
+                </tr>
+            </tbody> <!--Table body-->
+        </table>
+        <!--Table-->
+    </div>

@@ -1,0 +1,117 @@
+<div class="container">
+    <div class="row pointer filterdiv mt-0 pt-0 bg-primary text-white justify-content-center"
+        (click)="showFilterScreen = !showFilterScreen">
+        <div class="col text-center">
+            <span> <span class="small"> Fabrication Filters &nbsp;&nbsp;</span>
+                <i [hidden]="showFilterScreen" class="fa fa-angle-up"></i>
+                <i [hidden]="!showFilterScreen" class="fa fa-angle-down"></i>
+            </span>
+        </div>
+    </div>
+</div>
+
+<div class="container" [hidden]="!showFilterScreen">
+
+    <div class="row">
+        <div class="col-12">
+            <p class="indigo-text h4 text-center"> Fabrication Filter
+            </p>
+            <hr style="width:100%;text-align:left;margin-left:0">
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <label>Subject</label>
+            <input type="text" class="form-control" name="subject" [placeholder]="'Enter Subject'"
+                [(ngModel)]="_search_filters.subject">
+        </div>
+
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <label>Manufacturing Product</label>
+            <ng-multiselect-dropdown [placeholder]="'Select Product'" [data]="_products"
+                [(ngModel)]="_search_filters.products" [settings]="_ProductsDropdownSettings">
+            </ng-multiselect-dropdown>
+        </div>
+
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <label>Request By</label>
+            <ng-multiselect-dropdown [placeholder]="'Select Request By'" [data]="_agents"
+                [(ngModel)]="_search_filters.requestBy" [settings]="_AgentsDropdownSettings">
+            </ng-multiselect-dropdown>
+        </div>
+
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <label>Request To</label>
+            <ng-multiselect-dropdown [placeholder]="'Select Request To'" [data]=" _agents"
+                [(ngModel)]="_search_filters.requestTo" [settings]="_AgentsDropdownSettings">
+            </ng-multiselect-dropdown>
+        </div>
+
+        <div class="col-sm-6 col-md-6 col-lg-3">
+            <label for="dob" style="margin-bottom: 5px;"> Requested Date </label>
+            <div class="input-group">
+                <input class="form-control" (focus)="requestDatedp.toggleCalendar()" placeholder="choose Requested Date"
+                    angular-mydatepicker name="requestDateObject" [(ngModel)]="_search_filters.requestDateObject"
+                    (dateChanged)="_search_filters.requestDateFrom = $event.dateRange.beginJsDate;_search_filters.requestDateFrom = $event.dateRange.endJsDate;"
+                    [options]="myDatePickerOptions" #requestDatedp="angular-mydatepicker" autocomplete="off" />
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <i (click)="requestDatedp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-6 col-lg-3">
+            <label for="dob" style="margin-bottom: 5px;"> Approved/Rejected Date </label>
+            <div class="input-group">
+                <input class="form-control" (focus)="approvedDatedp.toggleCalendar()"
+                    placeholder="choose Approved/Rejected Date" angular-mydatepicker name="approvedDateObject"
+                    [(ngModel)]="_search_filters.approvedDateObject"
+                    (dateChanged)="_search_filters.approvedDateFrom = $event.dateRange.beginJsDate;_search_filters.approvedDateTo = $event.dateRange.endJsDate;"
+                    [options]="myDatePickerOptions" #approvedDatedp="angular-mydatepicker" autocomplete="off" />
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <i (click)="approvedDatedp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <label>Status</label>
+            <select class="form-control" name="status" id="status" [(ngModel)]="_search_filters.status">
+                <option value="">--select--</option>
+                <option value="Requested">Requested</option>
+                <option value="Approved">Approved</option>
+                <option value="Rejected">Rejected</option>
+            </select>
+        </div>
+
+        <div class="col-12 text-center mt-2">
+            <button class="btn btn-md btn-primary" (click)="loadFabricationReport()">Submit</button>
+            <button class="btn btn-sm btn-outline-primary" (click)="clearFilters()">Clear</button>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <p class="indigo-text h4 text-center"> Fabrication Report </p>
+        </div>
+        <div class="col">
+            <ag-grid-angular enableCellTextSelection="true" *ngIf="!loading" [rowData]="rawMaterialRequests"
+                style="width: 100%; height: 500px;" class="ag-theme-balham p-2" [columnDefs]="columnDefs"
+                [rowSelection]="'single'" [paginationAutoPageSize]="true" [pagination]="true">
+            </ag-grid-angular>
+
+            <div class="item" *ngIf="loading">
+                <ngx-skeleton-loader count="8"></ngx-skeleton-loader>
+            </div>
+
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,100 @@
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark indigo">
+  <img routerLink="" src="{{logourl}}" width="50" height="40" class="d-inline-block align-top pointer" alt="logo">
+  &nbsp;&nbsp;
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav" *ngIf="isLoggedIn">
+      <li class="nav-item">
+        <a class="nav-link" routerLink=""><b>Home</b></a>
+      </li>
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          <b>Institute's</b>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink"><a class="dropdown-item p-0 pl-3 text-muted"
+            *ngIf="loginAgentType == 1" routerLink="institute/register"><b>Register Institute</b></a>
+          <a class="dropdown-item p-0 pl-3 text-muted" *ngIf="loginAgentType == 1"
+            routerLink="institute/inst-product"><b>View/Add
+              Inst Products</b></a>
+          <a class="dropdown-item p-0 pl-3 text-muted" *ngIf="loginAgentType == 1"
+            routerLink="institute/amc-entry"><b>Amc Entry</b></a>
+          <a class="dropdown-item p-0 pl-3 text-muted" routerLink="institute/institute-detail"><b>Institute
+              Detail</b></a>
+        </div>
+      </li>
+
+      <li *ngIf="loginAgentType == 1" class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          <b>Agents</b>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item p-0 pl-3 text-muted" routerLink="agent-register"><b>Add Agent</b></a>
+          <a class="dropdown-item p-0 pl-3 text-muted" routerLink="view-agents"><b>View Agents</b></a>
+        </div>
+      </li>
+
+      <li *ngIf="loginAgentType == 1" class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          <b>Products</b>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item p-0 pl-3 text-muted" routerLink="add-product"><b>Add Products</b></a>
+          <a class="dropdown-item p-0 pl-3 text-muted" routerLink="view-product"><b>View All Products</b></a>
+
+        </div>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" routerLink="add-ticket"><b>New Ticket</b></a>
+      </li>
+      <li>&nbsp;</li>
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          <b>Reports</b>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item p-0 pl-3 text-muted" routerLink="reports/ticket-report"><b>Ticket Report</b></a>
+          <a class="dropdown-item p-0 pl-3 text-muted" routerLink="reports/institute-report"><b>Institute Report</b></a>
+          <a class="dropdown-item p-0 pl-3 text-muted" routerLink="reports/amc-report"><b>AMC Report</b></a>
+        </div>
+      </li>
+      <li *ngIf="loginAgentType == 1" class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          <b>Admin</b>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item p-0 pl-3 text-muted" routerLink="admin/generate-working-days"><b>Generate Working
+              Days</b></a>
+          <a class="dropdown-item p-0 pl-3 text-muted" routerLink="admin/view-working-days"><b>View Working Days</b></a>
+          <a class="dropdown-item p-0 pl-3 text-muted" routerLink="admin/attendance"><b>Attendance</b></a>
+          <a class="dropdown-item p-0 pl-3 text-muted" routerLink="admin/site-attendance"><b>Site Attendance</b></a>
+          <a class="dropdown-item p-0 pl-3 text-muted" routerLink="admin/gmail-tickets"><b>Gmail Tickets</b></a>
+          <a class="dropdown-item p-0 pl-3 text-muted" routerLink="admin/amc-records"><b>AMC Records</b></a>
+
+        </div>
+      </li>
+      <li>&nbsp;</li>
+    </ul>
+    <ul class="navbar-nav nav-flex-icons ml-auto">
+      <li class="nav-item">
+        <a *ngIf="isLoggedIn" class="nav-link btn btn-sm btn-outline-white" id="profile" aria-haspopup="true"
+          (click)="logout()" aria-expanded="false">
+          Logoutin
+        </a>
+        <a *ngIf="!isLoggedIn" class="nav-link btn btn-sm btn-outline-white" id="profile" aria-haspopup="true"
+          routerLink="/login" aria-expanded="false">
+          Login
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>

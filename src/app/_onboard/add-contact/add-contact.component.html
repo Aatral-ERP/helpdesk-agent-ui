@@ -1,0 +1,122 @@
+<div class="container">
+
+
+    <div class="row">
+        <div class="col-3">
+            <div class="card-header1">
+                <i class="fa fa-user" aria-hidden="true"></i>&nbsp; My Account
+                <!-- <div class="float-right"><i class="fa fa-chevron-up" aria-hidden="true"></i></div> -->
+            </div>
+
+            <ul class="list-group list-group-flush">
+                <a routerLink="/onboard/register" class="list-group-item list-group-item-action">My Details</a>
+                <a routerLink="/onboard/contacts"
+                    class="list-group-item list-group-item-action">Contcats/Sub-Accounts</a>
+                <a routerLink="/onboard/change-password" class="list-group-item list-group-item-action">Change
+                    Password</a>
+                <li class="list-group-item list-group-item-action" (click)="logout()"><i class="fa fa-sign-out"
+                        aria-hidden="true"></i>&nbsp;Logout</li>
+            </ul>
+        </div>
+        <div class="col-9">
+
+            <p class="indigo-text h3 text-left">Contacts/Sub-Accounts</p>
+            <br>
+            <div class="row">
+                <ul class="list-group list-group-flush">
+                    <a routerLink="/onboard/contacts" class="list-group-item list-group-item-action text-success h5"><i
+                            class="fa fa-users" aria-hidden="true"></i>View All Contacts</a>
+
+                </ul>
+            </div>
+            <br>
+            <hr style="width:100%;text-align:left;margin-left:0">
+            <div class="row">
+                <div class="col-6">
+                    <label for="firstName">First Name</label>
+                    <input class="form-control input-lg" type="text" id="firstName" placeHolder="Enter First Name"
+                        name="firstName" [(ngModel)]="firstName" />
+                </div>
+                <div class="col-6">
+                    <label for="lastName">Last Name</label>
+                    <input class="form-control input-lg" type="text" id="lastName" placeHolder="Enter Last Name"
+                        name="lastName" [(ngModel)]="lastName" />
+                </div>
+            </div>
+            <br>
+            <div class="row">
+
+                <div class="col-6">
+                    <label for="emailId">Email-ID</label>
+                    <input class="form-control input-lg" type="text" id="emailId" placeHolder="Enter MailId"
+                        name="emailId" [(ngModel)]="emailId" />
+                </div>
+                <div class="col-6">
+                    <label for="phone">Mobile Number</label>
+                    <input class="form-control input-lg" type="text" id="phone" placeHolder="Enter Mobile Number"
+                        maxlength="10" name="phone" [(ngModel)]="phone" />
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-6">
+                    <label for="street1">Address 1</label>
+                    <input class="form-control input-lg" type="text" id="street1" placeHolder="Enter Address 1"
+                        name="street1" [(ngModel)]="street1" />
+                </div>
+                <div class="col-6">
+                    <label for="street2">Address 2</label>
+                    <input class="form-control input-lg" type="text" id="street2" placeHolder="Enter Address 2"
+                        name="street2" [(ngModel)]="street2" />
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-6">
+                    <label for="city">City</label>
+                    <input class="form-control input-lg" type="text" id="city" placeHolder="Enter City" name="city"
+                        [(ngModel)]="city" />
+                </div>
+                <div class="col-6">
+                    <label for="state">State</label>
+                    <input class="form-control input-lg" type="text" id="state" placeHolder="Enter State" name="state"
+                        [(ngModel)]="state" />
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-6">
+                    <label for="zipcode">Country</label>
+                    <input class="form-control input-lg" type="text" id="country" placeHolder="Enter Country"
+                        name="country" [(ngModel)]="country" />
+                </div>
+                <div class="col">
+                    <label for="zipcode">Pin Code</label>
+                    <input class="form-control input-lg" type="text" id="zipcode" placeHolder="Enter PinCode"
+                        name="zipcode" [(ngModel)]="zipcode" />
+                </div>
+                <div class="col">
+                    <label for="isBlocked">Blocked</label>
+                    <select class="form-control" name="isBlocked" id="isBlocked" [(ngModel)]="isBlocked">
+                        <option value="0">Not Blocked</option>
+                        <option value="1">Blocked</option>
+                    </select>
+                </div>
+            </div>
+            <br>
+            <div class="row text-center">
+                <div class="col">
+                    <button class="btn btn-md btn-primary" (click)="saveContact()">
+                        Save
+                    </button>&nbsp;&nbsp;
+                    <button class="btn btn-md btn-primary" (click)="deleteContact()" *ngIf="showDelete">
+                        Delete
+                    </button>&nbsp;&nbsp;
+                    <button class="btn btn-md btn-primary" (click)="clear()">
+                        Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

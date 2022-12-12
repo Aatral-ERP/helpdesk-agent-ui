@@ -1,0 +1,368 @@
+<div class="container">
+    <h5 class="text-primary text-center">Project Implementations</h5>
+
+    <div class="row">
+        <div class="col-12">
+            <label>Project Started From To Date
+                <i [matMenuTriggerFor]="menu" class="fas fa-cog text-right pointer"></i>
+
+                <mat-menu #menu="matMenu">
+                    <button (click)="changeDate('1')" mat-menu-item>Last 1 month</button>
+                    <button (click)="changeDate('3')" mat-menu-item>Last 3 month</button>
+                    <button (click)="changeDate('6')" mat-menu-item>Last 6 month</button>
+                    <button (click)="changeDate('12')" mat-menu-item>Last 12 month</button>
+                </mat-menu>
+            </label>
+
+            <div class="input-group">
+                <input class="form-control" (focus)="datesdp.toggleCalendar()" placeholder="Select From - To Date range"
+                    angular-mydatepicker name="dates"
+                    (dateChanged)="fromDate = $event.dateRange.beginJsDate;toDate = $event.dateRange.endJsDate;"
+                    [(ngModel)]="fromToObject" [options]="myDatePickerOptions" #datesdp="angular-mydatepicker"
+                    autocomplete="off" />
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <i (click)="datesdp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 text-center mt-2">
+            <button class="btn btn-md btn-primary" (click)="loadProjectImplementations()">Submit</button>
+            <button class="btn btn-sm btn-outline-primary" (click)="clearFilters()">Clear</button>
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-info text-center p-2" role="alert" [hidden]="dpims.length > 0">
+
+    <span *ngIf="!loading" class="pl-2">No Project Implementations Found...</span>
+    <span *ngIf="loading" class="pl-2">loading...</span>
+
+</div>
+
+<div class="row p-2">
+    <div class="col">
+        <mat-accordion>
+            <mat-expansion-panel *ngFor="let dpim of dpims">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <h6 class="text-primary">{{dpim.deal.institute.instituteName}}
+                        </h6>
+                    </mat-panel-title>
+                    <mat-panel-description class="text-right">
+
+                        <div *ngIf="dpim.projectImplementation.manufacturingAgent == auth.getLoginEmailId()">
+                            <span class="badge badge-warning"
+                                *ngIf="(dpim.projectImplementation.manufacturingFinishedDateTime == null)">
+                                Pending Manufacturing
+                            </span>
+                            <span class="badge badge-info"
+                                *ngIf="(dpim.projectImplementation.manufacturingFinishedDateTime != null && dpim.projectImplementation.manufacturingApprovedDateTime == null)">
+                                Waiting for Manufacturing Confirmation from Admin
+                            </span>
+                            <span class="badge badge-success"
+                                *ngIf="dpim.projectImplementation.manufacturingFinishedDateTime != null && dpim.projectImplementation.manufacturingApprovedDateTime != null">
+                                Approved Manufacturing by {{dpim.projectImplementation.manufacturingApprovedBy}}
+                            </span>
+                        </div>
+
+                        <div *ngIf="dpim.projectImplementation.deliveryAgent == auth.getLoginEmailId()">
+                            <span class="badge badge-warning"
+                                *ngIf="(dpim.projectImplementation.deliveryFinishedDateTime == null)">
+                                Pending Delivery
+                            </span>
+                            <span class="badge badge-info"
+                                *ngIf="(dpim.projectImplementation.deliveryFinishedDateTime != null && dpim.projectImplementation.deliveryApprovedDateTime == null)">
+                                Waiting for Delivery Confirmation from Admin
+                            </span>
+                            <span class="badge badge-success"
+                                *ngIf="(dpim.projectImplementation.deliveryFinishedDateTime != null && dpim.projectImplementation.deliveryApprovedDateTime != null)">
+                                Approved Delivery by {{dpim.projectImplementation.deliveryApprovedBy}}
+                            </span>
+                        </div>
+
+                        <div *ngIf="dpim.projectImplementation.deliveryAgent == auth.getLoginEmailId()">
+                            <span class="badge badge-warning"
+                                *ngIf="(dpim.projectImplementation.installedFinishedDateTime == null && dpim.projectImplementation.installedAgent == auth.getLoginEmailId())">
+                                Pending Installation
+                            </span>
+                            <span class="badge badge-info"
+                                *ngIf="(dpim.projectImplementation.installedFinishedDateTime != null && dpim.projectImplementation.installedApprovedDateTime == null && dpim.projectImplementation.installedAgent == auth.getLoginEmailId())">
+                                Waiting for Installation Confirmation from Admin
+                            </span>
+                            <span class="badge badge-success"
+                                *ngIf="(dpim.projectImplementation.installedFinishedDateTime != null && dpim.projectImplementation.installedApprovedDateTime != null && dpim.projectImplementation.installedAgent == auth.getLoginEmailId())">
+                                Approved Installation by {{dpim.projectImplementation.installedApprovedBy}}
+                            </span>
+                        </div>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div class="row">
+                    <div class="col">
+
+                        <small class="text-muted"> #{{dpim.deal.id}}</small>
+
+                        <p class="text-muted pt-3">
+                            {{dpim.deal.institute.street1}},{{dpim.deal.institute.street2}},{{dpim.deal.institute.city}},
+                            {{dpim.deal.institute.state}},{{dpim.deal.institute.Country}} -
+                            {{dpim.deal.institute.zipcode}}.
+                        </p>
+
+                        <mat-chip-list>
+                            <mat-chip [hidden]="dpim.deal.institute.phone==null || dpim.deal.institute.phone==''"
+                                color="primary" selected><i class="fas fa-phone pr-2"> </i>
+                                {{dpim.deal.institute.phone}}
+                            </mat-chip>
+                            <mat-chip
+                                [hidden]="dpim.deal.institute.alternatePhone==null || dpim.deal.institute.alternatePhone==''"
+                                color="primary" selected><i class="fas fa-phone pr-2"> </i>
+                                {{dpim.deal.institute.alternatePhone}}
+                            </mat-chip>
+
+                            <mat-chip [hidden]="dpim.deal.institute.emailId==null || dpim.deal.institute.emailId==''"
+                                color="warn" selected><i class="far fa-envelope-open pr-2">
+                                </i>{{dpim.deal.institute.emailId}}
+                            </mat-chip>
+                            <mat-chip
+                                [hidden]="dpim.deal.institute.alternateEmailId==null || dpim.deal.institute.alternateEmailId==''"
+                                color="warn" selected><i
+                                    class="far fa-envelope-open pr-2"></i>{{dpim.deal.institute.alternateEmailId}}
+                            </mat-chip>
+                        </mat-chip-list>
+
+                        <hr>
+
+                        <h5>Product Details</h5>
+                        <p class="text-muted" *ngFor="let _dp of dpim.dealProducts;let i = index;">
+                            {{i+1}}) {{_dp.name}} - Qty({{_dp.quantity}})
+                        </p>
+
+                        <hr>
+
+                        <div class="row">
+                            <div class="col text-center">
+                                <div *ngIf="dpim.projectImplementation.manufacturingAgent == auth.getLoginEmailId()">
+                                    <h5 class="text-left">Manufacturing</h5>
+                                    <span class="small text-muted">Assigned Manufacturing by
+                                        {{dpim.projectImplementation.manufacturingAssignedBy}}
+                                        at
+                                        {{dpim.projectImplementation.manufacturingAssignedDateTime | date:'MMM dd,
+                                        yyyy hh:mm a'}}</span>
+
+                                    <br>
+                                    <button *ngIf="dpim.projectImplementation.manufacturingFinishedDateTime == null"
+                                        class="text-center m-1" mat-flat-button
+                                        (click)="markasManufacturingCompleted(dpim.projectImplementation)"
+                                        class="btn btn-sm m-1 btn-primary btn-block">&nbsp;Mark as Manufacturig
+                                        Completed</button>
+                                    <span *ngIf="dpim.projectImplementation.manufacturingFinishedDateTime != null"
+                                        class="small text-muted">Marked as Manufacturing Completed by
+                                        {{dpim.projectImplementation.manufacturingFinishedBy}} at
+                                        {{dpim.projectImplementation.manufacturingFinishedDateTime | date:'MMM dd,
+                                        yyyy hh:mm a'}}</span>
+                                    <br>
+                                    <span
+                                        *ngIf="dpim.projectImplementation.manufacturingFinishedDateTime != null && dpim.projectImplementation.manufacturingApprovedDateTime == null"
+                                        class="small text-muted">Waiting for Approval from Admin</span>
+                                    <span
+                                        *ngIf="dpim.projectImplementation.manufacturingFinishedDateTime != null && dpim.projectImplementation.manufacturingApprovedDateTime != null"
+                                        class="small text-muted">Approved By
+                                        {{dpim.projectImplementation.manufacturingApprovedBy}} at
+                                        {{dpim.projectImplementation.manufacturingApprovedDateTime | date:'MMM dd,
+                                        yyyy hh:mm a'}}</span>
+                                    <br>
+                                    <span class="float-left pointer"
+                                        (click)="getAllDealProjectImplementationComments(dpim.projectImplementation,'Manufacturing')">
+                                        <u>View Status Update Remarks</u>
+                                    </span>
+                                    <span class="float-right">
+                                        <button class="btn btn-sm btn-primary"
+                                            *ngIf="dpim.projectImplementation.status == 'Created'"
+                                            (click)="openAddCommentModal(dpim.projectImplementation)">
+                                            Add Status Update Remarks
+                                        </button>
+                                    </span>
+                                </div>
+                                <hr>
+                                <div *ngIf="dpim.projectImplementation.deliveryAgent == auth.getLoginEmailId()">
+                                    <h5 class="text-left">Delivery</h5>
+                                    <span class="small text-muted">Assigned Delivery by
+                                        {{dpim.projectImplementation.deliveryAssignedBy}}
+                                        at
+                                        {{dpim.projectImplementation.deliveryAssignedDateTime | date:'MMM dd, yyyy
+                                        hh:mm a'}}</span>
+
+                                    <br>
+                                    <button *ngIf="dpim.projectImplementation.deliveryFinishedDateTime == null"
+                                        class="text-center m-1" mat-flat-button
+                                        (click)="markasDeliveryCompleted(dpim.projectImplementation)"
+                                        class="btn btn-sm m-1 btn-primary btn-block">&nbsp;Mark as delivery
+                                        Completed</button>
+                                    <span *ngIf="dpim.projectImplementation.deliveryFinishedDateTime != null"
+                                        class="small text-muted">Marked as Manufactured by
+                                        {{dpim.projectImplementation.deliveryFinishedBy}} at
+                                        {{dpim.projectImplementation.deliveryFinishedDateTime | date:'MMM dd, yyyy
+                                        hh:mm a'}}</span>
+                                    <br>
+                                    <span
+                                        *ngIf="dpim.projectImplementation.deliveryFinishedDateTime != null && dpim.projectImplementation.deliveryApprovedDateTime == null"
+                                        class="small text-muted">Waiting for Approval from Admin</span>
+                                    <span
+                                        *ngIf="dpim.projectImplementation.deliveryFinishedDateTime != null && dpim.projectImplementation.deliveryApprovedDateTime != null"
+                                        class="small text-muted">Approved By
+                                        {{dpim.projectImplementation.deliveryApprovedBy}} at
+                                        {{dpim.projectImplementation.deliveryApprovedDateTime | date:'MMM dd, yyyy
+                                        hh:mm a'}}</span>
+
+                                    <span class="float-left pointer"
+                                        (click)="getAllDealProjectImplementationComments(dpim.projectImplementation,'Delivery')">
+                                        <u>View Status Update Remarks</u>
+                                    </span>
+                                    <span class="float-right">
+                                        <button class="btn btn-sm btn-primary"
+                                            *ngIf="dpim.projectImplementation.status == 'Manufactured'"
+                                            (click)="openAddCommentModal(dpim.projectImplementation)">
+                                            Add Status Update Remarks
+                                        </button>
+                                    </span>
+                                </div>
+                                <hr>
+                                <div *ngIf="dpim.projectImplementation.installedAgent == auth.getLoginEmailId()">
+                                    <h5 class="text-left">Installation</h5>
+                                    <span class="small text-muted">Assigned Installation by
+                                        {{dpim.projectImplementation.installedAssignedBy}}
+                                        at
+                                        {{dpim.projectImplementation.deliveryAssignedDateTime | date:'MMM dd, yyyy
+                                        hh:mm a'}}</span>
+
+                                    <br>
+                                    <button *ngIf="dpim.projectImplementation.installedFinishedDateTime == null"
+                                        class="text-center m-1" mat-flat-button
+                                        (click)="markasInstallationCompleted(dpim.projectImplementation)"
+                                        class="btn btn-sm m-1 btn-primary btn-block">&nbsp;Mark as Installation
+                                        Completed</button>
+                                    <span *ngIf="dpim.projectImplementation.installedFinishedDateTime != null"
+                                        class="small text-muted">Marked as Installation Completed by
+                                        {{dpim.projectImplementation.installedFinishedBy}} at
+                                        {{dpim.projectImplementation.installedFinishedDateTime | date:'MMM dd, yyyy
+                                        hh:mm a'}}</span>
+                                    <br>
+                                    <span
+                                        *ngIf="dpim.projectImplementation.installedFinishedDateTime != null && dpim.projectImplementation.installedApprovedDateTime == null"
+                                        class="small text-muted">Waiting for Approval from Admin</span>
+                                    <span
+                                        *ngIf="dpim.projectImplementation.installedFinishedDateTime != null && dpim.projectImplementation.installedApprovedDateTime != null"
+                                        class="small text-muted">Approved By
+                                        {{dpim.projectImplementation.installedApprovedBy}} at
+                                        {{dpim.projectImplementation.installedApprovedDateTime | date:'MMM dd, yyyy
+                                        hh:mm a'}}</span>
+
+                                    <span class="float-left pointer"
+                                        (click)="getAllDealProjectImplementationComments(dpim.projectImplementation,'Installation')">
+                                        <u>View Status Update Remarks</u>
+                                    </span>
+                                    <span class="float-right">
+                                        <button class="btn btn-sm btn-primary"
+                                            *ngIf="dpim.projectImplementation.status == 'Installed'"
+                                            (click)="openAddCommentModal(dpim.projectImplementation)">
+                                            Add Status Update Remarks
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+</div>
+
+
+<!--Section: Live preview-->
+
+<!--Modal: modal-->
+<div class="modal fade bottom" id="addCommentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true" data-backdrop="true">
+    <div class="modal-dialog modal-frame modal-bottom modal-full-height modal-notify modal-primary" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <!--Body-->
+            <div class="modal-body">
+                <div class="row p-1 mb-1">
+                    <div class="col">
+                        <h5>Add Status Update Remark</h5>
+                        <mat-form-field class="d-block">
+                            <textarea matInput rows="5" placeholder="Enter Something..." name="comment"
+                                [(ngModel)]="comment.comment"></textarea>
+                        </mat-form-field>
+
+                        <button [disabled]="savingComment" mat-raised-button class="m-1" color="primary"
+                            (click)="addComment()"> Save
+                            <div *ngIf="savingComment" class="spinner-border spinner-border-sm" role="status">
+                                <span class="sr-only"> Saving...</span>
+                            </div>
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/.Content-->
+    </div>
+</div>
+<!--Modal: modal-->
+
+<!--Section: Live preview-->
+
+
+
+<!--Section: Live preview-->
+
+<!--Modal: modal-->
+<div class="modal fade bottom" id="showCommentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true" data-backdrop="true">
+    <div class="modal-dialog modal-frame modal-bottom modal-full-height modal-notify modal-primary" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <!--Body-->
+            <div class="modal-body">
+                <div class="row p-1 mb-1">
+                    <div class="col-12">
+                        <h5 class="text-muted">Remarks</h5>
+                        <div class="alert alert-info text-center" role="alert" [hidden]="comments.length > 0">
+                            <span *ngIf="!loadingComment" class="pl-2">No Remarks Found...</span>
+                        </div>
+                        <div *ngIf="loadingComment" class="d-flex justify-content-center">
+                            <div class="spinner-border" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12" *ngFor="let cmnt of comments;let i=index">
+                        <span class="text-muted d-block">{{cmnt.commentBy}}
+                            <span class="badge badge-info">{{cmnt.commentAtStatus}}</span>
+                            <small class="float-right">{{cmnt.createddatetime | amTimeAgo}}
+                                <i class="fas fa-trash-alt text-danger pointer pl-2"
+                                    *ngIf="cmnt.commentBy == auth.getLoginEmailId()"
+                                    (click)="comments.splice(i, 1);deleteDealProjectImplementationComments(cmnt)"></i>
+                            </small>
+                        </span>
+                        <small [innerHTML]="cmnt.comment"></small>
+                        <hr>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/.Content-->
+    </div>
+</div>
+<!--Modal: modal-->
+
+<!--Section: Live preview-->

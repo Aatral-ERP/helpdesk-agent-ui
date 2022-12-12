@@ -1,0 +1,22 @@
+.containerDiv {
+    min-height: 180px;
+    height: 250px;
+    overflow-x: auto;
+    white-space: nowrap;
+    border: 0.5px dotted rgb(126, 208, 221);
+    text-align: center;
+    background: transparent;
+}
+
+.text-nowrap-2 {
+    height: 18px;
+    width: 90%;
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

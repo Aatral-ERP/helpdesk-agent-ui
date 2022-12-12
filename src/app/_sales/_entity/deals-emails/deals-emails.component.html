@@ -1,0 +1,50 @@
+<div class="container-fluid">
+
+
+    <div class="row m-1">
+        <div class="col">
+            <mat-accordion>
+                <mat-expansion-panel *ngFor="let mail of mails">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+
+                            <h6 title="{{mail.subject}}">
+                                {{(mail.subject.length>150)? (mail.subject | slice:0:150)+'...':(mail.subject)}}
+                            </h6>
+
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <div class="row">
+                        <div class="col">
+
+                            <mat-chip-list>
+                                <mat-chip color="primary">{{mail.tab}}</mat-chip>
+                            </mat-chip-list>
+
+                            <span class="text-dark d-block">Mail To : {{mail.mailIds}}</span>
+                            <span class="text-dark d-block">Mail cc : {{mail.mailIdCC}}</span>
+
+                            <h5 class="text-primary">{{mail.subject}}</h5>
+                            <p class="text-muted" [innerHTML]="mail.message"></p>
+
+                        </div>
+                    </div>
+
+                    <h6>Attachments</h6>
+
+                    <span [hidden]="mail.id != attach.emailId" *ngFor="let attach of mailAttachments"
+                        class="text-muted small">{{attach.filename}}</span>
+
+                    <small>mailed by {{mail.createdBy}} at {{mail.createddatetime | date:'MMM d, y, h:mm a'}}
+                    </small>
+
+                    <small class="text-primary pointer float-right" (click)="resendDealMail(mail)"><u>Resend
+                            Mail</u></small>
+
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+    </div>
+
+</div>

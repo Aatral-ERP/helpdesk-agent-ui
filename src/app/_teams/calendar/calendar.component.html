@@ -1,0 +1,15 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <h4 class="dark-right">{{currentTitle}}</h4>
+        </div>
+        <div class="col text-right">
+            <mat-button-toggle-group appearance="legacy">
+                <mat-button-toggle (click)="changeCalendarPrevMonth()" value="Prev Month">Prev Month</mat-button-toggle>
+                <mat-button-toggle (click)="changeCalendarNextMonth()" value="Next Month">Next Month</mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
+    </div>
+
+    <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+</div>

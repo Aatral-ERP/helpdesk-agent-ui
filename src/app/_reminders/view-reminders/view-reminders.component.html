@@ -1,0 +1,58 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate">
+</mat-progress-bar>
+
+<mat-dialog-content>
+    <div class="container">
+        <h5 class="indigo-text">View Reminders</h5>
+
+        <div class="row">
+            <div class="col">
+                <div class="scrollable">
+                    <div class="row card " *ngFor="let reminder of reminders">
+                        <div class="col" (click)="showReminder = reminder">
+                            <h5 class="text-dark font-weight-bold mt-2 mb-2 pointer">
+                                {{reminder.subject}}
+                                <i class="fas fa-trash-alt text-danger float-right ml-2"
+                                    (click)="deleteReminder(reminder)"></i>
+                            </h5>
+                            <p>
+                                <span class="text-primary">Event Time : {{reminder.eventDateTime | date:'MMM d,yyyy h:mm
+                                    a'}}</span>
+                            </p>
+                            <p>
+                                <span class="chip-pk bg-light">One Time/Recurring : {{reminder.recurringType}}</span>
+                                <span class="chip-pk bg-light">Status : {{reminder.status}}</span>
+                                <span *ngIf="reminder.tag != null && reminder.tag != ''"
+                                    class="chip-pk bg-light">{{reminder.tag}}</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col border border-left" *ngIf="showReminder != null">
+
+                <p class="p-0 m-0"><span class="float-right text-muted pointer"
+                        (click)="showReminder = null">close</span>
+                    <i class="fas fa-trash-alt text-danger ml-2" (click)="deleteReminder(showReminder)"></i>
+                </p>
+
+                <h2 class=" text-dark font-weight-bold mt-2 mb-2">
+                    {{showReminder.subject}}
+                </h2>
+                <p>
+                    <span class="text-primary">Event Time : {{showReminder.eventDateTime | date:'MMM d,yyyy h:mm a'}}</span>
+                </p>
+                <p>
+                    <span class="chip-pk bg-light">One Time/Recurring : {{showReminder.recurringType}}</span>
+                    <span class="chip-pk bg-light">Status : {{showReminder.status}}</span>
+                    <span *ngIf="showReminder.tag != null && showReminder.tag != ''"
+                        class="chip-pk bg-light">{{showReminder.tag}}</span>
+                </p>
+                <mat-label class="d-block text-muted">Description</mat-label>
+                <p class="text-muted">
+                    {{showReminder.description}}
+                </p>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>

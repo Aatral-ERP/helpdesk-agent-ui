@@ -1,0 +1,54 @@
+<!-- <div class="container-fluid">
+    <div class="row justify-content-center">
+        <h5 class="indigo-text font-weight-bold">
+            <span *ngIf="route.url ==='/admin/generate-working-days'">Generate Working Days</span>
+            <span *ngIf="route.url ==='/admin/view-working-days'">View Working Days</span>
+            <span *ngIf="route.url ==='/admin/attendance'">Attendance</span>
+            <span *ngIf="route.url ==='/admin/site-attendance'">Site Attendance</span>
+            <span *ngIf="route.url ==='/admin/gmail-tickets'">Gmail Tickets</span>
+            <span *ngIf="route.url ==='/admin/amc-records'">AMC Records</span>
+
+        </h5>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-3 col-sm-12 col-lg-2 sideNav">
+            <p class="Hbtn"><button routerLink="/admin/generate-working-days"
+                    [ngClass]="(route.url ==='/admin/generate-working-days') ?' btn-primary ':''"
+                    class="btn btn-md btn-block">Generate Working Days <i
+                        *ngIf="route.url ==='/admin/generate-working-days'"
+                        class="fas fa-caret-right float-right"></i></button></p>
+
+            <p class="Hbtn"><button routerLink="/admin/view-working-days"
+                    [ngClass]="(route.url ==='/admin/view-working-days') ?' btn-primary ':''"
+                    class="btn btn-md btn-block">View Working Days <i *ngIf="route.url ==='/admin/view-working-days'"
+                        class="fas fa-caret-right float-right"></i></button></p>
+
+            <p class="Hbtn"><button routerLink="/admin/attendance"
+                    [ngClass]="(route.url ==='/admin/attendance') ?' btn-primary ':''" class="btn btn-md btn-block">
+                    Attendance <i *ngIf="route.url ==='/admin/attendance'"
+                        class="fas fa-caret-right float-right"></i></button></p>
+
+            <p class="Hbtn"><button routerLink="/admin/site-attendance"
+                    [ngClass]="(route.url ==='/admin/site-attendance') ?' btn-primary ':''"
+                    class="btn btn-md btn-block">
+                    Site Attendance <i *ngIf="route.url ==='/admin/site-attendance'"
+                        class="fas fa-caret-right float-right"></i></button></p>
+            <p class="Hbtn"><button routerLink="/admin/gmail-tickets"
+                    [ngClass]="(route.url ==='/admin/gmail-tickets') ?' btn-primary ':''" class="btn btn-md btn-block">
+                    Gmail Tickets <i *ngIf="route.url ==='/admin/gmail-tickets'"
+                        class="fas fa-caret-right float-right"></i></button></p>
+            <p class="Hbtn"><button routerLink="/admin/amc-records"
+                    [ngClass]="(route.url ==='/admin/amc-records') ?' btn-primary ':''" class="btn btn-md btn-block">
+                    AMC Records<i *ngIf="route.url ==='/admin/amc-records'"
+                        class="fas fa-caret-right float-right"></i></button>
+            </p>
+
+        </div>
+        <div class="col">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div> -->
+
+<router-outlet></router-outlet>

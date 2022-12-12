@@ -1,0 +1,181 @@
+<h5 class="indigo-text">{{_mode}} Mail Template</h5>
+<mat-dialog-content class="mat-typography">
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <mat-form-field class="w-100 mb-0 pb-0">
+                    <mat-label class="text-muted">Mail Template Name</mat-label>
+                    <input type="text" matInput name="title" [(ngModel)]="template.title" />
+                </mat-form-field>
+                <small class="text-danger" *ngIf="_errors.title != ''">{{_errors.title}}</small>
+            </div>
+            <div class="col-12">
+                <mat-form-field class="w-100 mb-0 pb-0">
+                    <mat-label class="text-muted">Subject</mat-label>
+                    <input type="text" matInput name="subject" [(ngModel)]="template.subject" />
+                </mat-form-field>
+                <small class="text-danger" *ngIf="_errors.subject != ''">{{_errors.subject}}</small>
+            </div>
+            <div class="col-12">
+                <mat-label class="text-muted">Message</mat-label>
+                <angular-editor [config]="editorConfig" [(ngModel)]="template.message"></angular-editor>
+                <small class="text-danger" *ngIf="_errors.message != ''">{{_errors.message}}</small>
+            </div>
+
+            <div class="col-12 p-3">
+                <div class="text-center">
+                    <span class="pr-2" [ngClass]="template.enabled ? 'text-muted' : 'text-dark'">
+                        Disabled Mail Template
+                    </span>
+                    <mat-slide-toggle color="primary" [(ngModel)]="template.enabled">
+                    </mat-slide-toggle>
+                    <span class="pl-2" [ngClass]="template.enabled ? 'text-dark' : 'text-muted'">
+                        Enabled Mail Template</span>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12" *ngIf="template.enabled">
+                <mat-form-field class="w-100">
+                    <mat-label class="required-label text-muted">State</mat-label>
+                    <mat-select [(ngModel)]="template._states" multiple>
+
+                        <mat-option *ngFor="let _state of _lead_states" [value]="_state">
+                            {{_state}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <small class="text-danger" *ngIf="_errors.states != ''">{{_errors.states}}</small>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12" *ngIf="template.enabled">
+                <mat-form-field class="w-100 mb-0 pb-0">
+                    <mat-label class="required-label text-muted">Category</mat-label>
+                    <mat-select [(ngModel)]="template._categories" multiple>
+                        <!-- <mat-option value="All">All</mat-option> -->
+                        <mat-option *ngFor="let ld_category of _lead_categorys" [value]="ld_category">
+                            {{ld_category}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <small class="text-danger" *ngIf="_errors.categories != ''">{{_errors.categories}}</small>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12" *ngIf="template.enabled">
+                <mat-form-field class="w-100">
+                    <mat-label class="required-label text-muted">Industry Type</mat-label>
+                    <mat-select [(ngModel)]="template._industryTypes" multiple>
+                        <!-- <mat-option value="All">All</mat-option> -->
+                        <mat-option *ngFor="let ld_ind_type of _industry_types" [value]="ld_ind_type">
+                            {{ld_ind_type}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <small class="text-danger" *ngIf="_errors.industryTypes != ''">{{_errors.industryTypes}}</small>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12" *ngIf="template.enabled">
+                <mat-form-field class="w-100">
+                    <mat-label class="required-label text-muted">Lead Status</mat-label>
+                    <mat-select [(ngModel)]="template._status" multiple>
+                        <!-- <mat-option value="All">All</mat-option> -->
+                        <mat-option value="New Lead">New Lead</mat-option>
+                        <mat-option value="Attempted to Contact">Attempted to Contact</mat-option>
+                        <mat-option value="Already Purchased">Already Purchased</mat-option>
+                        <mat-option value="Not Required">Not Required</mat-option>
+                        <mat-option value="Contact In Future">Contact In Future</mat-option>
+                        <mat-option value="Intrested">Intrested</mat-option>
+                        <mat-option value="Under Processing">Under Processing</mat-option>
+                        <mat-option value="Imediate Requirement">Imediate Requirement</mat-option>
+                        <mat-option value="Converted to Sales">Converted to Sales</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <small class="text-danger" *ngIf="_errors.status != ''">{{_errors.status}}</small>
+            </div>
+
+            <div class="col-12" *ngIf="template.enabled">
+                <label class="d-block" color="'primary" id="example-radio-group-label">Mail Sending Frequency</label>
+                <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+                    [(ngModel)]="template.frequency">
+                    <mat-radio-button class="d-block" value="Daily">Daily</mat-radio-button>
+                    <mat-radio-button class="d-block" value="Weekly">Weekly (Every Monday)</mat-radio-button>
+                    <mat-radio-button class="d-block" value="Bi-Weekly">Bi-Weekly (1st and 15th day of evenry month)
+                    </mat-radio-button>
+                    <mat-radio-button class="d-block" value="Monthly">Monthly (Every 1st day of Month)
+                    </mat-radio-button>
+                    <mat-radio-button class="d-block" value="Bi-Monthly">Bi-Monthly (Once for Every Two Months)
+                    </mat-radio-button>
+                    <mat-radio-button class="d-block" value="Bi-Yearly">Bi-Yearly (Once for Every Six Months)
+                    </mat-radio-button>
+                    <mat-radio-button class="d-block" value="Yearly">Yearly (Once for an year)
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+        </div>
+    </div>
+
+    <h5 class="text-primary pt-3">Attachments</h5>
+    <div class="row">
+        <div class="col-12 pt-2">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item list-group-item-action" [hidden]="attach == ''"
+                    *ngFor="let attach of getAttachmentssAsArray()">
+                    <small class="badge badge-light text-muted mr-2">
+                        <i (click)="downloadLeadMailTemplateAttachmnet(attach)" class="fa fa-download pointer"></i>
+                    </small>
+                    <small>{{attach}}</small>
+                    <small class="float-right">
+                        <i class="fas fa-trash-alt text-danger" (click)="deleteFile(attach)"></i>
+                    </small>
+                </li>
+            </ul>
+        </div>
+        <div class="col-12 pt-2">
+            <div class="row m-1 border border-light" *ngFor="let file of files;let i = index;">
+                <div class="col p-0 m-0">
+                    <mat-progress-bar style="height: 3px;" mode="determinate" [value]="file.progress">
+                    </mat-progress-bar>
+                    <div class="row">
+                        <div class="col">
+                            <span class="text-dark pl-2 text-nowrap-2">{{file.file.name}}</span>
+                            <br>
+                            <span class="text-muted small pl-2">{{file.status}} - {{file.file.size | filesize}} -
+                                {{file.progress}}%</span>
+                        </div>
+                        <div class="col-1">
+                            <span class="float-right pr-1"><i (click)="files.splice(i, 1);"
+                                    class="far fa-times-circle pointer"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <ngx-file-drop multiple="true" [showBrowseBtn]="false" dropZoneLabel="Drop files here."
+                (onFileDrop)="dropped($event)">
+                <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                    Drop files here or&nbsp;&nbsp;
+                    <span class="pointer" (click)="openFileSelector()"><u>Browse Files</u></span>
+                </ng-template>
+            </ngx-file-drop>
+            <small class="text-muted">File size limit is 25MB</small>
+        </div>
+    </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <span *ngIf="template.id > 0" (click)="deleteMailTemplate()" class="text-danger pointer">
+        <u>Delete this Template</u> <i class="fas fa-trash-alt pl-1"></i>
+        <div *ngIf="deleting" class="spinner-border spinner-border-sm pl-1" role="status">
+            &nbsp;<span class="sr-only"> deleting...</span>
+        </div>
+    </span>
+
+    <button mat-button mat-dialog-close>Close</button>
+    <button color="primary" mat-stroked-button cdkFocusInitial (click)="saveMailTemplate()"
+        [disabled]="saving">Save&nbsp;
+        <i class="fa fa-save"></i>
+        <div *ngIf="saving" class="spinner-border spinner-border-sm pl-1" role="status">
+            &nbsp;<span class="sr-only"> Saving...</span>
+        </div>
+    </button>
+
+</mat-dialog-actions>

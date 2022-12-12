@@ -1,0 +1,35 @@
+.containerDiv {
+    min-height: 180px;
+    height: 250px;
+    overflow-x: auto;
+    border: 0.5px dotted rgb(126, 208, 221);
+    background: transparent;
+}
+
+.text-nowrap-2 {
+    height: 18px;
+    width: 90%;
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+    display: inline-block;
+    text-align: left;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.termDiv {
+    border: 1px solid lightgray;
+    border-radius: 5px;
+}
+
+.termDiv:hover {
+    border: 1px solid rgb(73, 110, 211);
+    border-radius: 5px;
+}
+
+.termsText {
+    display: inline-block !important;
+    white-space: none;
+}

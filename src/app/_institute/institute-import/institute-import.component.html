@@ -1,0 +1,54 @@
+<div class="container pb-5 mb-5">
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10">
+            <p class="indigo-text h3 text-center">Institute Data Import</p>
+            <hr style="width:100%;text-align:left;margin-left:0">
+            <br>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-4">&nbsp;</div>
+                        <div class="col-8 p-1 center">
+                            <input type="file" (change)="onFileChange($event)" multiple="false" />
+                            <table class="sjs-table">
+                                <br><br>
+                                <tbody>
+                                    <!-- <tr *ngFor="let row of data">
+                                        <td *ngFor="let val of row">
+                                            {{val}}
+                                        </td>
+                                    </tr> -->
+                                </tbody>
+                            </table>
+                            <!-- <button (click)="export()">Export!</button> -->
+                        </div>
+                        <div class="col-12 text-center">
+                            <button [disabled]="" class="btn btn-sm btn-primary" (click)="saveInstitutes()">
+                                save
+                                <div *ngIf="loading" class="spinner-border spinner-border-sm" role="status">
+                                    <span class="sr-only"> Saving...</span>
+                                </div>
+                            </button>
+                            <button class="btn btn-sm btn-primary-outline" (click)="clear()">
+                                clear
+                            </button>
+                        </div>
+                        
+                    </div>
+                    <div class="row">
+                        <div class="col-1">&nbsp;</div>
+                        <!-- <div class="col-5">
+                            <small>*Note: Make a Date Format as (yyyy-mm-dd)*</small>
+                        </div> -->
+                        <div class="col-5">
+                            <a href="./assets/Template/Institute Template.xlsx">
+                                <small>**Click here to download sample Institute template**</small>&nbsp;
+                                <i class="fas fa-download"></i></a>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>

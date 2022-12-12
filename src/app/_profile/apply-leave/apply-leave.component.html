@@ -1,0 +1,144 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <mat-label class="required-label text-muted small">Staff Name</mat-label>
+            <input type="text" disabled matInput [value]="ls.auth.getLoginAgentFullName()">
+        </div>
+
+        <div class="col-12 pt-2">
+            <mat-form-field class="ml-1">
+                <mat-label class="required-label text-muted small">Leave Type</mat-label>
+                <mat-select [(ngModel)]="leaveApplied.leaveType">
+                    <mat-option value="Annual Leave">Annual Leave</mat-option>
+                    <mat-option value="Casual Leave">Casual Leave</mat-option>
+                    <mat-option value="Sick Leave">Sick Leave</mat-option>
+                    <mat-option value="Other Leave">Other Leave</mat-option>
+                    <mat-option value="Half Day">Half Day</mat-option>
+                    <mat-option value="Permission">Permission</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div [ngSwitch]="leaveApplied.leaveType">
+
+            <div *ngSwitchCase="'Permission'">
+                <div class="col-12">
+                    <mat-form-field class="ml-1">
+                        <mat-label class="required-label text-muted small">Permission Date</mat-label>
+                        <input matInput [matDatepicker]="permissionDatepicker" placeholder="Choose Permission date"
+                            (focus)="permissionDatepicker.open()" [matDatepicker]="permissionDatepicker"
+                            (ngModelChange)="changePermissionDate($event)" name="permissionDate"
+                            [ngModel]="permissionDate">
+                        <mat-datepicker-toggle matSuffix [for]="permissionDatepicker"></mat-datepicker-toggle>
+                        <mat-datepicker #permissionDatepicker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-lg-3 col-md-5 col-sm-12">
+                    <mat-label class="text-muted small">From Time</mat-label>
+                    <ngx-mat-timepicker [enableMeridian]="true"
+                        (ngModelChange)="permissionTimeFrom = $event;changePermissionTimeFrom($event);"
+                        [(ngModel)]="permissionTimeFrom">
+                    </ngx-mat-timepicker>
+                </div>
+                <div class="col-lg-3 col-md-5 col-sm-12">
+                    <mat-label class="text-muted small">To Time</mat-label>
+                    <ngx-mat-timepicker [enableMeridian]="true"
+                        (ngModelChange)="permissionTimeTo = $event;changePermissionTimeTo($event);"
+                        [(ngModel)]="permissionTimeTo">
+                    </ngx-mat-timepicker>
+                </div>
+            </div>
+
+            <div *ngSwitchCase="'Half Day'">
+                <div class="col-12">
+                    <mat-form-field class="ml-1">
+                        <mat-label class="required-label text-muted small">Half Day Leave Date</mat-label>
+                        <input matInput [matDatepicker]="halfDayleaveFrompicker" placeholder="Choose from date"
+                            name="halfDayDate" (focus)="halfDayleaveFrompicker.open()" [ngModel]="halfDayDate"
+                            (ngModelChange)="changeHalfDayDate($event);">
+                        <mat-datepicker-toggle matSuffix [for]="halfDayleaveFrompicker"></mat-datepicker-toggle>
+                        <mat-datepicker #halfDayleaveFrompicker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="col-12">
+                    <mat-button-toggle-group name="Half Day Type" [(ngModel)]="_halfDay">
+                        <mat-button-toggle value="First Half">First Half </mat-button-toggle>
+                        <mat-button-toggle value="Second Half">Second Half </mat-button-toggle>
+                    </mat-button-toggle-group>
+                </div>
+            </div>
+
+            <div *ngSwitchDefault>
+                <div class="col-12">
+                    <mat-form-field class="ml-1">
+                        <mat-label class="required-label text-muted small">Leave From</mat-label>
+                        <input matInput [matDatepicker]="leaveFrompicker" placeholder="Choose from date"
+                            (ngModelChange)="calculateNoOfDays($event,'From')" name="leaveFrom"
+                            (focus)="leaveFrompicker.open()" [ngModel]="leaveApplied.leaveFrom">
+                        <mat-datepicker-toggle matSuffix [for]="leaveFrompicker"></mat-datepicker-toggle>
+                        <mat-datepicker #leaveFrompicker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="col-12">
+                    <mat-form-field class="ml-1">
+                        <mat-label class="required-label text-muted small">Leave To</mat-label>
+                        <input matInput [matDatepicker]="leaveTopicker" placeholder="Choose to date"
+                            (focus)="leaveTopicker.open()" [matDatepicker]="leaveTopicker"
+                            (ngModelChange)="calculateNoOfDays($event,'To')" name="leaveTo"
+                            [ngModel]="leaveApplied.leaveTo">
+                        <mat-datepicker-toggle matSuffix [for]="leaveTopicker"></mat-datepicker-toggle>
+                        <mat-datepicker #leaveTopicker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12">
+                    <mat-form-field class="ml-1">
+                        <mat-label class="text-muted small">No Of Days</mat-label>
+                        <input type="text" disabled matInput [value]="leaveApplied.noOfDays">
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="col-12" *ngIf="leaveApplied.leaveType == 'Permission'">
+            <mat-form-field class="ml-1">
+                <mat-label class="required-label text-muted small">Leave To</mat-label>
+                <input matInput [matDatepicker]="permissionDatepicker" placeholder="Choose Permission date"
+                    (focus)="permissionDatepicker.open()" [matDatepicker]="permissionDatepicker"
+                    (ngModelChange)="changePermissionDate($event)" name="permissionDate" [ngModel]="permissionDate">
+                <mat-datepicker-toggle matSuffix [for]="permissionDatepicker"></mat-datepicker-toggle>
+                <mat-datepicker #permissionDatepicker></mat-datepicker>
+
+            </mat-form-field>
+        </div> 
+
+        <div class="col-lg-3 col-md-5 col-sm-12" *ngIf="leaveApplied.leaveType == 'Permission'">
+            <mat-label class="text-muted small">From Time</mat-label>
+            <ngx-mat-timepicker [enableMeridian]="true"
+                (ngModelChange)="permissionTimeFrom = $event;changePermissionTimeFrom($event);"
+                [(ngModel)]="permissionTimeFrom">
+            </ngx-mat-timepicker>
+        </div>
+        <div class="col-lg-3 col-md-5 col-sm-12" *ngIf="leaveApplied.leaveType == 'Permission'">
+            <mat-label class="text-muted small">To Time</mat-label>
+            <ngx-mat-timepicker [enableMeridian]="true"
+                (ngModelChange)="permissionTimeTo = $event;changePermissionTimeTo($event);"
+                [(ngModel)]="permissionTimeTo">
+            </ngx-mat-timepicker>
+        </div> -->
+
+        <div class="col-12">
+            <mat-form-field class="ml-1">
+                <mat-label class="text-muted small">Reason</mat-label>
+                <textarea matInput placeholder="Enter reason..." [(ngModel)]="leaveApplied.reason"></textarea>
+            </mat-form-field>
+        </div>
+
+        <div class="col-12">
+            <button class="mr-2" mat-flat-button color="primary" (click)="applyLeave()"
+                [disabled]="saving">Submit</button>
+            <button class="ml-2" mat-stroked-button color="primary" (click)="clearLeave()">Clear</button>
+        </div>
+    </div>
+</div>

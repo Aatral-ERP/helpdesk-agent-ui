@@ -1,0 +1,13 @@
+.logo {
+    min-height: 100px;
+    color: #afb1b5;
+}
+
+.logo>img {
+    max-height: 250px;
+    margin-top: 00px;
+    padding: 0px;
+    border: 1px solid #F17153;
+    border-radius: 100%;
+    background-color: #fff;
+}

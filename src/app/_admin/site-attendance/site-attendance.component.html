@@ -1,0 +1,104 @@
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col">
+            <label>Institutes</label>
+            <ng-multiselect-dropdown [placeholder]="'Select Institutes'" [data]="_institutes" [(ngModel)]="institutes"
+                [settings]="_instituteDropdownSettings">
+            </ng-multiselect-dropdown>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-8">
+            <label>Agents</label>
+            <ng-multiselect-dropdown [placeholder]="'Select Agents'" [data]="_agents" [(ngModel)]="agents"
+                [settings]="_agentsDropdownSettings">
+            </ng-multiselect-dropdown>
+        </div>
+
+        <div class="col-sm-12 col-md-12 col-lg-4">
+            <label for="dob"> Date </label>
+            <div class="input-group">
+                <input class="form-control" (focus)="datesdp.toggleCalendar()" placeholder="Select from-to date"
+                    angular-mydatepicker name="dates" [(ngModel)]="dates" [options]="myDatePickerOptions"
+                    #datesdp="angular-mydatepicker" autocomplete="off" />
+                <div class="input-group-append">
+                    <i *ngIf="datesdp.isDateValid()" (click)="datesdp.clearDate()" class="far fa-times-circle"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p class="text-center">
+        <button class="btn btn-sm btn-outline-primary float-center" (click)="getSiteAttendances()">Submit</button>
+    </p>
+
+    <div *ngIf="SiteAttendances.length > 0">
+        <h5 class="font-weight-bold">Site Attendances</h5>
+        <div class="row" *ngFor="let sa of SiteAttendances">
+            <div class="col">
+                <div class="card p-2 m-1">
+                    <h6 class="text-muted">{{sa.workingDate | date:'short'}}</h6>
+                    <h5 class="indigo-text">{{sa.institute.instituteName}}</h5>
+                    <small class="text-muted">{{sa.institute.street1}}, {{sa.institute.street2}},
+                        {{sa.institute.city}}, {{sa.institute.state}}, {{sa.institute.country}} -
+                        {{sa.institute.zipcode}} </small>
+                    <h6 class="font-weight-bold mb-0">{{sa.agent.firstName}} {{sa.agent.lastName}}</h6>
+                    <small class="text-muted">{{sa.agent.emailId}}</small>
+                    <br>
+                    <small class="small">Start Time : <span class="text-muted">{{sa.startTime | date:'medium'}}</span>
+                        <span class="ml-1"
+                            *ngIf="sa.startlatitude != null && sa.startlatitude != '' && sa.startlongitude != null && sa.startlongitude != ''">
+                            <a class="text-primary" (click)="mapInitializer(sa.startlatitude , sa.startlongitude)">[
+                                <i class="fas fa-map">&nbsp;</i>
+                                {{sa.startlatitude}} ,
+                                {{sa.startlongitude}} ]</a>
+
+                            <a (click)="tabToGmap(sa.startlatitude , sa.startlongitude)" target="_blank">
+                                &nbsp;&nbsp;<i class="fas fa-external-link-alt text-primary"></i>
+                            </a>
+                        </span>
+                    </small>
+                    <small class="small">End Time : <span class="text-muted">{{sa.endTime | date:'medium'}}</span>
+                        <span class="ml-1"
+                            *ngIf="sa.endlatitude != null && sa.endlatitude != '' && sa.endlongitude != null && sa.endlongitude != ''">
+                            <a class="text-primary" (click)="mapInitializer(sa.endlatitude , sa.endlongitude)"> [
+                                <i class="fas fa-map">&nbsp;</i>
+                                {{sa.endlatitude}} ,
+                                {{sa.endlongitude}} ] </a>
+
+                            <a (click)="tabToGmap(sa.endlatitude , sa.endlongitude)" target="_blank">
+                                &nbsp;&nbsp;<i class="fas fa-external-link-alt text-primary"></i>
+                            </a>
+                        </span>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- <div #mapContainer id="map"></div> -->
+
+
+<!--Section: Live preview-->
+
+<!--Modal: modal-->
+<div class="modal fade top" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+    data-backdrop="true">
+    <div class="modal-dialog modal-frame modal-top modal-notify modal-primary" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <!--Body-->
+            <div class="modal-body">
+                <div #mapContainer id="map"></div>
+            </div>
+        </div>
+        <!--/.Content-->
+    </div>
+</div>
+<!--Modal: modal-->
+
+<!--Section: Live preview-->

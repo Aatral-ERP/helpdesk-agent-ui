@@ -1,0 +1,48 @@
+<div class="container-fluid">
+    <div class="row border-bottom border-light pb-0 mb-0">
+        <div class="col">
+            <h5 class="text-primary text-center">Manage Leave Masters
+                <button (click)="leaveMasterCreate.openCreateModal()" class="btn btn-sm btn-primary float-right">
+                    <i class="fa fa-plus"> Create Leave Master </i>
+                </button>
+            </h5>
+        </div>
+    </div>
+
+    <app-leave-master-create #leaveMasterCreate (respEvent)="onRespEvent($event)"></app-leave-master-create>
+
+    <div>
+        <div class="row mb-5">
+            <div class="col">
+                <ag-grid-angular enableCellTextSelection="true" *ngIf="!loading" [rowData]="leavemasters"
+                    style="width: 100%; height: 500px;" class="ag-theme-balham p-2" [columnDefs]="columnDefs"
+                    [paginationAutoPageSize]="true" [pagination]="true" [frameworkComponents]="frameworkComponents">
+                </ag-grid-angular>
+
+                <div class="item" *ngIf="loading">
+                    <ngx-skeleton-loader count="12"></ngx-skeleton-loader>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Section: Live preview-->
+
+<!--Modal: modal-->
+<div class="modal fade bottom" id="update_amc_desc" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true" data-backdrop="true">
+    <div class="modal-dialog modal-frame modal-bottom modal-full-height modal-notify modal-primary" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <!--Body-->
+            <div class="modal-body">
+
+            </div>
+        </div>
+        <!--/.Content-->
+    </div>
+</div>
+<!--Modal: modal-->
+
+<!--Section: Live preview-->

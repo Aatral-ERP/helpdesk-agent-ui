@@ -1,0 +1,73 @@
+<div class="row border-bottom border-light pb-0 mb-0">
+        <div class="col">
+                <a routerLink="/vendor/vendor-register" class="btn btn-md btn-primary float-right">
+                        <i class="fa fa-plus"> Add Vendor</i>
+                </a>
+        </div>
+</div>
+
+
+<p class="indigo-text h3 text-center">Vendors</p>
+<br>
+<div class="container">
+        <div class="row" *ngFor="let vendors of vendorResults">
+                <div class="col-10">
+                        <div class="card m-3">
+                                <div class="card-header">
+                                        <span class="text-success h5">{{vendors.vendorName}}</span>
+                                </div>
+                                <div class="card-body">
+                                        <p class="m-0">Address :
+                                                {{vendors.address1}}&nbsp;,&nbsp;{{vendors.address2}}
+                                        </p>
+                                        <p class="m-0">City : {{vendors.city}}</p>
+                                        <p class="m-0">State : {{vendors.state}}</p>
+                                        <p class="m-0">Country : {{vendors.country}}</p>
+                                        <p class="m-0">Pincode : {{vendors.pincode}}</p>
+                                        <p class="m-0">Phone : {{vendors.vendorPhone}}</p>
+                                        <p class="m-0">Email-ID: {{vendors.vendorEmail}}</p>
+                                        <p class="m-0">GST Number : {{vendors.gstNo}}</p>
+                                        <p class="h5 pt-2 pb-3">Bank Details : </p>
+                                        <p class="m-0">Account Name :
+                                                {{vendors.accountName}}
+                                        </p>
+                                        <p class="m-0">Account Number :
+                                                {{vendors.accountNumber}}
+                                        </p>
+                                        <p class="m-0">IFSC Code :
+                                                {{vendors.ifscCode}}
+                                        </p>
+                                        <p class="m-0">Bank Name :
+                                                {{vendors.bankName}}
+                                        </p>
+                                        <p class="m-0">Branch Name :
+                                                {{vendors.branchName}}
+                                        </p>
+                                </div>
+                                <div class="row">
+                                        <div class="col">
+                                                <button class="btn btn-sm btn-indigo" (click)="editVendor(vendors.id)">
+                                                        <i class="fas fa-edit text-white"
+                                                                aria-hidden="true"></i>&nbsp;&nbsp;Edit
+                                                </button>
+                                                <button class="btn btn-sm btn-red" (click)="deleteVendor(vendors.id)">
+                                                        <i class="fas fa-trash text-white"
+                                                                aria-hidden="true"></i>&nbsp;Delete
+                                                </button>
+                                        </div>
+                                </div>
+                                <br>
+                        </div>
+                </div>
+        </div>
+</div>
+
+
+
+<div class="col-12" *ngIf="vendorResults.length == 0">
+        <div class="row justify-content-center">
+                <p class="text-primary">No Vendors Found..!!</p>
+        </div>
+
+
+</div>

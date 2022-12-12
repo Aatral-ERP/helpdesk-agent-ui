@@ -1,0 +1,11 @@
+.check-section {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    height: 60px;
+}
+
+ul, li {
+    list-style-type: none;
+    margin-top: 4px;
+}

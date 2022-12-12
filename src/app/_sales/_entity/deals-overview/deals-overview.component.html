@@ -1,0 +1,48 @@
+<div class="container-fluid pt-2">
+    <mat-tab-group [selectedIndex]="tab" (selectedTabChange)="tab = $event.index;tabChange($event)"
+        animationDuration="0ms">
+        <mat-tab label="Deal Details">
+            <app-deals-view class="m-2" (dealEmitter)="deal = $event" [dealId]="dealId"></app-deals-view>
+        </mat-tab>
+        <mat-tab label="Quotation">
+            <app-deals-quotation class="m-2" *ngIf="tab == 1" [deal]="deal" [dealId]="dealId"></app-deals-quotation>
+        </mat-tab>
+        <mat-tab label="Purchase Order">
+            <app-deals-purchase-order class="m-2" *ngIf="tab == 2" [dealId]="dealId"></app-deals-purchase-order>
+        </mat-tab>
+        <mat-tab label="Project Implementation">
+            <app-deals-project-implementation class="m-2" *ngIf="tab == 3" [dealId]="dealId">
+            </app-deals-project-implementation>
+        </mat-tab>
+        <mat-tab label="Sales Order">
+            <app-deals-sales-order class="m-2" *ngIf="tab == 4" [dealId]="dealId"></app-deals-sales-order>
+        </mat-tab>
+        <mat-tab label="Proforma Invoice">
+            <app-deals-proforma-invoice class="m-2" *ngIf="tab == 5" [dealId]="dealId"></app-deals-proforma-invoice>
+        </mat-tab>
+        <mat-tab label="Invoice">
+            <app-deals-invoice class="m-2" *ngIf="tab == 6" [deal]="deal" [dealId]="dealId">
+            </app-deals-invoice>
+        </mat-tab>
+        <mat-tab label="Delivery Challan">
+            <app-deals-delivery-challan-handler [hidden]="deal === undefined" class="m-2" *ngIf="tab == 7" [deal]="deal"
+                [dealId]="dealId">
+            </app-deals-delivery-challan-handler>
+        </mat-tab>
+        <mat-tab label="Payments">
+            <app-deals-payments class="m-2" *ngIf="tab == 8" [dealId]="dealId"></app-deals-payments>
+        </mat-tab>
+        <mat-tab label="AMC Visits Schedule">
+            <app-deal-amc-visits class="m-2" *ngIf="tab == 9" [deal]="deal" [dealId]="dealId"></app-deal-amc-visits>
+        </mat-tab>
+        <mat-tab label="Notes">
+            <app-deals-notes class="m-2" *ngIf="tab == 10" [dealId]="dealId"></app-deals-notes>
+        </mat-tab>
+        <mat-tab label="Emails">
+            <app-deals-emails class="m-2" *ngIf="tab == 11" [dealId]="dealId"></app-deals-emails>
+        </mat-tab>
+    </mat-tab-group>
+
+    <p class="p-5">&nbsp;</p>
+
+</div>

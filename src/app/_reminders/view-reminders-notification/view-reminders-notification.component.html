@@ -1,0 +1,88 @@
+<div class="container-fluid">
+
+    <p class="text-muted ml-2 mr-2">Reminders
+        <span (click)="openCreateReminderDialog()"
+            class="float-right pointer badge badge-primary rounded">&nbsp;Add&nbsp;<mat-icon [inline]="true">
+                notification_add</mat-icon>&nbsp;
+        </span>
+    </p>
+
+    <div class="scrollable pt-1">
+        <div class="row m-0" [hidden]="!loading" *ngFor="let i of [].constructor(5)">
+            <div class="col-8">
+                <ngx-skeleton-loader count="1" animation="pulse" appearance="line" [theme]="{
+                    height: '15px'
+                  }"></ngx-skeleton-loader>
+            </div>
+            <div class="col-4">
+                <ngx-skeleton-loader count="1" animation="pulse" appearance="line" [theme]="{
+                    height: '15px'
+                  }">
+                </ngx-skeleton-loader>
+            </div>
+            <div class="col-12">
+                <ngx-skeleton-loader class="d-block" count="1" animation="pulse" appearance="line" [theme]="{
+                    height: '25px'
+                  }"></ngx-skeleton-loader>
+            </div>
+            <div class="col-4">
+                <ngx-skeleton-loader count="1" animation="pulse" appearance="line" [theme]="{
+                    height: '15px'
+                  }"></ngx-skeleton-loader>
+            </div>
+            <div class="col-4">
+                <ngx-skeleton-loader count="1" animation="pulse" appearance="line" [theme]="{
+                    height: '15px'
+                  }">
+                </ngx-skeleton-loader>
+            </div>
+            <div class="col-4">
+                <ngx-skeleton-loader count="1" animation="pulse" appearance="line" [theme]="{
+                    height: '15px'
+                  }">
+                </ngx-skeleton-loader>
+            </div>
+        </div>
+
+        <div class="row border border-bottom pointer" (click)="openViewRemindersDialog(rem)"
+            *ngFor="let rem of reminders">
+
+            <div class="col-12">
+                <small class="float-right">{{rem.eventDateTime | amTimeAgo}}</small>
+            </div>
+
+            <div class="col-12">
+                <span class="text-nowrap-2">{{rem.subject}}</span>
+            </div>
+            <div class="col-12">
+                <span *ngIf="rem.tag != null && rem.tag != ''" class="badge badge-light">{{rem.tag}}</span>
+
+                <span (click)="$event.stopPropagation()" *ngIf="rem.status != null && rem.status != ''"
+                    [ngSwitch]="rem.status">
+                    <span class="bg-success chip-pk float-right" *ngSwitchCase="'Done'"
+                        [matMenuTriggerFor]="statusMenu">{{rem.status}}<mat-icon>done</mat-icon></span>
+                    <span class="bg-danger chip-pk float-right" *ngSwitchCase="'Dismiss'"
+                        [matMenuTriggerFor]="statusMenu">{{rem.status}}<mat-icon>close</mat-icon></span>
+                    <span class="bg-light chip-pk float-right" *ngSwitchDefault
+                        [matMenuTriggerFor]="statusMenu">{{rem.status}}<mat-icon>expand_more</mat-icon></span>
+
+                </span>
+
+                <mat-menu #statusMenu="matMenu">
+                    <button mat-menu-item (click)="changeStatus(rem,'Dismiss',$event)">
+                        <mat-icon>highlight_off</mat-icon>
+                        <span>Dismiss</span>
+                    </button>
+                    <button mat-menu-item (click)="changeStatus(rem,'Done',$event)">
+                        <mat-icon>done_outline</mat-icon>
+                        <span>Done</span>
+                    </button>
+                </mat-menu>
+            </div>
+        </div>
+
+        <h5 *ngIf="!loading && reminders.length == 0" class="text-dark">No Reminders for next 5 days</h5>
+    </div>
+
+
+</div>

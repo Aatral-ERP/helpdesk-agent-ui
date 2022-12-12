@@ -1,0 +1,19 @@
+{
+    "InstitutionName": "AutoLib Software Systems",
+    "InstitutionLogo": "assets/static/images/logo.jpg",
+    "InstitutionWebsite": "http://autolib-india.net",
+    "InstitutionAddress": {
+        "Street1": "32GF, 2nd Main Road ",
+        "Street2": "Sabari Nagar Extn, Mugalivakkam",
+        "City": "Chennai",
+        "State": "TamilNadu",
+        "Country": "India",
+        "pincode": "600 125"
+    },
+    "LibraryTiming": "09 AM to 05 PM",
+    "Phone": "9876543210",
+    "AlternatePhone": "1234567980",
+    "Mail": "library@college.com",
+    "BaseURL": "http://smallcart.in:9090/autolib-api/",
+    "ContentPath": "http://smallcart.in:8888/AutoLib/filePath/"
+}

@@ -1,0 +1,61 @@
+<div class="container p-2 mb-5">
+    <div class="card">
+        <div class="card-body">
+            <p class="h4 text-center"> Service Report</p>
+            <hr style="width:100%;text-align:left;margin-left:0">
+            <div class="row justify-content-center">
+                <div class="col-6">
+                    <label>Institute Name</label>
+                    <ng-multiselect-dropdown [placeholder]="'Select Institutes'" [data]="_institutes"
+                        [(ngModel)]="_search_instfilters.institutes" [settings]="_instituteDropdownSettings">
+                    </ng-multiselect-dropdown>
+                </div>
+
+                <div class="col-md-3 col-sm-12 col-lg-3">
+                    <label for="dob" style="margin-bottom: 5px;"> From Date </label>
+                    <div class="input-group">
+                        <input class="form-control" (focus)="fromdp.toggleCalendar()" placeholder="Select a date"
+                            angular-mydatepicker name="fromDate" [(ngModel)]="fromDate" [options]="myDatePickerOptions"
+                            #fromdp="angular-mydatepicker" autocomplete="off" />
+                        <div class="input-group-append">
+                            <i *ngIf="fromdp.isDateValid()" (click)="fromdp.clearDate()"
+                                class="far fa-times-circle"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-12 col-lg-3">
+                    <label for="dob" style="margin-bottom: 5px;"> To Date </label>
+                    <div class="input-group">
+                        <input class="form-control" (focus)="todp.toggleCalendar()" placeholder="Select a date"
+                            angular-mydatepicker name="toDate" [(ngModel)]="toDate" [options]="myDatePickerOptions"
+                            #todp="angular-mydatepicker" autocomplete="off" />
+                        <div class="input-group-append">
+                            <i *ngIf="todp.isDateValid()" (click)="todp.clearDate()" class="far fa-times-circle"></i>
+
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+<br>
+            <div class="row justify-content-center">
+                    <p *ngIf="isServiceReport"
+                    class="text-success">
+                    <span (click)="viewPDF(instituteId,fileName)">
+                        View Service Report
+                    </span>
+                    &nbsp;&nbsp;&nbsp;
+                    <i class="fas fa-download" *ngIf="isServiceReport"
+                        (click)="downloadPDF(instituteId,fileName)"></i>
+
+                </p>
+            </div>
+            <div class="row mt-5">
+                <div class="col text-center">
+                    <button class="btn btn-md btn-primary" (click)="getReport()">Get Report</button>&nbsp;&nbsp;
+                    <button class="btn btn-md btn-primary" (click)="clear()">Clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

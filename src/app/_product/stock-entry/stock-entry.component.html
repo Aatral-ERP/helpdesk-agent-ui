@@ -1,0 +1,80 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <label>Product</label>
+            <ng-multiselect-dropdown [placeholder]="'Select Product'" [data]=" _products"
+                (onDeSelect)="onProductDeSelect()" (onSelect)="onProductSelect($event);"
+                [settings]="_ProductsDropdownSettings">
+            </ng-multiselect-dropdown>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid" *ngIf="_selectedProduct !== undefined">
+
+    <h5 class="text-muted">In Stock : {{_selectedProduct.stock | number}}</h5>
+
+    <span *ngIf="!showStockEntry" (click)="showStockEntry = !showStockEntry"
+        class="text-primary float-right pointer">Add Stock
+        Entry</span>
+    <span *ngIf="showStockEntry" (click)="showStockEntry = !showStockEntry"
+        class="text-primary float-right pointer">Close</span>
+
+    <div class="border border-light p-5" [hidden]="!showStockEntry">
+        <h5 class="text-center font-weight-bold">Add Stock Entry</h5>
+        <h6 class="text-dark">{{_selectedProduct.name}}</h6>
+        <div class="row">
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-6">
+                        <label for="firstName">Add Stock in Nos.</label>
+                        <input class="form-control input-sm" type="number" id="quantity" placeHolder="Enter Quantity"
+                            name="quantity" [(ngModel)]="stockEntry.quantity" />
+                    </div>
+                    <div class="col-6">
+                        <label for="entryDate" style="margin-bottom: 5px;"> Stock Entry Date </label>
+
+                        <input [(ngModel)]="stockEntry.entryDate" class="form-control" (focus)="picker.open()"
+                            [matDatepicker]="picker">
+                        <mat-datepicker #picker></mat-datepicker>
+
+                        <!-- <input [(ngModel)]="stockEntry.entryDate" class="form-control" [owlDateTime]="dt2"
+                                    [owlDateTimeTrigger]="dt2" placeholder="Choose Stock Enty Date">
+                                <owl-date-time [pickerType]="'calendar'" #dt2></owl-date-time> -->
+                    </div>
+                    <div class="col-6">
+                        <label for="firstName">Stock Type.</label>
+                        <select name="type" id="type" class="form-control" [(ngModel)]="stockEntry.type">
+                            <option value="Credit">Credit</option>
+                            <option value="Deduct">Deduct</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <label for="entryDate" style="margin-bottom: 5px;"> Stock Entry Remarks </label>
+                <textarea class="form-control" cols="60%" id="remarks" rows="5" placeHolder="Enter Remarks"
+                    name="remarks" [(ngModel)]="stockEntry.remarks"></textarea>
+            </div>
+        </div>
+
+        <button class="btn btn-sm btn-primary float-right" (click)="saveStockEntry()">
+            Save Stock Entry
+        </button>
+
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <h6 class="text-muted">Stock Entries</h6>
+            <ag-grid-angular enableCellTextSelection="true" *ngIf="!loadingStock" [rowData]="rowData"
+                style="width: 100%; height: 500px;" class="ag-theme-balham p-2" [columnDefs]="columnDefs"
+                [paginationAutoPageSize]="true" [pagination]="true">
+            </ag-grid-angular>
+
+            <div class="item" *ngIf="loadingStock">
+                <ngx-skeleton-loader count="8"></ngx-skeleton-loader>
+            </div>
+        </div>
+    </div>
+</div>

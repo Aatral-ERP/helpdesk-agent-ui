@@ -1,0 +1,229 @@
+<div class="container-fluid">
+
+    <div class="row p-2">
+        <div class="col">
+
+            <p class="indigo-text h4 text-center">Call Report
+            </p>
+
+            <hr style="width:100%;text-align:left;margin-left:0">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-md btn-primary float-right" (click)="showAddNewDiv = !showAddNewDiv">Add Call Report &nbsp;
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+    </div>
+    <div  *ngIf ="showViewDiv &&!showAddNewDiv">
+    <div class="row justify-content-centre">
+        <div class="col-sm-12 col-md-12 col-lg-10">
+            <label>Institute</label>
+            <ng-multiselect-dropdown [placeholder]="'Select Institutes'" [data]="_institutes"
+                [(ngModel)]="_selectedInstitute" (onSelect)="onSelectInstitute($event)"
+                [settings]="_instituteDropdownSettings">
+            </ng-multiselect-dropdown>
+        </div>
+
+    </div>
+
+    <!-- <div class="row mt-5">
+        <div class="col text-center">
+            <button (click)="submit()" class="btn btn-md btn-primary">Get Report</button>
+            <button (click)="clear()" class="btn btn-md btn-primary">Clear</button>
+        </div>
+    </div> -->
+</div>
+
+        <!-- <div class="alert alert-info text-center" role="alert" [hidden]="callReport.length == 0">
+            No Call Report Found...
+        </div> -->
+    
+       
+        <div class="row justify-content-center" *ngIf="showAddNewDiv">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="text-dark font-weight-bold">Call Report</h5>
+
+                        <label>Institute</label>
+            <ng-multiselect-dropdown [placeholder]="'Select Institute'" [data]="_institutes"
+                [(ngModel)]="_selectedInstitute" (onSelect)="onSelect($event)"
+                [settings]="_instituteDropdownSettings">
+            </ng-multiselect-dropdown>
+            <br>
+    
+                            <label for="actionTaken">Action Taken</label>
+                        <textarea type="text" rows="3" class="form-control" id="actionTaken" placeholder="Enter ActionTaken"
+                            [(ngModel)]="callReport.actionTaken">
+                        </textarea>
+    
+                        <label for="problemsReported">Problem Reported</label>
+                        <textarea type="text" rows="3" class="form-control" id="problemsReported" placeholder="Enter Problems Reported"
+                            [(ngModel)]="callReport.problemsReported">
+                        </textarea>
+
+                        <label for="customerRemarks">Customer Remarks</label>
+                        <textarea type="text" rows="3" class="form-control" id="customerRemarks" placeholder="Enter Customer Remarks"
+                            [(ngModel)]="callReport.customerRemarks">
+                        </textarea>
+
+                        <label for="followUpAction">Follow Up Action</label>
+                        <textarea type="text" rows="3" class="form-control" id="followUpAction" placeholder="Enter Follow Up Action"
+                            [(ngModel)]="callReport.followUpAction">
+                        </textarea>
+
+                        <label for="descriptionOfNameSupplied">Description of Name Supplied</label>
+                        <textarea type="text" rows="3" class="form-control" id="descriptionOfNameSupplied" placeholder="Enter Description"
+                            [(ngModel)]="callReport.descriptionOfNameSupplied">
+                        </textarea>
+    
+                        <div class="row">       
+    
+                            <div class="col-sm-3 col-md-2 col-lg-2">
+                                <label for="dob" style="margin-bottom: 5px;"> Reporting Entry Date </label>
+                                <div class="input-group">
+                                    <input class="form-control" (focus)="reportingInDatedp.toggleCalendar()"
+                                        placeholder="Choose Reporting In Date" angular-mydatepicker name="reporingInTimeDateObject"
+                                        [(ngModel)]="callReport.reporingInTimeDateObject"
+                                        (dateChanged)="callReport.reportingInTime = $event.singleDate.jsDate"
+                                        [options]="myDatePickerOptions" #reportingInDatedp="angular-mydatepicker"
+                                        autocomplete="off" />
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">
+                                            <i (click)="reportingInDatedp.toggleCalendar()"
+                                                class="fas fa-calendar-alt pointer"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div class="col-sm-3 col-md-2 col-lg-2">
+                                <label for="dob" style="margin-bottom: 5px;"> Reporting Out Date </label>
+                                <div class="input-group">
+                                    <input class="form-control" (focus)="reportingOutDatedp.toggleCalendar()"
+                                        placeholder="Choose Reporting Out Date" angular-mydatepicker name="reportingOutTimeDateObject"
+                                        [(ngModel)]="callReport.reportingOutTimeDateObject"
+                                        (dateChanged)="callReport.reportingOutTime = $event.singleDate.jsDate"
+                                        [options]="myDatePickerOptions" #reportingOutDatedp="angular-mydatepicker"
+                                        autocomplete="off" />
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">
+                                            <i (click)="reportingOutDatedp.toggleCalendar()"
+                                                class="fas fa-calendar-alt pointer"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <label for="customerName">Customer Name</label>
+                            <input type="text" class="form-control" id="customerName" placeholder="Enter CustomerName"
+                                [(ngModel)]="callReport.customerName">
+                            
+                            
+                            
+                            <div class="col-12 text-center">
+                                <button [disabled]="saving" mat-raised-button class="m-1" color="primary"
+                                    (click)="saveCallReport()"> Save
+                                    <div *ngIf="saving" class="spinner-border spinner-border-sm" role="status">
+                                        <span class="sr-only"> Saving...</span>
+                                    </div>
+                                </button>
+                                <!-- <button [disabled]="saving" mat-stroked-button class="m-1" color="primary"
+                                    (click)="clearFilters();showAddNewDiv = !showAddNewDiv">Cancel</button> -->
+                            </div>
+    
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+
+
+        <div class="row m-1">
+            <div class="col">
+                <h5 *ngIf="callReportAll.length > 0" class="text-dark font-weight-bold">Call Reports</h5>
+                <mat-accordion>
+                    <mat-expansion-panel  *ngFor="let callReportAll of callReportAll">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                <h5>#{{callReportAll.id}}</h5>
+                            </mat-panel-title>
+                            <mat-panel-description class="text-right">
+                                Reporting Date&nbsp;&nbsp;:&nbsp;&nbsp;{{callReportAll.reportingInTime | date:'MMM d, y'}}
+                            </mat-panel-description>
+                            
+                            
+                        </mat-expansion-panel-header>
+    
+                        <div class="row">
+                            <div class="col">
+                                <p></p>
+                                <h5 class="text-primary">{{callReportAll.actionTaken}}</h5>
+                                <p class="text-muted">
+                                    {{callReportAll.customerRemarks}}
+                                </p>
+    
+                                
+                                <p *ngIf="callReportAll.fileName != '' && callReportAll.fileName != null"
+                                    class="text-muted">
+                                    <span (click)="viewPDF(callReportAll.instituteId,callReportAll.fileName)">
+                                        {{callReportAll.fileName}}
+                                    </span>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <i class="fas fa-download" *ngIf="callReportAll.fileName != null && callReportAll.fileName != ''"
+                                        (click)="downloadPDF(callReportAll.instituteId,callReportAll.fileName)"></i>
+
+
+    
+                                </p>
+                            
+    
+                    
+                            </div>
+                        </div>
+    
+                        <button class="btn btn-sm btn-red" (click)="deleteCallReport(callReportAll.id)">
+                            <i class="fas fa-trash text-white" aria-hidden="true"></i>&nbsp;Delete
+                        </button>
+    
+                        <a (click)="showReceiptTemplate = !showReceiptTemplate;"
+                            class="text-right float-right text-primary">
+                            <i class="fas fa-receipt"></i>&nbsp;Click to Generate CallReport
+                        </a>
+
+                        <span (click)="uploadCallReport.click()" class="pointer text-primary">Upload Generated Call Report
+                            &nbsp;
+                            <i class="fas fa-upload"></i></span>
+            
+                        <input hidden type="file" #uploadCallReport (change)="callReportFileUploadChange(callReportAll.id,$event.target.files[0])">
+    
+                        <div class="row " [hidden]="!showReceiptTemplate">
+                            
+                            
+                            <div class="col-12 p-1 border border-light">
+                                <p class="text-dark" [innerHtml]="receiptContent"></p>
+                            </div>
+    
+                            <div class="row">
+                                <div class="col-12">
+                                    <mat-checkbox [(ngModel)]="addRoundSeal">Add Round Seal</mat-checkbox>
+                                    &nbsp;&nbsp;
+                                    <!-- <mat-checkbox [(ngModel)]="addFullSeal">Add Full Seal</mat-checkbox>
+                                    &nbsp;&nbsp; -->
+                                    <mat-checkbox [(ngModel)]="addSign">Add Signature</mat-checkbox>
+                                    &nbsp;&nbsp;
+                                    <button (click)="generateCallReport(callReportAll)"
+                                        class="btn btn-sm btn-primary text-right">Generate CallReport</button>
+                                </div>
+                            </div>
+                            <mat-progress-bar *ngIf="generatingPDF" mode="indeterminate">
+                            </mat-progress-bar>
+                        </div>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </div>
+        </div>
+</div>

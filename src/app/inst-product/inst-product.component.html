@@ -1,0 +1,150 @@
+<div class="container p-2 mb-5">
+    <div class="row container">
+        <div class="col">
+            <p class="indigo-text h4 text-center" style="font-family: bookman old style;">View/Add Institution Product
+            </p>
+            <hr style="width:100%;text-align:left;margin-left:0">
+            <div class="row justify-content-center">
+                <div class="col">
+                    <div class="row justify-content-center">
+                        <div class="col">
+                            <label>Institute</label>
+                            <ng-multiselect-dropdown [placeholder]="'Select Institutes'" [data]="institute"
+                                [(ngModel)]="_selectedInstitute" (onSelect)="onSelectInst($event)"
+                                [settings]="_instituteDropdownSettings">
+                            </ng-multiselect-dropdown>
+                        </div>
+                    </div>
+                    <br>
+
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="table-responsive" *ngIf="product.length > 0">
+            <b><u>Product List of Institute:</u></b>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width: 5%">S.No</th>
+                        <th scope="col" style="width: 20%">Product Name</th>
+                        <th scope="col" style="width: 40%">Description</th>
+                        <th scope="col" style="width: 15%">Current Service</th>
+                        <th scope="col" style="width: 10%">Qty</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let pro of product ; let i=index">
+                        <td>{{i+1}}</td>
+                        <td title="{{pro.product.name}}">{{pro.product.name}}</td>
+                        <td> <span [innerHTML]="pro.product.description"> </span></td>
+                        <td>
+                            <span>{{pro.currentServiceUnder}} expires at {{pro.amcExpiryDate | date:'dd/MM/yyyy'}}
+                            </span>
+                        </td>
+                        <td>{{pro.quantity}}</td>
+                        <td> <button (click)="removeProduct(pro);" class="btn btn-sm btn-primary">Remove</button> </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <br>
+        <br>
+        <div class="table-responsive" *ngIf="productList.length > 0">
+
+            <div class="row">
+                <div class="col">
+                    <b><u>Remaining Product List:</u></b>
+                </div>
+                <div class="col">
+                    <label for="">Search by name</label>
+                    <input type="text" class="form-control input-sm" [(ngModel)]="searchStr">
+                </div>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width: 5%">S.No</th>
+                        <th scope="col" style="width: 35%">Product Name</th>
+                        <th scope="col" style="width: 45%">Description</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr [hidden]="!prod.name.toLowerCase().includes(searchStr.toLowerCase())"
+                        *ngFor="let prod of productList ; let i=index">
+                        <th scope="row">{{i+1}}</th>
+                        <td title="{{prod.name}}">{{prod.name}}</td>
+                        <td title="{{prod.description}}">
+                            <span [innerHTML]="prod.description">
+
+                            </span>
+                        </td>
+                        <td>
+                            <button (click)="openModal(prod);" class="btn btn-sm btn-primary">Add</button>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!--Section: Live preview-->
+
+<!--Modal: modal-->
+<div class="modal fade top" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+    data-backdrop="true">
+    <div class="modal-dialog modal-frame modal-top modal-notify modal-primary" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <!--Body-->
+            <div class="modal-body">
+
+                <div class="row d-flex justify-content-center align-items-center">
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+                        <h2>
+                            <span class="badge">{{selectedProduct.name}}</span>
+                        </h2>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <p class="pt-3 mx-4"><strong>Warranty Expires at</strong>
+                        </p>
+                        <!-- <input class="form-control editFocus" (focus)="fromdp.toggleCalendar()"
+                                placeholder="Select a date" angular-mydatepicker name="amcExpiryDate"
+                                [(ngModel)]="amcExpiryDate" [options]="myDatePickerOptions"
+                                #fromdp="angular-mydatepicker" autocomplete="off" /> -->
+
+                        <div class="input-group">
+                            <input class="form-control editFocus" placeholder="Select a date" angular-mydatepicker
+                                name="amcExpiryDate" [(ngModel)]="amcExpiryDate" [options]="myDatePickerOptions"
+                                #quoteDatedp="angular-mydatepicker" autocomplete="off" />
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <i (click)="quoteDatedp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <p class="pt-3 mx-4"><strong>Quantity</strong>
+                            <input type="number" class="form-control editFocus" placeholder="Select a date"
+                                [(ngModel)]="quantity" />
+                        </p>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-12">
+                        <a type="button" class="btn btn-success" (click)="addproduct(selectedProduct)">Add
+                            <i class="fas fa-book ml-1 white-text"></i>
+                        </a>
+                        <a type="button" class="btn btn-outline-success waves-effect" data-dismiss="modal">Close</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/.Content-->
+    </div>
+</div>
+<!--Modal: modal-->
+
+<!--Section: Live preview-->

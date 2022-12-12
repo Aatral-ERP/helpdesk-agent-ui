@@ -1,0 +1,55 @@
+<div class="container-fluid">
+
+    <p (click)="showAddEdit()" class="pointer float-right text-primary d-block">Add Terms and Conditions Master
+    </p>
+    <br>
+    <div class="row" [hidden]="!showAddEditDiv">
+        <div class="col-12">
+            <label for="name">Terms Name</label>
+            <input class="form-control" type="text" id="name" placeHolder="Enter Terms Name" name="name"
+                [(ngModel)]="term.name" />
+        </div>
+
+        <div class="col-12 ">
+            <label for="terms">Terms & Conditions</label>
+            <textarea class="form-control" name="terms" id="terms" rows="5" [(ngModel)]="term.terms"></textarea>
+        </div>
+
+        <div class="col-12">
+            <button class="btn btn-sm btn-primary" (click)="saveTermsAndConditions()">Save</button>
+            <button class="btn btn-sm btn-outline-primary" (click)="showAddEditDiv = false">Close</button>
+        </div>
+    </div>
+
+</div>
+
+<div class="container-fluid containerDiv">
+    <mat-progress-bar *ngIf="loading" mode="indeterminate">
+    </mat-progress-bar>
+
+    <span *ngIf="terms.length == 0" class="text-center text-info d-block">
+        No Terms and Conditions found.
+    </span>
+    <div class="row flex-nowrap">
+        <div class="col-lg-5 col-md-7 col-sm-10 card p-1 m-1" *ngFor="let _term of terms">
+            <div class="row">
+                <div class="col-12 pointer" (click)="useTerm(_term)">
+                    <span title="{{_term.name}}" class="text-primary text-nowrap-2">
+                        {{_term.name}}
+                    </span>
+                </div>
+                <div class="col-12">
+                    <p class="p-2 pl-4 pr-4">
+                        <span (click)="showAddEdit(_term)" class="pointer float-left text-primary"><i
+                                class="fas fa-edit"></i></span>
+                        <span (click)="deleteTermsAndConditions(_term)" class="pointer float-right text-danger"><i
+                                class="fas fa-trash-alt"></i></span>
+                    </p>
+                </div>
+                <div class="col-12 pointer" (click)="useTerm(_term)">
+                    <span class="text-muted" [outerHTML]="getHTMLContent(_term.terms)"> </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

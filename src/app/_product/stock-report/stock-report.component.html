@@ -1,0 +1,83 @@
+<p class="h4 text-center"> Stock Filters
+</p>
+<div class="container pt-2">
+    <div class="row justify-content-center">
+        <div class="col-sm-12 col-md-12 col-lg-8">
+            <label>Remarks</label>
+            <input class="form-control input-lg" type="text" id="remarks" placeHolder="Enter Remarks" name="remarks"
+                [(ngModel)]="_search_stockfilter.remarks" />
+        </div>
+
+        <div class="col-sm-12 col-md-12 col-lg-4">
+            <label>Entry Date</label>
+            <div class="input-group">
+                <input class="form-control" (focus)="entrydatesdp.toggleCalendar()"
+                    placeholder="Select From - To Entry Date range" angular-mydatepicker name="dates"
+                    (dateChanged)="dateChanged($event);_search_stockfilter.entryDateFrom = $event.dateRange.beginJsDate;_search_stockfilter.entryDateTo = $event.dateRange.endJsDate;"
+                    [(ngModel)]="_search_stockfilter.entryDateObject" [options]="myDatePickerOptions"
+                    #entrydatesdp="angular-mydatepicker" autocomplete="off" />
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <i (click)="entrydatesdp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-12 col-lg-4">
+            <label>Products</label>
+            <ng-multiselect-dropdown [placeholder]="'Select Products'" [data]="_products"
+                [(ngModel)]="_search_stockfilter.products" [settings]="_ProductsDropdownSettings">
+            </ng-multiselect-dropdown>
+        </div>
+
+        <div class="col-sm-12 col-md-12 col-lg-4">
+            <label>Type</label>
+            <select class="form-control" name="type" id="type" [(ngModel)]="_search_stockfilter.type">
+                <option value="">--select--</option>
+                <option value="Credit">Credit</option>
+                <option value="Deduct">Deduct</option>
+            </select>
+        </div>
+
+        <div class="col-sm-12 col-md-12 col-lg-4">
+            <label for="category">Category</label>
+
+            <ng-autocomplete id="category" placeHolder="Enter Category" [(ngModel)]="_search_stockfilter.category"
+                [data]="_products_category" [itemTemplate]="categoryTemplateDesignation">
+            </ng-autocomplete>
+
+            <ng-template #categoryTemplateDesignation let-item>
+                <a [innerHTML]="item"></a>
+            </ng-template>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-12 text-center mt-2">
+        <button class="btn btn-md btn-primary" (click)="loadStockDetials()">Submit</button>
+        <button class="btn btn-sm btn-outline-primary" (click)="clearFilters()">Clear</button>
+    </div>
+</div>
+<br>
+<br>
+<div *ngIf="!loading" class="mt-2">
+    <div class="row justify-content-center">
+        <p class="h4 text-center">Stock Details</p>
+    </div>
+    <div class="row">
+        <div class="col">
+            <ag-grid-angular enableCellTextSelection="true" [rowData]="rowData" style="width: 100%; height: 500px;"
+                class="ag-theme-balham p-2" [columnDefs]="columnDefs" [rowSelection]="'single'"
+                [paginationAutoPageSize]="true" (selectionChanged)="onGridSelectionChanged()"
+                (gridReady)="onGridReady($event)">
+            </ag-grid-angular>
+        </div>
+    </div>
+    <button class="btn btn-sm btn-primary" *ngIf="rowData.length > 0" (click)="onBtnExport()">Export <i
+            class="fas fa-download"></i></button>
+</div>
+
+<div class="item" *ngIf="loading">
+    <ngx-skeleton-loader count="10"></ngx-skeleton-loader>
+</div>

@@ -1,0 +1,335 @@
+<div class="container-fluid">
+    <mat-horizontal-stepper [hidden]="loading" [linear]="true" #stepper>
+        <mat-step label="Begin Project Implementation" [completed]="currentStageNumber > 0">
+            <div class="row noQuoteSpan mt-5 justify-content-center">
+                <div class="col-12 p-3 pointer" (click)="createPIM()" *ngIf="pimp.id == 0">
+                    <h6 class="text-primary">
+                        <span>
+                            Start Project Implementation
+                        </span>
+                    </h6><br>
+                </div>
+
+                <div class="col-12 p-3 pointer" (click)="createPIM()" *ngIf="pimp.id > 0">
+                    <h6 class="text-primary">
+                        <span>
+                            Started {{pimp.createddatetime | date:'MMM dd, yyyy hh:mm a'}}
+                        </span>
+                    </h6><br>
+                </div>
+            </div>
+        </mat-step>
+        <mat-step label="Manufacturing" [completed]="currentStageNumber > 1">
+            <div class="row noQuoteSpan mt-5 justify-content-center">
+                <div class="col-12" *ngIf="pimp.manufacturingAgent == null">
+                    <button class="text-center m-1" mat-flat-button
+                        (click)="openAgentModal('assignManufacturingToAgent')"
+                        class="btn btn-sm m-1 btn-primary btn-block">&nbsp;Assign to Agent</button>
+                </div>
+                <div class="col-12" *ngIf="pimp.manufacturingAgent != null">
+                    <span class="h5 text-primary pt-3">
+                        Assigned to {{pimp.manufacturingAgent}}
+                    </span>
+                    <br>
+                    <span class="small text-muted float-right">
+                        Assigned by {{pimp.manufacturingAssignedBy}} at
+                        {{pimp.manufacturingAssignedDateTime | date:'MMM dd, yyyy hh:mm a'}}
+                    </span>
+                    <br>
+                    <hr>
+                    <br>
+                    <div *ngIf="pimp.manufacturingFinishedDateTime == null">
+                        <span class="small text-muted">
+                            waiting for Agent to complete the Manufacturing.
+                        </span>
+                        <br>
+                        <button class="text-center m-1" mat-flat-button
+                            (click)="openAgentModal('markasManufacturingCompleted')"
+                            class="btn btn-sm m-1 btn-primary btn-block">&nbsp;Mark as Manufacturig Completed</button>
+                    </div>
+                    <span class="small text-muted" *ngIf="pimp.manufacturingFinishedDateTime != null">
+                        Completed by {{pimp.manufacturingFinishedBy}} at
+                        {{pimp.manufacturingFinishedDateTime | date:'MMM dd, yyyy hh:mm a'}}
+                    </span>
+                    <br>
+                    <hr>
+                    <br>
+
+                    <div
+                        *ngIf="pimp.manufacturingFinishedDateTime != null && pimp.manufacturingApprovedDateTime == null">
+
+                        <span class="small text-muted"
+                            *ngIf="pimp.manufacturingFinishedDateTime != null && pimp.manufacturingApprovedDateTime == null">
+                            waiting for Approval
+                        </span>
+
+                        <button class="text-center m-1" mat-flat-button (click)="approveManufacturing()"
+                            class="btn btn-sm m-1 btn-primary btn-block">&nbsp;Approve this Manufacturing</button>
+
+                    </div>
+
+                    <span class="small text-muted" *ngIf="pimp.manufacturingApprovedDateTime != null">
+                        Approved By {{pimp.manufacturingApprovedBy}} at
+                        {{pimp.manufacturingApprovedDateTime | date:'MMM dd, yyyy hh:mm a'}}
+
+                        <i class="fas fa-check-circle text-success"></i>
+                    </span>
+
+
+                </div>
+            </div>
+        </mat-step>
+        <mat-step label="Delivery" [completed]="currentStageNumber > 2">
+            <div class="row noQuoteSpan mt-5 justify-content-center">
+                <div class="col-12" *ngIf="pimp.deliveryAgent == null">
+                    <button class="text-center m-1" mat-flat-button (click)="openAgentModal('assignDeliveryToAgent')"
+                        class="btn btn-sm m-1 btn-primary btn-block">&nbsp;Assign to Agent</button>
+                </div>
+                <div class="col-12" *ngIf="pimp.deliveryAgent != null">
+                    <span class="h5 text-primary pt-3">
+                        Assigned to {{pimp.deliveryAgent}}
+                    </span>
+                    <br>
+                    <span class="small text-muted float-right">
+                        Assigned by {{pimp.deliveryAssignedBy}} at
+                        {{pimp.deliveryAssignedDateTime | date:'MMM dd, yyyy hh:mm a'}}
+                    </span>
+                    <br>
+                    <hr>
+                    <br>
+
+                    <div *ngIf="pimp.deliveryFinishedDateTime == null">
+                        <span class="small text-muted">
+                            waiting for Agent to complete the Delivery.
+                        </span>
+                        <br>
+                        <button class="text-center m-1" mat-flat-button
+                            (click)="openAgentModal('markasDeliveryCompleted')"
+                            class="btn btn-sm m-1 btn-primary btn-block">&nbsp;Mark as Completed</button>
+                    </div>
+                    <span class="small text-muted" *ngIf="pimp.deliveryFinishedDateTime != null">
+                        Completed by {{pimp.deliveryFinishedBy}} at
+                        {{pimp.deliveryFinishedDateTime | date:'MMM dd, yyyy hh:mm a'}}
+                    </span>
+
+                    <!-- <span class="small text-muted" *ngIf="pimp.deliveryFinishedDateTime == null">
+                    waiting for Agent to complete the Delivery.
+                </span>
+                <span class="small text-muted" *ngIf="pimp.deliveryFinishedDateTime != null">
+                    Completed at {{pimp.deliveryFinishedDateTime | date:'MMM dd, yyyy hh:mm a'}}
+                </span> -->
+                    <br>
+                    <hr>
+                    <br>
+
+                    <div *ngIf="pimp.deliveryFinishedDateTime != null && pimp.deliveryApprovedDateTime == null">
+
+                        <span class="small text-muted"
+                            *ngIf="pimp.deliveryFinishedDateTime != null && pimp.deliveryApprovedDateTime == null">
+                            waiting for Approval
+                        </span>
+
+                        <button class="text-center m-1" mat-flat-button (click)="approveDelivery()"
+                            class="btn btn-sm m-1 btn-primary btn-block">&nbsp;Approve this Delivery</button>
+
+                    </div>
+
+                    <span class="small text-muted" *ngIf="pimp.deliveryApprovedDateTime != null">
+                        Approved By {{pimp.deliveryApprovedBy}} at
+                        {{pimp.deliveryApprovedDateTime | date:'MMM dd, yyyy hh:mm a'}}
+
+                        <i class="fas fa-check-circle text-success"></i>
+                    </span>
+
+
+                </div>
+            </div>
+        </mat-step>
+        <mat-step label="Installation" [completed]="currentStageNumber > 3">
+            <div class="row noQuoteSpan mt-5 justify-content-center">
+                <div class="col-12" *ngIf="pimp.installedAgent == null">
+                    <button class="text-center m-1" mat-flat-button
+                        (click)="openAgentModal('assignInstallationToAgent')"
+                        class="btn btn-sm m-1 btn-primary btn-block">&nbsp;Assign to Agent</button>
+                </div>
+                <div class="col-12" *ngIf="pimp.installedAgent != null">
+                    <span class="h5 text-primary pt-3">
+                        Assigned to {{pimp.installedAgent}}
+                    </span>
+                    <br>
+                    <span class="small text-muted float-right">
+                        Assigned by {{pimp.installedAssignedBy}} at
+                        {{pimp.installedAssignedDateTime | date:'MMM dd, yyyy hh:mm a'}}
+                    </span>
+                    <br>
+                    <hr>
+                    <br>
+
+                    <div *ngIf="pimp.installedFinishedDateTime == null">
+                        <span class="small text-muted">
+                            waiting for Agent to complete the Installation.
+                        </span>
+                        <br>
+                        <button class="text-center m-1" mat-flat-button
+                            (click)="openAgentModal('markasInstallationCompleted')"
+                            class="btn btn-sm m-1 btn-primary btn-block">&nbsp;Mark as Installed</button>
+                    </div>
+                    <span class="small text-muted" *ngIf="pimp.installedFinishedDateTime != null">
+                        Completed by {{pimp.installedFinishedBy}} at
+                        {{pimp.installedFinishedDateTime | date:'MMM dd, yyyy hh:mm a'}}
+                    </span>
+
+                    <!-- <span class="small text-muted" *ngIf="pimp.installedFinishedDateTime == null">
+                    waiting for Agent to complete the Installation.
+                </span>
+                <span class="small text-muted" *ngIf="pimp.installedFinishedDateTime != null">
+                    Completed at {{pimp.installedFinishedDateTime | date:'MMM dd, yyyy hh:mm a'}}
+                </span> -->
+                    <br>
+                    <hr>
+                    <br>
+
+                    <div *ngIf="pimp.installedFinishedDateTime != null && pimp.installedApprovedDateTime == null">
+
+                        <span class="small text-muted"
+                            *ngIf="pimp.installedFinishedDateTime != null && pimp.installedApprovedDateTime == null">
+                            waiting for Approval
+                        </span>
+
+                        <button class="text-center m-1" mat-flat-button (click)="approveInstalled()"
+                            class="btn btn-sm m-1 btn-primary btn-block">&nbsp;Approve this Installation</button>
+
+                    </div>
+
+                    <span class="small text-muted" *ngIf="pimp.installedApprovedDateTime != null">
+                        Approved By {{pimp.installedApprovedBy}} at
+                        {{pimp.installedApprovedDateTime | date:'MMM dd, yyyy hh:mm a'}}
+
+                        <i class="fas fa-check-circle text-success"></i>
+                    </span>
+                </div>
+            </div>
+        </mat-step>
+        <mat-step label="Completed" [completed]="currentStageNumber > 4">
+
+            <div class="row noQuoteSpan mt-5 justify-content-center">
+                <div class="col-12" *ngIf="pimp.workCompletionBy == null">
+                    <button class="text-center m-1" mat-flat-button (click)="markAsCompleted()"
+                        class="btn btn-sm m-1 btn-primary btn-block">&nbsp;Mark as Completed</button>
+                </div>
+                <div class="col-12" *ngIf="pimp.workCompletionBy != null">
+                    <span class="small pt-5 text-muted">
+                        Marked as Project Implementation Complete by {{pimp.workCompletionBy}} at
+                        {{pimp.workCompletionDateTime | date:'MMM dd, yyyy hh:mm a'}}
+                        <i class="fas fa-check-circle text-success"></i>
+                    </span>
+                </div>
+            </div>
+        </mat-step>
+
+    </mat-horizontal-stepper>
+
+
+    <div class="row">
+        <div class="col-12">
+            <h5>Status Update Remarks</h5>
+            <button *ngIf="pimp.status != 'Completed'" class="btn btn-md float-right" (click)="openAddCommentModal();">
+                Add Status Update Remark &nbsp;
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+        <div class="col-12" *ngFor="let cmnt of comments;let i=index">
+            <span class="text-muted d-block">{{cmnt.commentBy}}
+                <span class="badge badge-info">{{cmnt.commentAtStatus}}</span>
+                <small class="float-right">{{cmnt.createddatetime | amTimeAgo}}
+                    <i class="fas fa-trash-alt text-danger pointer pl-2"
+                        (click)="comments.splice(i, 1);deleteDealProjectImplementationComments(cmnt)"></i>
+                </small>
+            </span>
+            <small [innerHTML]="cmnt.comment"></small>
+            <hr>
+        </div>
+    </div>
+</div>
+<!--Section: Live preview-->
+
+<!--Modal: modal-->
+<div class="modal fade right" id="agentaddmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true" data-backdrop="true">
+    <div class="modal-dialog modal-frame modal-right modal-full-height modal-notify modal-primary" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <!--Body-->
+            <div class="modal-body">
+
+                <div class="row p-1 mb-1">
+                    <div class="col">
+                        <mat-form-field class="d-block">
+                            <input matInput placeholder="Enter Agent Name to filter" name="agentName"
+                                [(ngModel)]="agentName">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 m-2">
+                        <div [hidden]="agent.workingStatus == 'releived' || agent.isBlocked"
+                            *ngFor="let agent of _agents">
+                            <div class="pointer" (click)="callBackSaveProjectImplementation(agent)" *ngIf="agentName == '' 
+                                || agent.firstName.toLowerCase().includes(agentName.toLowerCase())
+                                || agent.lastName.toLowerCase().includes(agentName.toLowerCase())
+                                || agent.emailId.toLowerCase().includes(agentName.toLowerCase())">
+                                <p class="text-dark">{{agent.firstName}} {{agent.lastName}} <span
+                                        *ngIf="auth.getLoginEmailId() == agent.emailId"
+                                        class="badge badge-primary">You</span></p>
+                                <small class="text-muted">{{agent.emailId}}</small>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!--/.Content-->
+    </div>
+</div>
+<!--Modal: modal-->
+
+<!--Section: Live preview-->
+
+
+<!--Section: Live preview-->
+
+<!--Modal: modal-->
+<div class="modal fade bottom" id="addCommentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true" data-backdrop="true">
+    <div class="modal-dialog modal-frame modal-bottom modal-full-height modal-notify modal-primary" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <!--Body-->
+            <div class="modal-body">
+                <div class="row p-1 mb-1">
+                    <div class="col">
+                        <h5>Add Status Update Remark</h5>
+                        <mat-form-field class="d-block">
+                            <textarea matInput rows="5" placeholder="Enter Something..." name="comment"
+                                [(ngModel)]="comment"></textarea>
+                        </mat-form-field>
+
+                        <button [disabled]="savingComment" mat-raised-button class="m-1" color="primary"
+                            (click)="addComment()"> Save
+                            <div *ngIf="savingComment" class="spinner-border spinner-border-sm" role="status">
+                                <span class="sr-only"> Saving...</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/.Content-->
+    </div>
+</div>
+<!--Modal: modal-->
+
+<!--Section: Live preview-->

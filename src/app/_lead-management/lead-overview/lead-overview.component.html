@@ -1,0 +1,169 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate">
+</mat-progress-bar>
+
+<mat-tab-group [selectedIndex]="tab" (selectedTabChange)="tab = $event.index;tabChange($event)" animationDuration="0ms">
+    <mat-tab label="Lead Details">
+
+        <div class="container-fluid pt-2">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card-header">
+                        <span class="indigo-text h4">{{lead.company}}
+                            <span class="text-primary pointer pl-4" (click)="EditLead()"><u>Edit</u>
+                                &nbsp;<i class='fas fa-edit'></i> </span>
+                            <span class="text-primary pointer pl-4" (click)="registerAsInstitute()"><u>Register as
+                                    Institute</u>
+                                &nbsp;<i class='fas fa-edit'></i> </span>
+                            <span class="text-danger pointer pl-4" (click)="deleteLead()"><u>Delete Lead</u>
+                                &nbsp;<i class='fas fa-trash-alt'></i> </span>
+                        </span>
+                        <span class="float-right text-dark chip-pk pointer"
+                            [matMenuTriggerFor]="statusMenu">{{lead.status}}
+                            <mat-icon class="pr-0 mr-0">expand_more</mat-icon>
+                        </span>
+                        <span class="float-right text-dark chip-pk pointer">{{lead.leadDate | date:'dd/MM/yyyy'}}
+                        </span>
+
+                        <mat-menu #statusMenu="matMenu" xPosition="before">
+                            <button mat-menu-item (click)="changeStatus('New Lead')">New Lead</button>
+                            <button mat-menu-item (click)="changeStatus('Attempted to Contact')">Attempted to
+                                Contact</button>
+                            <button mat-menu-item (click)="changeStatus('Contact in Future')">Contact in Future</button>
+                            <button mat-menu-item (click)="changeStatus('Junk Lead')">Junk Lead</button>
+                            <button mat-menu-item (click)="changeStatus('Lost Lead')">Lost Lead</button>
+                            <button mat-menu-item (click)="changeStatus('Not Qualified')">Not Qualified</button>
+                            <button mat-menu-item (click)="changeStatus('Converted to Sales')">Converted to
+                                Sales</button>
+                        </mat-menu>
+                    </div>
+
+                    <h5 class="text-primary pt-2">{{lead.title}}</h5>
+
+                    <span class="chip-pk bg-warning">Lead Owner : {{lead.ownerName}} <{{lead.ownerEmailId}}></span>
+
+                    <span class="chip-pk" *ngIf="lead.fullName != null && lead.fullName != ''">Contact Person Full Name
+                        :
+                        {{lead.fullName}}</span>
+
+                    <span class="chip-pk" *ngIf="lead.leadSource != null && lead.leadSource != ''">Lead Source :
+                        {{lead.leadSource}}</span>
+
+                    <span class="chip-pk" *ngIf="lead.industryType != null && lead.industryType != ''">Industry Type :
+                        {{lead.industryType}}</span>
+
+                    <span class="chip-pk" *ngIf="lead.annualRevenue != null && lead.annualRevenue != ''">Industry Annual
+                        Revenue
+                        : {{lead.annualRevenue | currency:'INR'}}</span>
+
+                    <span class="chip-pk" *ngIf="lead.noOfEmployees != null && lead.noOfEmployees != ''">Industry Total
+                        Employees : {{lead.noOfEmployees | number}}</span>
+
+                </div>
+                <div class="col-12 pt-3">
+                    <h5 class="text-dark font-weight-bold">Lead Contacts and Address</h5>
+                    <p class="text-muted pt-1">
+                        <span *ngIf="lead.street != null && lead.street != ''">{{lead.street}},</span>
+                        <span *ngIf="lead.city != null && lead.city != ''">{{lead.city}}, </span>
+                        <span *ngIf="lead.state != null && lead.state != ''">{{lead.state}}, </span>
+                        <span *ngIf="lead.country != null && lead.country != ''">{{lead.country}} - </span>
+                        <span *ngIf="lead.pincode != null && lead.pincode != ''">{{lead.pincode}}.</span>
+
+                        <span class="chip-pk pointer" *ngIf="lead.website != null && lead.website != ''"
+                            (click)="redirectURL(lead.website)">
+                            <mat-icon>link</mat-icon>&nbsp;
+                            {{lead.website}}
+                        </span>
+                    </p>
+                    <p class="text-muted" *ngFor="let contact of leadContacts">
+                        <span class="d-block text-dark">{{contact.name}}</span>
+                        <span class="chip-pk" *ngIf="contact.designation != null && contact.designation != ''">
+                            <mat-icon>contact_page</mat-icon>&nbsp;{{contact.designation}}
+                        </span>
+                        <span class="chip-pk" *ngIf="contact.phoneNo != null && contact.phoneNo != ''">
+                            <mat-icon>phone</mat-icon>&nbsp;{{contact.phoneNo}}
+                        </span>
+                        <span class="chip-pk"
+                            *ngIf="contact.alternatePhoneNo != null && contact.alternatePhoneNo != ''">
+                            <mat-icon>phone</mat-icon>&nbsp;{{contact.alternatePhoneNo}}
+                        </span>
+                        <span class="chip-pk" *ngIf="contact.emailId != null && contact.emailId != ''">
+                            <mat-icon>alternate_email</mat-icon>&nbsp;{{contact.emailId}}
+                        </span>
+                        <span class="chip-pk" *ngIf="contact.alternateEmail != null && contact.alternateEmail != ''">
+                            <mat-icon>alternate_email</mat-icon>&nbsp;{{contact.alternateEmail}}
+                        </span>
+                        <mat-checkbox color="primary" disabled [(ngModel)]="contact.active">Send Email Updates
+                        </mat-checkbox>
+                    </p>
+
+                    <h5 class="text-dark font-weight-bold">Products Intrested In</h5>
+                    <p class="text-muted pt-1">
+                        <span class="chip-pk" *ngFor="let prod of getProductsAsArray()">{{prod}}</span>
+                    </p>
+
+                    <h5 class="text-dark font-weight-bold">Description</h5>
+                    <p class="text-muted pt-1">
+                        <span [innerHTML]="lead.description"></span>
+                    </p>
+
+                    <h5 class="text-dark font-weight-bold">Attachments</h5>
+
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item list-group-item-action" [hidden]="attach == ''"
+                            *ngFor="let attach of getAttachmentssAsArray()">
+                            <small class="badge badge-light text-muted mr-2">
+                                <i (click)="downloadLeadAttachmnet(attach)" class="fa fa-download pointer"></i>
+                            </small>
+                            <small>{{attach}}</small>
+                            <small class="float-right"></small>
+                        </li>
+                    </ul>
+
+                    <div class="row">
+                        <div class="col-12 pt-2">
+                            <div class="row m-1 border border-light" *ngFor="let file of files;let i = index;">
+                                <div class="col p-0 m-0">
+                                    <mat-progress-bar style="height: 3px;" mode="determinate" [value]="file.progress">
+                                    </mat-progress-bar>
+                                    <div class="row">
+                                        <div class="col">
+                                            <span class="text-dark pl-2 text-nowrap-2">{{file.file.name}}</span>
+                                            <br>
+                                            <span class="text-muted small pl-2">{{file.status}} - {{file.file.size |
+                                                filesize}}
+                                                -
+                                                {{file.progress}}%</span>
+                                        </div>
+                                        <div class="col-1">
+                                            <span class="float-right pr-1"><i (click)="files.splice(i, 1);"
+                                                    class="far fa-times-circle pointer"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <ngx-file-drop multiple="true" [showBrowseBtn]="false" dropZoneLabel="Drop files here."
+                                (onFileDrop)="dropped($event)">
+                                <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                                    Drop files here or&nbsp;&nbsp;
+                                    <span class="pointer" (click)="openFileSelector()"><u>Browse Files</u></span>
+                                </ng-template>
+                            </ngx-file-drop>
+                            <small class="text-muted">File size limit is 25MB</small>
+                        </div>
+                    </div>
+
+                    <p class="text-muted small pt-3">Created at {{lead.createddatetime | date:'medium'}}</p>
+                    <p class="text-muted small">Last updated at {{lead.lastupdatedatetime | date:'medium'}}</p>
+
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+    <mat-tab label="Activities">
+        <app-lead-activities *ngIf="tab == 1 && lead.id > 0" [lead]="lead"></app-lead-activities>
+    </mat-tab>
+    <mat-tab label="Emails">
+        <app-lead-details-mail *ngIf="tab == 2 && lead.id > 0" [lead]="lead"></app-lead-details-mail>
+    </mat-tab>
+</mat-tab-group>

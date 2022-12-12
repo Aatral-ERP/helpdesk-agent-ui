@@ -1,0 +1,59 @@
+<div class="row">
+    <div class="col-12">
+        <h5 class="text-muted font-weight-bold">Comments ({{comments.length}} comments)
+            <small *ngIf="canCommentTask" class="float-right text-muted pointer"
+                (click)="showAddComment = !showAddComment">
+                <u>
+                    <span [hidden]="!showAddComment">Close</span>
+                    <span [hidden]="showAddComment">Add Comment</span>
+                    <i class="fas fa-paperclip pl-2"></i>
+                </u>
+            </small>
+        </h5>
+    </div>
+    <div class="col-12" *ngIf="showAddComment && canCommentTask">
+        <mat-form-field class="example-full-width w-100">
+            <mat-label>Leave a comment</mat-label>
+            <textarea [disabled]="saving" matInput class="w-100" rows="6" placeholder="Enter Something" name="comment"
+                [(ngModel)]="comment"></textarea>
+        </mat-form-field>
+        <button [disabled]="saving" mat-stroked-button color="primary" (click)="saveTaskComment()">Save Comment</button>
+    </div>
+</div>
+
+<hr>
+
+<div *ngIf="loading" class="spinner-border spinner-border-sm pl-1" role="status">
+    &nbsp;<span class="sr-only"> loading...</span>
+</div>
+<div class="row">
+    <div class="col text-muted">
+        <small [hidden]="sortingOrder == 'new-first'" (click)="sortComments('new-first')"
+            class="float-right pointer">Sort
+            Newest First<i class="fas fa-sort-amount-up pl-1"></i></small>
+        <small [hidden]="sortingOrder == 'old-first'" (click)="sortComments('old-first')"
+            class="float-right pointer">Sort
+            Oldest First<i class="fas fa-sort-amount-down pl-1"></i></small>
+    </div>
+</div>
+
+<div class="row m-1" *ngFor="let cmnt of comments">
+    <div class="col-1">
+        <img title="{{getMemberName(cmnt.commentBy)}}" class="pointer avator-thumb"
+            src="{{getMemberImageURL(cmnt.commentBy)}}">
+        &nbsp;&nbsp;
+    </div>
+    <div class="col">
+        <div class="row">
+            <div class="col-12">
+                <small class="text-muted font-weight-bold">
+                    {{getMemberName(cmnt.commentBy)}}</small>
+                <small title="{{cmnt.createddatetime | date:'MMM dd, yyyy hh:mm a'}}"
+                    class="float-right">{{cmnt.createddatetime | amTimeAgo}}</small>
+
+                <p class="text-muted d-block" [innerHTML]="cmnt.comment"></p>
+            </div>
+        </div>
+    </div>
+    <hr>
+</div>

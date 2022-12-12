@@ -1,0 +1,70 @@
+<h5 class="text-indigo">{{mode}} Lead</h5>
+
+<div class="row pt-2">
+    <div class="col-12">
+        <mat-form-field class="w-100">
+            <mat-label for="owner">Name</mat-label>
+            <input type="text" matInput [(ngModel)]="leadContact.name" (keyup)="checkName()" />
+            <mat-icon matSuffix>person</mat-icon>
+        </mat-form-field>
+        <small class="text-danger" *ngIf="_errors.name != ''">{{_errors.name}}
+            <i class="fas fa-exclamation-triangle pl-1"></i>
+        </small>
+    </div>
+    <div class="col-12">
+        <mat-form-field class="w-100">
+            <mat-label for="owner">Designation</mat-label>
+            <input type="text" matInput [(ngModel)]="leadContact.designation" />
+            <mat-icon matSuffix>contact_page</mat-icon>
+        </mat-form-field>
+    </div>
+    <div class="col-12">
+        <mat-form-field class="w-100">
+            <span matPrefix>+91 &nbsp;</span>
+            <mat-label for="owner">Phone No.</mat-label>
+            <input type="text" maxlength="10" matInput [(ngModel)]="leadContact.phoneNo" (keyup)="checkPhone()" />
+            <mat-icon matSuffix>phone</mat-icon>
+        </mat-form-field>
+        <small class="text-danger" *ngIf="_errors.phoneNo != ''">{{_errors.phoneNo}}
+            <i class="fas fa-exclamation-triangle pl-1"></i>
+        </small>
+    </div>
+    <div class="col-12">
+        <mat-form-field class="w-100">
+            <mat-label for="owner">Alternate Phone/Land Line</mat-label>
+            <input type="text" matInput [(ngModel)]="leadContact.alternatePhoneNo" />
+            <mat-icon matSuffix>tty</mat-icon>
+        </mat-form-field>
+    </div>
+    <div class="col-12">
+        <mat-form-field class="w-100">
+            <mat-label for="owner">Email Id</mat-label>
+            <input type="text" matInput [(ngModel)]="leadContact.emailId" (keyup)="checkEmail()" />
+            <mat-icon matSuffix>alternate_email</mat-icon>
+        </mat-form-field>
+        <small class="text-danger" *ngIf="_errors.emailId != ''">{{_errors.emailId}}
+            <i class="fas fa-exclamation-triangle pl-1"></i>
+        </small>
+    </div>
+    <div class="col-12">
+        <mat-form-field class="w-100">
+            <mat-label for="owner">Alternate Email</mat-label>
+            <input type="text" matInput [(ngModel)]="leadContact.alternateEmail" (keyup)="checkAltEmail()" />
+            <mat-icon matSuffix>alternate_email</mat-icon>
+        </mat-form-field>
+        <small class="text-danger" *ngIf="_errors.altEmailId != ''">{{_errors.altEmailId}}
+            <i class="fas fa-exclamation-triangle pl-1"></i>
+        </small>
+    </div>
+
+    <div class="col-12">
+        <mat-checkbox color="primary" [(ngModel)]="leadContact.active">Send Email Updates</mat-checkbox>
+    </div>
+
+    <div class="col-12 pt-2 text-center">
+        <button mat-button (click)="close()">close</button>
+        <button color="primary" mat-stroked-button (click)="saveLeadContact()">{{mode}}&nbsp;Contact&nbsp;
+            <i class="fa fa-save"></i>
+        </button>
+    </div>
+</div>

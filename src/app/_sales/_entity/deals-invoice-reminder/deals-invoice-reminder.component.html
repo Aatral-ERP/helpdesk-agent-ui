@@ -1,0 +1,30 @@
+<h4 class="pl-0 ml-0 mt-3">
+    <span class=" p-2 pl-5 pr-2 text-white font-size-14 sideTitle">
+        <i class="far fa-bell"></i> Deal Invoice Reminders
+    </span>
+    <input hidden class="form-control" (focus)="dp.toggleCalendar()" placeholder="choose valid date"
+        angular-mydatepicker name="dateObject" [(ngModel)]="_filters.dateObject" [options]="myDatePickerOptions"
+        (dateChanged)="_filters.fromDate = $event.dateRange.beginJsDate;_filters.toDate = $event.dateRange.endJsDate;searchDealsInvoiceReminders();"
+        #dp="angular-mydatepicker" autocomplete="off" />
+    <span class="text-muted small">
+        ({{_filters.fromDate | date:'MMM dd, yyyy'}} -
+        {{_filters.toDate | date:'MMM dd, yyyy'}})
+        <i (click)="dp.toggleCalendar()" class="far fa-calendar-alt pr-2 pointer"></i>
+    </span>
+</h4>
+
+<p *ngIf="reminders.length == 0" class="text-muted">No Invoice Reminders Found...</p>
+
+<mat-progress-bar *ngIf="loading" mode="indeterminate">
+</mat-progress-bar>
+
+<mat-card *ngFor="let rem of reminders">#{{rem.deal.id}} - {{rem.deal.institute.instituteName}}
+    <span class="float-right">
+        <span class="chip-pk" *ngIf="rem.reminder.invoiceId > 0">Inv #{{rem.reminder.invoiceNo}}
+            <i class="far fa-check-circle text-success"></i>
+        </span>
+        <a routerLink="/sales/deals/overview/{{rem.reminder.dealId}}/invoice">
+            <i class="fas fa-external-link-alt"></i>
+        </a>
+    </span>
+</mat-card>

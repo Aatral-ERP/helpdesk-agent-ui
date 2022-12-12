@@ -1,0 +1,179 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate">
+</mat-progress-bar>
+
+<div class="row pt-2">
+    <div class="col">
+        <h6 class="font-weight-bold pt-2">Team Members
+            <small *ngIf="_my_team_membership !== undefined && _my_team_membership.memberRole == 'Administrator'"
+                (click)="viewAll = !viewAll" class="pl-3 text-primary pointer float-right"><u>View All Team
+                    Members</u></small>
+        </h6>
+    </div>
+</div>
+<!-- <h6 class="pt-1">Lead : {{getMemberName(team.leadEmail)}}</h6> -->
+
+<div class="containerDiv row flex-nowrap">
+    <div class="col">
+
+        <span class="profile-member-container" *ngFor="let member of members"
+            [hidden]="member.memberEmailId != team.leadEmail" title="{{getMemberName(member.memberEmailId)}}">
+
+            <figure class="figure">
+                <img [ngClass]="(selectedMember == member.memberEmailId) ? 'selectedMemberIMG' : ''"
+                    class="pointer profile-member" (click)="selectMember(member)"
+                    src="{{getMemberImageURL(member.memberEmailId)}}">
+                <figcaption class="figure-caption">
+                    <small class="small text-dark caption">
+                        {{getMemberName(member.memberEmailId)}}</small>
+                </figcaption>
+            </figure>
+        </span>
+
+        <span class="profile-member-container" *ngFor="let member of members"
+            [hidden]="member.memberEmailId == team.leadEmail" title="{{getMemberName(member.memberEmailId)}}">
+
+            <figure class="figure">
+                <img [ngClass]="(selectedMember == member.memberEmailId) ? 'selectedMemberIMG' : ''"
+                    class="pointer profile-member" (click)="selectMember(member)"
+                    src="{{getMemberImageURL(member.memberEmailId)}}">
+                <figcaption class="figure-caption">
+                    <small class="small text-dark caption">{{getMemberName(member.memberEmailId)}}</small>
+                </figcaption>
+            </figure>
+
+        </span>
+        <span class="profile-member-container">
+            <figure class="figure">
+                <img *ngIf="team.leadEmail == ts.auth.getLoginEmailId()" class="pointer profile-member"
+                    (click)="openAddCommentModal()" src="https://friconix.com/png/fi-xnsuxx-user-plus-solid.png">
+                <figcaption class="figure-caption">
+                    <small class="small text-muted caption"> + Add New Member</small>
+                </figcaption>
+            </figure>
+        </span>
+
+    </div>
+</div>
+
+<div class="row" [hidden]="!viewAll">
+    <div class="col">
+        <div class="table-responsive">
+            <table class="table table-striped">
+
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Photo</th>
+                        <th>Name</th>
+                        <th>Open Tasks</th>
+                        <th>Closed Tasks</th>
+                        <!-- <th>Rating</th> -->
+                        <th>Role</th>
+                        <th>Lead</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let member of members;let i = index">
+                        <th scope="row">{{i+1}}</th>
+                        <td><img title="{{getMemberName(member.memberEmailId)}}" class="pointer profile-member"
+                                src="{{getMemberImageURL(member.memberEmailId)}}"></td>
+                        <td>
+                            {{getMemberName(member.memberEmailId)}}
+                            <br>
+                            <small>{{member.memberEmailId}}</small>
+                        </td>
+                        <td>{{member.openTasks}}</td>
+                        <td>{{member.closedTasks}}</td>
+                        <!-- <td>{{member.rating}}<i class="fas fa-star text-warning"></i></td> -->
+                        <td>
+                            <select (change)="changeRole(member)" name="role"
+                                [disabled]="ts.auth.getLoginEmailId() != team.leadEmail" class="form-control"
+                                [(ngModel)]="member.memberRole">
+                                <option value="Administrator">Administrator</option>
+                                <option value="Member">Member</option>
+                                <option value="Viewer">Viewer</option>
+                            </select>
+                        </td>
+                        <td>
+                            <span *ngIf="member.memberEmailId == team.leadEmail" class="text-primary float-center">Lead
+                                &nbsp;&nbsp;<i class="fas fa-user-shield"></i>
+                            </span>
+                            <button *ngIf="member.memberEmailId != team.leadEmail" mat-stroked-button color="primary"
+                                [disabled]="ts.auth.getLoginEmailId() != team.leadEmail" (click)="makeTeamLead(member)">
+                                <i class="fas fa-user-shield pl-2"></i>&nbsp;&nbsp; Make Team Lead
+                            </button>
+                        </td>
+                        <td>
+                            <button *ngIf="member.memberEmailId != team.leadEmail" mat-stroked-button color="warn"
+                                (click)="deleteMember(member)" [disabled]="ts.auth.getLoginEmailId() != team.leadEmail">
+                                <i class="fas fa-trash-alt pl-2"></i>&nbsp;&nbsp; Delete
+                            </button>
+                            <!-- <i *ngIf="member.memberEmailId != team.leadEmail && ts.auth.getLoginEmailId() == team.leadEmail"
+                                (click)="deleteMember(member)" class="fas fa-trash-alt text-danger pointer"></i> -->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!--Section: Live preview-->
+
+<!--Modal: modal-->
+<div class="modal fade right" id="agentaddmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true" data-backdrop="true">
+    <div class="modal-dialog modal-frame modal-right modal-full-height modal-notify modal-primary" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <!--Body-->
+            <div class="modal-body">
+
+                <div class="row p-1 mb-1">
+                    <div class="col-12">
+                        <label class="required-label">Select Role</label>
+                        <select class="form-control" [(ngModel)]="role">
+                            <option value="Administrator">Administrator </option>
+                            <option value="Member">Member </option>
+                            <option value="Viewer">Viewer </option>
+                        </select>
+                    </div>
+                    <div class="col-12 pt-2">
+                        <label for="">Enter Name to filter</label>
+                        <input class="form-control" placeholder="Enter Agent Name to filter" name="agentName"
+                            [(ngModel)]="agentName">
+                    </div>
+                </div>
+
+                <div class="row" (click)="addNewMember(agent)"
+                    [hidden]="agent.workingStatus == 'releived' || agent.isBlocked"
+                    *ngFor="let agent of add_agents_show">
+                    <div class="col-12 m-2">
+                        <div class="row" *ngIf="agentName == '' 
+                            || agent.firstName.toLowerCase().includes(agentName.toLowerCase())
+                            || agent.lastName.toLowerCase().includes(agentName.toLowerCase())
+                            || agent.emailId.toLowerCase().includes(agentName.toLowerCase())">
+                            <div class="col">
+                                <div class="pointer">
+                                    <p class="text-dark">{{agent.firstName}} {{agent.lastName}}
+                                        <br>
+                                        <small class="text-muted">{{agent.emailId}}</small>
+                                        <hr>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <img class="pointer profile-member" src="{{ts.getMemberImageURL(agent.emailId)}}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!--/.Content-->
+    </div>
+</div>
+<!--Modal: modal-->
+
+<!--Section: Live preview-->

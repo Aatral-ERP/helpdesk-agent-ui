@@ -1,0 +1,434 @@
+<div class="container-fluid">
+
+    <div class="row p-2">
+        <div class="col">
+
+            <p class="indigo-text h4 text-center">{{_mode}} Deal
+            </p>
+
+            <hr style="width:100%;text-align:left;margin-left:0">
+
+        </div>
+    </div>
+
+    <h5 class="font-weight-bold">Deal Info</h5>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-6">
+            <label>Institute</label>
+            <ng-multiselect-dropdown [placeholder]="'Select Institutes'" [data]="_institutes"
+                [(ngModel)]="_selectedInstitute" [settings]="_instituteDropdownSettings"
+                (onSelect)="deal.institute = $event;loadAllInstituteContacts($event);copyBillingAddressFromInstitute();copyShippingAddressFromBillingAddress();decideGSTType();">
+            </ng-multiselect-dropdown>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-4">
+            <label>Contacts</label>
+            <ng-multiselect-dropdown [placeholder]="'Select Contact'" [data]="_inst_contacts"
+                [(ngModel)]="deal.instituteContacts" [settings]="_instituteContactDropdownSettings">
+            </ng-multiselect-dropdown>
+        </div>
+
+        <div class="col-sm-12 col-md-12 col-lg-2">
+            <label>Deal Type</label>
+            <select class="form-control" name="dealType" id="dealType" [(ngModel)]="deal.dealType">
+                <option value="Sales">Sales</option>
+                <option value="AMC">AMC</option>
+                <option value="Service">Service</option>
+                <option value="Others">Others</option>
+            </select>
+        </div>
+    </div>
+
+    <p class="p-2">&nbsp;</p>
+
+    <h5 class="font-weight-bold">Address Info</h5>
+
+    <div class="row justify-content-center">
+        <div class="col-sm-12 col-md-12 col-lg-6">
+            <div class="p-2 border border-light-1">
+
+                <span class="font-weight-bold h6">Billing Address</span>
+                <span *ngIf="deal.institute.instituteId" class="text-primary pointer float-right"
+                    (click)="copyBillingAddressFromInstitute()">
+                    <u>Copy Address from Selected Institute</u>
+                </span>
+                <div class="row">
+                    <div class="col-12">
+                        <label for="billingTo">Billing To</label>
+                        <input class="form-control" type="text" id="billingTo"
+                            placeHolder="i.e. The Principal / Purchase Department" name="billingTo"
+                            [(ngModel)]="deal.billingTo" />
+                    </div>
+                    <div class="col-12">
+                        <label for="billingStreet">Billing Street</label>
+                        <input class="form-control" type="text" id="billingStreet" placeHolder="Enter Billing Street"
+                            name="billingStreet" [(ngModel)]="deal.billingStreet1" />
+                    </div>
+                    <div class="col-12">
+                        <label for="billingStreet">Billing Street2</label>
+                        <input class="form-control" type="text" id="billingStreet2" placeHolder="Enter Billing Street2"
+                            name="billingStreet" [(ngModel)]="deal.billingStreet2" />
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <label for="billingCity">Billing City</label>
+                        <input class="form-control" type="text" id="billingCity" placeHolder="Enter Billing City"
+                            name="billingCity" [(ngModel)]="deal.billingCity" />
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <label for="billingState">Billing State</label>
+                        <input class="form-control" type="text" id="billingState" placeHolder="Enter Billing State"
+                            name="billingState" [(ngModel)]="deal.billingState" />
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <label for="billingCountry">Billing Country</label>
+                        <input class="form-control" type="text" id="billingCountry" placeHolder="Enter Billing Country"
+                            name="billingCountry" [(ngModel)]="deal.billingCountry" />
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <label for="billingZIPCode">Billing ZIP Code</label>
+                        <input class="form-control" type="text" id="billingZIPCode" placeHolder="Enter Billing ZIP Code"
+                            name="billingZIPCode" [(ngModel)]="deal.billingZIPCode"
+                            (ngModelChange)="decideGSTType();" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-6">
+            <div class="p-2 border border-light-1">
+                <span class="font-weight-bold h6">Shipping Address</span>
+                <span *ngIf="deal.institute.instituteId" class="text-primary pointer float-right"
+                    (click)="copyShippingAddressFromBillingAddress()">
+                    <u>Copy Address from Billing Address</u>
+                </span>
+                <div class="row">
+                    <div class="col-12">
+                        <label for="shippingTo">Shipping To</label>
+                        <input class="form-control" type="text" id="shippingTo"
+                            placeHolder="i.e. The Principal / Purchase Department" name="shippingTo"
+                            [(ngModel)]="deal.shippingTo" />
+                    </div>
+                    <div class="col-12">
+                        <label for="shippingStreet1">Shipping Street</label>
+                        <input class="form-control" type="text" id="shippingStreet1"
+                            placeHolder="Enter Shipping Street1" name="shippingStreet1"
+                            [(ngModel)]="deal.shippingStreet1" />
+                    </div>
+                    <div class="col-12">
+                        <label for="shippingStreet2">Shipping Street2</label>
+                        <input class="form-control" type="text" id="shippingStreet2"
+                            placeHolder="Enter Shipping Street2" name="shippingStreet2"
+                            [(ngModel)]="deal.shippingStreet2" />
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <label for="shippingCity">Shipping City</label>
+                        <input class="form-control" type="text" id="shippingCity" placeHolder="Enter Shipping City"
+                            name="shippingCity" [(ngModel)]="deal.shippingCity" />
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <label for="shippingState">Shipping State</label>
+                        <input class="form-control" type="text" id="shippingState" placeHolder="Enter Shipping State"
+                            name="shippingState" [(ngModel)]="deal.shippingState" />
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <label for="shippingCountry">Shipping Country</label>
+                        <input class="form-control" type="text" id="shippingCountry"
+                            placeHolder="Enter Shipping Country" name="shippingCountry"
+                            [(ngModel)]="deal.shippingCountry" />
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <label for="shippingZIPCode">Shipping ZIP code</label>
+                        <input class="form-control" type="text" id="shippingZIPCode"
+                            placeHolder="Enter Shipping ZIP Code" name="shippingZIPCode"
+                            [(ngModel)]="deal.shippingZIPCode" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p class="p-2">&nbsp;</p>
+
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-12">
+            <h5 class="font-weight-bold">Product Details</h5>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            <div [hidden]="deal.dealType != 'AMC'">
+                <div class="row">
+                    <div class="col">
+                        <label for="amcFromDate" style="margin-bottom: 5px;"> AMC From Date </label>
+
+                        <input (ngModelChange)="onAMCFromDateChange($event)" [(ngModel)]="deal.amcFromDate"
+                            class="form-control" (focus)="picker.open()" [matDatepicker]="picker">
+                        <mat-datepicker #picker></mat-datepicker>
+                    </div>
+
+                    <div class="col">
+                        <label for="amcToDate" style="margin-bottom: 5px;"> AMC To Date </label>
+
+                        <input [(ngModel)]="deal.amcToDate" class="form-control" (focus)="picker2.open()"
+                            [matDatepicker]="picker2">
+                        <mat-datepicker #picker2></mat-datepicker>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="deal.products.length > 0" class="col-lg-3 col-md-3 col-sm-12">
+            <button (click)="openAddProductModal()" class="btn btn-md btn-primary float-right">Add Product
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="deal.products.length == 0">
+        <div class="col noProductSpan p-3 m-1">
+            <span (click)="openAddProductModal()" class="pointer text-primary">Add Products <i
+                    class="fa fa-plus"></i></span>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table id="example" class="table table-bordered" *ngIf="deal.products.length > 0">
+            <thead>
+                <tr>
+                    <th style="width: 2%" scope="col">#</th>
+                    <th [hidden]="!_show_parts" style="width: 5%" scope="col">Part</th>
+                    <th style="width: 25%" scope="col">Product</th>
+                    <th style="width: 10%" scope="col">Price(&#8377;)</th>
+                    <th style="width: 10%" scope="col">Discount(&#8377;)
+                        <select name="discountType" id="discountType" [(ngModel)]="deal.discountType">
+                            <option value="Percent">In %</option>
+                            <option value="Amount">In Rs.(&#8377;)</option>
+                        </select>
+                    </th>
+                    <th style="width: 8%" scope="col">Quantity</th>
+                    <th style="width: 10%" scope="col">GST
+                        <select name="gstType" id="gstType" [(ngModel)]="deal.gstType">
+                            <option value="IGST">IGST</option>
+                            <option value="CGST/SGST">CGST/SGST</option>
+                        </select>
+                    </th>
+                    <th style="width: 10%" scope="col">Total(&#8377;)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let prod of deal.products;let i = index;">
+                    <th scope="row">{{i+1}} <br>
+                        <i (click)="deal.products.splice(i, 1);" class="far fa-trash-alt text-danger pointer"></i>
+                    </th>
+                    <td *ngIf="_show_parts">
+                        <select name="partId" id="partId" [(ngModel)]="prod.partId">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </td>
+                    <td>{{prod.name}}
+                        <br>
+                        <textarea class="editFocus" name="prod.description" id="description" cols="60%" rows="3"
+                            [(ngModel)]="prod.description"></textarea>
+
+                    </td>
+                    <td>
+                        <!-- {{prod.price | currency:'INR'}} -->
+                        <input type="number" class="form-control editFocus" name="price" [(ngModel)]="prod.price">
+                        <small class="text-muted">{{prod.price | currency:'INR'}}</small>
+                    </td>
+                    <td><input type="number" class="form-control editFocus" *ngIf="deal.discountType == 'Amount'"
+                            (ngModelChange)="prod.discountPercent = onChangeDiscountAmount($event,prod.price)"
+                            name="discount" [(ngModel)]="prod.discount">
+                        <input type="number" class="form-control editFocus" *ngIf="deal.discountType == 'Percent'" min=1
+                            max=100 (ngModelChange)="prod.discount = onChangeDiscountPercent($event,prod.price)"
+                            name="discount" [(ngModel)]="prod.discountPercent">
+                        <small class="text-muted">{{prod.discount | currency:'INR'}}</small>
+                        <small class="text-muted">({{prod.discountPercent | number}}%)</small>
+
+                        {{prod.discountType}}
+                    </td>
+                    <td><input type="number" class="form-control editFocus" name="quantity" [(ngModel)]="prod.quantity">
+                        <small class="text-muted">{{prod.quantity | number}}
+                            <small *ngIf="prod.uom != null">({{prod.uom}})</small>
+                        </small>
+                    </td>
+                    <td>
+                        <select name="gstPercentage" id="gstPercentage" [(ngModel)]="prod.gstPercentage">
+                            <option value="0">0%</option>
+                            <option value="5">5%</option>
+                            <option value="12">12%</option>
+                            <option value="18">18%</option>
+                            <option value="28">28%</option>
+                        </select>
+                        <br>
+                        <span *ngIf="deal.gstType == 'CGST/SGST'">
+                            CGST -
+                            {{su.getGSTAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage) / 2 |
+                            currency:'INR'}}
+                            ({{prod.gstPercentage / 2}}%)
+                            <br>
+                            SGST -
+                            {{su.getGSTAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage) / 2 |
+                            currency:'INR'}}
+                            ({{prod.gstPercentage / 2}}%)
+                        </span>
+                        <span *ngIf="deal.gstType == 'IGST'">
+                            IGST -
+                            {{su.getGSTAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage) |
+                            currency:'INR'}}
+                            ({{prod.gstPercentage}})%
+                        </span>
+                    </td>
+                    <td align="right">
+                        {{su.getTotalAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage) |
+                        currency:'INR'}}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="borderless">
+                        <button (click)="openAddProductModal()" class="btn btn-sm btn-primary">Add Product
+                            <i class="fa fa-plus"></i>
+                        </button>
+                        <button *ngIf="!_show_parts" (click)="_show_parts = true" class="btn btn-sm btn-primary">
+                            Show Parts
+                        </button>
+                        <button *ngIf="_show_parts" (click)="removeParts()" class="btn btn-sm btn-primary">
+                            Remove Parts
+                        </button>
+                        <br>
+                        <div *ngIf="_show_parts">
+                            <span *ngIf="su.getPartSubTotal(deal.products, 1) > 0" class="d-block">Part 1 Subtotal :
+                                {{su.getPartSubTotal(deal.products, 1) | currency:'INR'}}</span>
+                            <span *ngIf="su.getPartSubTotal(deal.products, 2) > 0" class="d-block">Part 2 Subtotal :
+                                {{su.getPartSubTotal(deal.products, 2) | currency:'INR'}}</span>
+                            <span *ngIf="su.getPartSubTotal(deal.products, 3) > 0" class="d-block">Part 3 Subtotal :
+                                {{su.getPartSubTotal(deal.products, 3) | currency:'INR'}}</span>
+                            <span *ngIf="su.getPartSubTotal(deal.products, 4) > 0" class="d-block">Part 4 Subtotal :
+                                {{su.getPartSubTotal(deal.products, 4) | currency:'INR'}}</span>
+                            <span *ngIf="su.getPartSubTotal(deal.products, 5) > 0" class="d-block">Part 5 Subtotal :
+                                {{su.getPartSubTotal(deal.products, 5) | currency:'INR'}}</span>
+                        </div>
+                    </td>
+                    <td [hidden]="!_show_parts"></td>
+                    <td colspan="2">
+                        <table class="table table-sm table-borderless text-dark">
+                            <tr>
+                                <td>
+                                    Sub Total
+                                </td>
+                                <td align="right">
+                                    {{su.getSubTotal(deal.products) | currency:'INR'}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Discount
+                                </td>
+                                <td align="right">
+                                    {{su.getDiscount(deal.products) | currency:'INR'}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Tax
+                                </td>
+                                <td align="right">
+                                    {{su.getTaxAmount(deal.products) | currency:'INR'}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Adjustment
+                                </td>
+                                <td align="right">
+                                    {{su.getAdjustment(deal.products) | currency:'INR'}}
+                                </td>
+                            </tr>
+                            <tr class="border-light border-top border-bottom">
+                                <td class="font-weight-bold">
+                                    Grand Total
+                                </td>
+                                <td class="font-weight-bold" align="right">
+                                    {{su.getGrandTotal(deal.products) | currency:'INR'}}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p class="p-5">&nbsp;</p>
+
+    <div class="footer bg-white">
+        <span class="float-right">
+
+            <a *ngIf="deal.id > 0" routerLink="/sales/deals/overview/{{deal.id}}/deal" class="text-primary u"> cancel
+            </a>
+
+            <button class="btn btn-md btn-outline-primary" (click)="clear()">Clear</button>
+
+            <button (click)="saveDeal()" class="btn btn-md btn-primary">Save&nbsp;
+                <i class="fa fa-save"></i>
+            </button>
+        </span>
+    </div>
+
+    <!--Section: Live preview-->
+
+    <!--Modal: modal-->
+    <div class="modal fade right" id="productaddmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true" data-backdrop="true">
+        <div class="modal-dialog modal-frame modal-right modal-full-height modal-notify modal-primary" role="document">
+            <!--Content-->
+            <div class="modal-content">
+                <!--Body-->
+                <div class="modal-body">
+
+                    <div class="row p-1 mb-1">
+                        <div class="col">
+                            <mat-form-field class="d-block">
+                                <input matInput placeholder="Enter Product Name to filter" name="productName"
+                                    [(ngModel)]="productName" (ngModelChange)="filterProduct($event)">
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-12" [hidden]="!_is_products_loading">
+                            <div class="item" *ngFor="let i of [].constructor(5)">
+                                <ngx-skeleton-loader count="1" animation="pulse" appearance="line">
+                                </ngx-skeleton-loader>
+                                <ngx-skeleton-loader count="1" animation="pulse" appearance="line" [theme]="{
+                                        height: '50px'
+                                      }">
+                                </ngx-skeleton-loader>
+                            </div>
+                        </div>
+
+                        <a (click)="hideProductAddModal()" routerLink="/product/add-product"><u>Create Product</u></a>
+
+                        <div class="col-12" [hidden]="_is_products_loading || !prod.finishedProduct"
+                            *ngFor="let prod of _productsShow">
+
+                            <div (click)="addProduct(prod)" class="pointer productCard cardPurple mt-1">
+                                <h5>{{prod.name}}</h5>
+                                <small class="productDesc"> <span [innerHTML]="prod.description"></span>
+                                </small>
+                                <small [hidden]="deal.dealType == 'Sales'">{{prod.amount | currency : 'INR'}}</small>
+                                <small [hidden]="deal.dealType == 'AMC'">{{prod.amcAmount | currency : 'INR'}}</small>
+                                <button class="addProductButton">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/.Content-->
+        </div>
+    </div>
+</div>
+<!--Modal: modal-->
+
+<!--Section: Live preview-->
