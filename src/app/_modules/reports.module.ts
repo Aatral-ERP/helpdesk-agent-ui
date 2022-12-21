@@ -21,7 +21,7 @@ import { ServiceReportComponent } from '../service-report/service-report.compone
 
 @NgModule({
   declarations: [TicketReportComponent, AmcReportComponent, InstcontactReportComponent,
-    AgentReportComponent, CallReportComponent,ServiceReportComponent,AmcReportComponent],
+    AgentReportComponent, CallReportComponent,ServiceReportComponent],
   imports: [
     CommonModule,
     FormsModule,

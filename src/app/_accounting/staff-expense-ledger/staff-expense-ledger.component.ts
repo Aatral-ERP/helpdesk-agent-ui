@@ -11,6 +11,7 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
 import { IAngularMyDpOptions } from 'angular-mydatepicker';
 import { AGGridButtonRendererComponent } from 'src/app/_modules/common/ag-grid-button-renderer.component';
 import { environment } from 'src/environments/environment';
+import { Agent } from 'src/app/_profile/agent-profile/Agent';
 
 export const MY_FORMATS = {
   parse: {
@@ -55,18 +56,13 @@ export class StaffExpenseLedgerComponent implements OnInit {
   ledger: Array<AgentLedger> = [];
   ledger_show: Array<AgentLedger> = [];
 
-  _agents = [];
-  _selectedAgents = [];
+  _agents: Array<Agent> = [];
+  _recentLegderPerAgent: Array<AgentLedger> = [];
+  selectedAgent: Agent;
 
   loading = false;
   saving = false;
   showNewLedger = false;
-
-  totalCredit = 0;
-  totalDebit = 0;
-
-  private gridApi;
-  private gridColumnApi;
 
   public myDatePickerOptions: IAngularMyDpOptions = {
     dateRange: true,
@@ -86,14 +82,6 @@ export class StaffExpenseLedgerComponent implements OnInit {
   frameworkComponents: any;
 
   columnDefs = [
-    // {
-    //   headerName: '', field: 'id', width: 40,
-    //   cellRenderer: 'buttonRenderer',
-    //   cellRendererParams: {
-    //     onClick: this.editLedger.bind(this),
-    //     label: null
-    //   }
-    // },
     {
       headerName: '', field: 'id', width: 40, resizable: true,
       cellRenderer: 'buttonRenderer',
@@ -141,7 +129,7 @@ export class StaffExpenseLedgerComponent implements OnInit {
         if (data.value != null && data.value != '')
           return `<a href='${this.getLegderProofURL('view', data.value)}' target="_blank"> ${data.value} </a>`;
         else
-          return "--note-attachment--";
+          return "--no-attachment--";
       }
     },
     { headerName: 'Journal/Category', field: 'journal', sortable: true, filter: true, resizable: true, minWidth: 240, tooltip: (data) => { return data.value }, },
@@ -163,53 +151,34 @@ export class StaffExpenseLedgerComponent implements OnInit {
     this.accServ.loadIncomeExpenseNeeded().subscribe(resp => {
       if (resp['StatusCode'] == '00') {
         this._agents = resp['Agents'];
+        this._recentLegderPerAgent = resp['RecentLegderPerAgent'];
       }
     })
   }
 
   onAgentDeSelect() {
     this.ledger = [];
-    this.totalCredit = 0;
-    this.totalDebit = 0;
+  }
+
+  showAgentLegder(emailId: string) {
+    this.getAgentLedger(this._agents.find(agent => agent.emailId == emailId));
   }
 
   getAgentLedger(agent) {
 
     this.ledger = [];
-    this.totalCredit = 0;
-    this.totalDebit = 0;
 
     this.dateObject = null;
     this.fromDate = null;
     this.toDate = null;
 
+    this.selectedAgent = undefined;
     this.loading = true;
     this.accServ.getAgentLedger(agent).subscribe(resp => {
       this.loading = false;
       if (resp['StatusCode'] == '00') {
-        let _balance = 0;
+        this.selectedAgent = agent;
         this.ledger = resp['AgentLedger'];
-
-        this.ledger
-          .sort((a, b) => +new Date(a.paymentDate) - +new Date(b.paymentDate))
-          .forEach(ledg => {
-            //Calculating Balance for each ledger
-
-            if (ledg.credit > 0)
-              _balance = _balance + ledg.credit;
-            else if (ledg.debit > 0)
-              _balance = _balance - ledg.debit;
-
-            ledg.balance = _balance;
-
-            // Calculating totalCredit and totalDebit
-            if (ledg.credit > 0) {
-              this.totalCredit = this.totalCredit + ledg.credit;
-            } else if (ledg.debit > 0) {
-              this.totalDebit = this.totalDebit + ledg.debit;
-            }
-          });
-        this.ledger.sort((a, b) => +new Date(b.paymentDate) - +new Date(a.paymentDate));
         this.prepareLegderShow();
       }
     }, error => this.loading = false);
@@ -230,7 +199,7 @@ export class StaffExpenseLedgerComponent implements OnInit {
       else
         return true;
     }).forEach((ledg: AgentLedger) => this.ledger_show.push(ledg));
-
+    this.ledger_show = this.ledger_show.sort((a, b) => b.id - a.id);
   }
 
   addLedger() {
@@ -251,7 +220,7 @@ export class StaffExpenseLedgerComponent implements OnInit {
       return;
     }
 
-    this.newLedger.agentEmailId = this._selectedAgents[0].emailId;
+    this.newLedger.agentEmailId = this.selectedAgent.emailId;
 
     this.saving = true;
     this.accServ.addLedger(this.newLedger).subscribe(resp => {
@@ -259,7 +228,8 @@ export class StaffExpenseLedgerComponent implements OnInit {
       if (resp['StatusCode'] == '00') {
         this.newLedger = new AgentLedger();
         this.showNewLedger = false;
-        this.getAgentLedger(this._selectedAgents[0]);
+        this.loadIncomeExpenseNeeded();
+        this.getAgentLedger(this.selectedAgent);
       }
     }, error => this.saving = false);
   }
@@ -267,7 +237,7 @@ export class StaffExpenseLedgerComponent implements OnInit {
   creditExpense() {
     this.newLedger = new AgentLedger();
     this.ledgerType = 'Credit';
-    this.newLedger.agentEmailId = this._selectedAgents[0].emailId;
+    this.newLedger.agentEmailId = this.selectedAgent.emailId;
     this.showNewLedger = true;
   }
 
@@ -341,13 +311,17 @@ export class StaffExpenseLedgerComponent implements OnInit {
     a.click();
   }
 
-  onBtnExport() {
-    this.gridApi.exportDataAsCsv({ fileName: 'Staff Expenses Legder Report' });
 
+  getMemberName(emailId) {
+    let agent: Agent = this._agents.find(agent => agent.emailId == emailId);
+    if (agent !== undefined)
+      return agent.firstName + ' ' + agent.lastName;
+    else
+      return emailId;
   }
 
-  onGridReady(params) {
-    this.gridApi = params.api;
+  getMemberLegderBalance(emailId) {
+    return this._recentLegderPerAgent.find(ledger => ledger.agentEmailId == emailId).balance;
   }
 
 }

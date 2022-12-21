@@ -310,7 +310,7 @@ export class TicketReportComponent implements OnInit {
     });
   }
 
-  //Export CSV 
+  //Export CSV
 
   onBtnExport() {
     this.gridApi.exportDataAsCsv({ fileName: 'Ticket Report' });

@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Agent } from 'src/app/_profile/agent-profile/Agent';
 import { TeamsService } from 'src/app/_services/teams.service';
 import { environment } from 'src/environments/environment';
+import Swal from 'sweetalert2';
+import { TaskFeature } from '../task-feature-create/TaskFeature';
 import { TeamCreateComponent } from '../team-create/team-create.component';
 import { TeamMembers } from '../team-members/TeamMembers';
 import { TeamSetting } from '../team-settings/TeamSetting';
@@ -26,12 +28,13 @@ export class ViewTeamComponent implements OnInit, OnDestroy {
   role = 'Administrator'
 
   loading = false;
+  featuresLoaded = false;
   team: Teams = new Teams();
   teamSetting: TeamSetting = new TeamSetting();
   allTeamMembers: Array<TeamMembers>
   myTeamMembership: TeamMembers;
   selectedMember: TeamMembers;
-
+  allFeatures: Array<TaskFeature>;
   agents: Array<Agent> = [];
 
   ngOnDestroy(): void {
@@ -97,6 +100,32 @@ export class ViewTeamComponent implements OnInit, OnDestroy {
       console.log(result);
       this.getTeam(this.team.id);
     });
+  }
+
+  deleteTeam() {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `You want to Delete this team`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: 'red',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Delete!'
+    }).then((result) => {
+      if (result.value) {
+
+        this.loading = true;
+        this.ts.deleteTeam(this.team).subscribe(resp => {
+          this.loading = false;
+          if (resp['StatusCode'] == '00') {
+            this.snackbar.open('Deleted Team Successfully: ' + this.team.name);
+            this.router.navigateByUrl('teams/boards');
+          } else if (resp['StatusCode'] == '03') {
+            this.snackbar.open('Fialed: ' + resp['StatusDesc']);
+          }
+        }, error => this.loading = false)
+      }
+    })
   }
 
 }

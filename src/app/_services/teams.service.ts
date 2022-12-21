@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { Agent } from '../_profile/agent-profile/Agent';
 import { TaskComments } from '../_teams/task-comments/TaskComments';
 import { Task } from '../_teams/task-create/Task';
+import { TaskFeature } from '../_teams/task-feature-create/TaskFeature';
 import { TaskHistory } from '../_teams/task-history/TaskHistory';
 import { TeamEmailSetting } from '../_teams/team-email-notification-settings/TeamEmailSetting';
 import { TeamMembers } from '../_teams/team-members/TeamMembers';
@@ -32,6 +33,11 @@ export class TeamsService {
     }
     let req = { teams: team, agent: this.auth.getAgentDetails() };
     return this.http.post(environment.apiUrl + 'teams/save-team', req);
+  }
+
+  deleteTeam(team: Teams) {
+    let req = { teams: team, agent: this.auth.getAgentDetails() };
+    return this.http.post(environment.apiUrl + 'teams/delete-team', req);
   }
 
   getTeam(id) {
@@ -170,6 +176,36 @@ export class TeamsService {
 
   getMyCalendarTasksEvents(req) {
     return this.http.post(environment.apiUrl + 'tasks/get-my-calendar-tasks-events', req);
+  }
+
+  uploadTaskFeatureAttachments(file, directoryName) {
+    let form = new FormData();
+    form.append('file', file);
+    form.append('directoryName', directoryName);
+    const url = environment.apiUrl + '/task-features/upload-task-feature-attachments';
+    const req = new HttpRequest('POST', url, form, {
+      reportProgress: true
+    });
+    return this.http.request(req);
+  }
+
+
+  createTaskFeature(feature: TaskFeature, directoryName: string) {
+    let req = { feature: feature, directoryName: directoryName };
+    return this.http.post(environment.apiUrl + 'task-features/create-task-feature', req);
+  }
+
+  loadTeamTaskFeatures(teamId) {
+    return this.http.get(environment.apiUrl + 'task-features/get-team-task-features/' + teamId);
+  }
+
+  getTaskFeature(featureId) {
+    return this.http.get(environment.apiUrl + 'task-features/get-task-feature/' + featureId);
+  }
+
+  deleteTaskFeature(feature: TaskFeature) {
+    let req = { feature: feature };
+    return this.http.post(environment.apiUrl + 'task-features/delete-task-feature', req);
   }
 
 }

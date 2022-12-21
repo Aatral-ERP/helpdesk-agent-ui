@@ -106,16 +106,16 @@
                     </button>
 
                     <button mat-flat-button class="m-1 pl-0 pr-0 bg-light" [matMenuTriggerFor]="priorityMenu">
-                        <i *ngIf="task.priority == 'Not Preferred'" class="fas fa-arrows-alt-h text-muted"></i>
-                        <i *ngIf="task.priority == 'High'" class="fas fa-arrow-up text-danger"></i>
-                        <i *ngIf="task.priority == 'Medium'" class="fas fa-arrows-alt-v text-warning"></i>
-                        <i *ngIf="task.priority == 'Low'" class="fas fa-arrow-down text-info"></i>
+                        <i *ngIf="task.priority == 'Not Preferred'" class="fas fa-arrows-alt-h text-muted p-1"></i>
+                        <i *ngIf="task.priority == 'High'" class="fas fa-arrow-up text-danger p-1"></i>
+                        <i *ngIf="task.priority == 'Medium'" class="fas fa-arrow-up text-warning p-1"></i>
+                        <i *ngIf="task.priority == 'Low'" class="fas fa-arrow-down text-info p-1"></i>
                     </button>
 
                     <button (click)="openShareWhatsAppModal()" mat-flat-button class="bg-light m-1 pl-0 pr-0">
                         <i class="fab fa-whatsapp"></i>
                     </button>
-                    <!-- 
+                    <!--
                     <button mat-flat-button mat-dialog-close class="bg-light m-1 pl-0 pr-0">
                         <i class="fas fa-times text-muted fa-lg"></i>
                     </button> -->
@@ -160,13 +160,24 @@
 
             <div class="row pt-2">
                 <div class="col-12">
+                    <mat-label class="text-muted small">Feature {{allFeatures.length}}</mat-label>
+                </div>
+                <div class="col">
+                    <span (click)="openFeaturesModal()" class="chip-pk pointer">
+                        {{getFeatureName(task.featureId)}}
+                    </span>
+                    <i (click)="removeFeature()" *ngIf="task.featureId > 0" class="fas fa-times ml-2 pointer"></i>
+                </div>
+            </div>
+
+            <div class="row pt-2">
+                <div class="col-12">
                     <mat-label class="text-muted small">Label/Category</mat-label>
                 </div>
                 <div class="col">
                     <span class="chip-pk" *ngIf="task.label != null && task.label != ''">
-                        {{ (task.label.length > 40)? (task.label | slice:0:40)+'..':(task.label) }}
-                        {{task.label}}</span>
-                    <span class="chip-pk" *ngIf="task.label == null && task.label == ''"> - </span>
+                        {{ (task.label.length > 40)? (task.label | slice:0:40)+'..':(task.label) }}</span>
+                    <span class="chip-pk" *ngIf="task.label == null || task.label == ''"> - </span>
                 </div>
             </div>
 
@@ -246,6 +257,51 @@
 <!--Section: Live preview-->
 
 <!--Modal: modal-->
+<div class="modal fade right" id="featuresModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true" data-backdrop="true">
+    <div class="modal-dialog modal-frame modal-right modal-full-height modal-notify modal-primary" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <!--Body-->
+            <div class="modal-body">
+
+                <div class="row p-1 mb-1">
+                    <div class="col-12 pt-2">
+                        <label for="">Enter Feature Name to filter</label>
+                        <input class="form-control" placeholder="Enter Feature Name to filter"
+                            [(ngModel)]="searchFeatureSTR">
+                    </div>
+                </div>
+
+                <div class="row" (click)="closeFeaturesModal(feature)" *ngFor="let feature of allFeatures">
+                    <div class="col-12 m-2">
+                        <div class="row" *ngIf="searchFeatureSTR == ''
+                            || feature.name.toLowerCase().includes(searchFeatureSTR.toLowerCase())
+                            || feature.name.toLowerCase().includes(searchFeatureSTR.toLowerCase())
+                            || feature.name.toLowerCase().includes(searchFeatureSTR.toLowerCase())">
+                            <div class="col">
+                                <div class="pointer">
+                                    <p class="text-dark">{{feature.name}} <br>
+                                        <small class="text-muted">Reporter: {{getMemberName(feature.reporter)}}</small>
+                                        <hr class="m-0 p-0">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/.Content-->
+    </div>
+</div>
+<!--Modal: modal-->
+
+<!--Section: Live preview-->
+
+
+<!--Section: Live preview-->
+
+<!--Modal: modal-->
 <div class="modal fade right" id="watchersaddmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
     aria-hidden="true" data-backdrop="true">
     <div class="modal-dialog modal-frame modal-right modal-full-height modal-notify modal-primary" role="document">
@@ -268,7 +324,7 @@
                 <div class="row" (click)="addWatcher(agent.emailId)" *ngFor="let agent of agents_show"
                     [hidden]="agent.workingStatus == 'releived' || agent.isBlocked">
                     <div class="col-12 m-2">
-                        <div class="row" *ngIf="searchwatchersSTR == '' 
+                        <div class="row" *ngIf="searchwatchersSTR == ''
                             || agent.firstName.toLowerCase().includes(searchwatchersSTR.toLowerCase())
                             || agent.lastName.toLowerCase().includes(searchwatchersSTR.toLowerCase())
                             || agent.emailId.toLowerCase().includes(searchwatchersSTR.toLowerCase())">
@@ -373,19 +429,19 @@
 <mat-menu #priorityMenu="matMenu">
     <button [disabled]="!canModifyTask" class="menu-button mt-0" (click)="ChangePriority('Not Preferred')"
         mat-menu-item>
-        <i class="fas fa-arrows-alt-h text-muted p-1 pr-2"></i> Not Preferred
+        <i class="fas fa-arrows-alt-h text-muted p-1"></i> Not Preferred
     </button>
 
     <button [disabled]="!canModifyTask" class="menu-button mt-0" (click)="ChangePriority('High')" mat-menu-item>
-        <i class="fas fa-arrow-up text-danger p-1 pr-2"></i> High
+        <i class="fas fa-arrow-up text-danger p-1"></i> High
     </button>
 
     <button [disabled]="!canModifyTask" class="menu-button mt-0" (click)="ChangePriority('Medium')" mat-menu-item>
-        <i class="fas fa-arrows-alt-v text-warning p-1 pr-2"></i> Medium
+        <i class="fas fa-arrow-up text-warning p-1"></i> Medium
     </button>
 
     <button [disabled]="!canModifyTask" class="menu-button mt-0" (click)="ChangePriority('Low')" mat-menu-item>
-        <i class="fas fa-arrow-down text-info p-1 pr-2"></i> Low
+        <i class="fas fa-arrow-down text-info p-1"></i> Low
     </button>
 </mat-menu>
 
@@ -413,7 +469,7 @@
     <hr>
     <div class="scrollable-small">
         <div class="row" *ngFor="let mem of allTeamMembers">
-            <div class="col-12 m-2" *ngIf="changeAssigneeSTR == '' 
+            <div class="col-12 m-2" *ngIf="changeAssigneeSTR == ''
     || getMemberName(mem.memberEmailId).toLowerCase().includes(changeAssigneeSTR.toLowerCase())
     || mem.memberEmailId.toLowerCase().includes(changeAssigneeSTR.toLowerCase())">
                 <div (click)="changeAssignee(mem.memberEmailId)" class="pointer">
@@ -437,7 +493,7 @@
     <hr>
     <div class="scrollable-small">
         <div class="row" *ngFor="let mem of allTeamMembers">
-            <div class="col-12 m-2" *ngIf="changeReporterSTR == '' 
+            <div class="col-12 m-2" *ngIf="changeReporterSTR == ''
     || getMemberName(mem.memberEmailId).toLowerCase().includes(changeReporterSTR.toLowerCase())
     || mem.memberEmailId.toLowerCase().includes(changeReporterSTR.toLowerCase())">
                 <div (click)="changeReporter(mem.memberEmailId)" class="pointer">

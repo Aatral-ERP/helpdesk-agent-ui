@@ -116,7 +116,7 @@ export class InstcontactReportComponent implements OnInit {
     }
   }
 
-  //Export CSV 
+  //Export CSV
 
   onBtnExport() {
     this.gridApi.exportDataAsCsv({ fileName: 'Institute Contact Report' });
