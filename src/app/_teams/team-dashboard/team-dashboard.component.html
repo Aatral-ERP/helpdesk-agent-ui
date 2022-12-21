@@ -3,7 +3,7 @@
 
 <div class="row p-2">
     <div class="col">
-        <h6 class="font-weight-bold">Tasks Board
+        <h6 class="font-weight-bold pt-2">Tasks Board
             <span class="float-right">
                 <button *ngIf="canCreateTasks" mat-flat-button color="primary" (click)="openCreateTaskDialog()">Create
                     Task
@@ -41,16 +41,14 @@
                                         </span>
 
                                         <span class="float-right">
-                                            <small
-                                                class="badge badge-light mr-2 font-weight-light">{{task.lastupdatedatetime
-                                                | amTimeAgo}}</small>
-
+                                            <small class="badge badge-light pr-1">{{task.lastupdatedatetime |
+                                                amTimeAgo}}</small>
                                             <i *ngIf="task.priority == 'Not Preferred'"
                                                 class="fas fa-arrows-alt-h text-muted p-1"></i>
                                             <i *ngIf="task.priority == 'High'"
                                                 class="fas fa-arrow-up text-danger p-1"></i>
                                             <i *ngIf="task.priority == 'Medium'"
-                                                class="fas fa-arrow-up text-warning p-1"></i>
+                                                class="fas fa-arrows-alt-v text-warning p-1"></i>
                                             <i *ngIf="task.priority == 'Low'"
                                                 class="fas fa-arrow-down text-info p-1"></i>
 
@@ -63,15 +61,8 @@
                                     </div>
                                     <div class="col-12">
                                         <span class="text-muted float-left">#{{task.taskId}}&nbsp;-&nbsp;
-                                            {{task.subject}} ({{task.featureId}})
+                                            {{task.subject}}
                                         </span>
-                                    </div>
-                                    <div class="col-12" *ngIf="task.featureId > 0">
-                                        <small class="fond-weight-light">
-                                            <i class="fa fa-briefcase pr-1 {{getFeatureCaseBGColorByPriority(task.featureId)}}"
-                                                aria-hidden="true"></i>
-                                            {{getFeatureName(task.featureId)}}
-                                        </small>
                                     </div>
                                 </div>
                             </div>

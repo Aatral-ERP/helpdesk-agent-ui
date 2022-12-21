@@ -12,7 +12,6 @@ export class Task {
     assignee: string = '';
     reporter: string = '';
     priority: string = 'Not Preferred';
-    featureId: number;
     dueDateTime: Date;
     label: string = '';
     files: string;

@@ -198,6 +198,7 @@ export class SidenavComponent implements OnInit, OnDestroy {
           { name: 'Agent Report', url: 'reports/agent-report', icon: '<img class="mb-1" src="./assets/icons/amc_report2.png" width="15" height="15">&nbsp;', },
           { name: 'Call Report', url: 'reports/call-report', icon: '<img class="mb-1" src="./assets/icons/amc_report2.png" width="15" height="15">&nbsp;' },
           { name: 'Service Report', url: 'reports/service-report', icon: '<img class="mb-1" src="./assets/icons/amc_report2.png" width="15" height="15">&nbsp;' },
+          { name: 'Amc Report', url: 'reports/amc-report', icon: '<img class="mb-1" src="./assets/icons/amc_report2.png" width="15" height="15">&nbsp;' },
 
         ]
       },

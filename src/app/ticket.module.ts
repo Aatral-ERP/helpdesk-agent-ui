@@ -12,6 +12,7 @@ import { ViewRatingComponent } from './_tickets/view-rating/view-rating.componen
 import { PipeModuleModule } from './_pipes/pipe-module.module';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 
+
 @NgModule({
   declarations: [AddTicketComponent, TicketsComponent, ViewTicketComponent,
     AddRatingComponent, ViewRatingComponent],

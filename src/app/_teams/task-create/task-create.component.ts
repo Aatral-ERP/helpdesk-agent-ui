@@ -7,7 +7,6 @@ import { Institute } from 'src/app/_onboard/inst-registration/institute';
 import { Agent } from 'src/app/_profile/agent-profile/Agent';
 import { NeededService } from 'src/app/_services/needed.service';
 import { TeamsService } from 'src/app/_services/teams.service';
-import { TaskFeature } from '../task-feature-create/TaskFeature';
 import { TeamMembers } from '../team-members/TeamMembers';
 import { TeamSetting } from '../team-settings/TeamSetting';
 import { Teams } from '../teams/Teams';
@@ -47,7 +46,6 @@ export class TaskCreateComponent implements OnInit {
   files: Array<fileUpload> = [];
   filesUploaded = 0;
   labels: Array<string> = [];
-  allFeatures: Array<TaskFeature> = [];
 
   editorConfig: AngularEditorConfig = {
     editable: true,
@@ -98,8 +96,6 @@ export class TaskCreateComponent implements OnInit {
       this.member = this.data.member;
       this.setting = this.data.setting;
       this.allTeamMembers = this.data.allTeamMembers;
-      this.allFeatures = this.data.allFeatures;
-      this.allFeatures = this.allFeatures.sort((a, b) => a.name.localeCompare(b.name));
 
       this.task.teamId = this.team.id;
       this.task.createdBy = this.ts.auth.getLoginEmailId();

@@ -167,7 +167,9 @@ export class CreateLetterpadComponent implements OnInit {
 
 
   clearFilters()
-  {}
+  {
+    
+  }
 
 
   saveLetterpad()

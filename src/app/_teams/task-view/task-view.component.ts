@@ -10,7 +10,6 @@ import { TeamsService } from 'src/app/_services/teams.service';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 import { Task } from '../task-create/Task';
-import { TaskFeature } from '../task-feature-create/TaskFeature';
 import { TaskHistory } from '../task-history/TaskHistory';
 import { TeamMembers } from '../team-members/TeamMembers';
 import { TeamSetting } from '../team-settings/TeamSetting';
@@ -39,7 +38,6 @@ export class TaskViewComponent implements OnInit {
   setting: TeamSetting;
   member: TeamMembers;
   allTeamMembers: Array<TeamMembers>;
-  allFeatures: Array<TaskFeature>;
 
   agents: Array<Agent> = [];
   institutes: Array<Institute> = [];
@@ -57,8 +55,6 @@ export class TaskViewComponent implements OnInit {
 
   changeAssigneeSTR = '';
   changeReporterSTR = '';
-
-  searchFeatureSTR = '';
 
   loading = false;
   saving = false;
@@ -80,7 +76,6 @@ export class TaskViewComponent implements OnInit {
     this.member = this.data.member;
     this.setting = this.data.setting;
     this.allTeamMembers = this.data.allTeamMembers;
-    this.allFeatures = this.data.allFeatures;
 
     this.getTask(this.task.taskId);
     this.loadNeeded();
@@ -278,73 +273,6 @@ export class TaskViewComponent implements OnInit {
     $(function () {
       $('#watchersaddmodal').appendTo("body").modal('hide');
     });
-  }
-
-  openFeaturesModal() {
-    $(function () {
-      $('#featuresModal').appendTo("body").modal('show');
-    });
-  }
-
-  closeFeaturesModal(feature?: TaskFeature) {
-    $(function () {
-      $('#featuresModal').modal('hide');
-    });
-    this.updateFeature(feature);
-  }
-
-  removeFeature() {
-    let taskHistory: TaskHistory = new TaskHistory();
-
-    taskHistory.taskId = this.task.taskId;
-    taskHistory.field = 'Changed Feature';
-    taskHistory.historyFrom = this.getFeatureName(this.task.featureId);
-    taskHistory.historyTo = "-";
-    taskHistory.updatedBy = this.ts.auth.getLoginEmailId();
-
-    let _task = Object.assign({}, this.task);
-    _task.featureId = 0;
-    this.loading = true;
-    this.ts.updateTask(_task, taskHistory).subscribe(resp => {
-      this.loading = false;
-      if (resp['StatusCode'] == '00') {
-        this.snackbar.open('Changed Feature successfully');
-        this.task = resp['Task'];
-        this.handleGetTask();
-      }
-    }, error => this.loading = false)
-  }
-
-  updateFeature(feature) {
-    let taskHistory: TaskHistory = new TaskHistory();
-
-    taskHistory.taskId = this.task.taskId;
-    taskHistory.field = 'Changed Feature';
-    taskHistory.historyFrom = this.getFeatureName(this.task.featureId);
-    taskHistory.historyTo = feature.name;
-    taskHistory.updatedBy = this.ts.auth.getLoginEmailId();
-
-    let _task = Object.assign({}, this.task);
-    _task.featureId = feature.featureId;
-    this.loading = true;
-    this.ts.updateTask(_task, taskHistory).subscribe(resp => {
-      this.loading = false;
-      if (resp['StatusCode'] == '00') {
-        this.snackbar.open('Changed Feature successfully');
-        this.task = resp['Task'];
-        this.handleGetTask();
-      }
-    }, error => this.loading = false)
-  }
-
-  getFeatureName(featureId) {
-    if (this.allFeatures === undefined)
-      return " - - ";
-    let feature = this.allFeatures.find(feature => feature.featureId == featureId);
-    if (feature === undefined)
-      return "-";
-    else
-      return this.allFeatures.find(feature => feature.featureId == featureId).name;
   }
 
   addWatcher(emailId) {

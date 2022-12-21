@@ -6,7 +6,6 @@ import { TeamsService } from 'src/app/_services/teams.service';
 import { environment } from 'src/environments/environment';
 import { Task } from '../task-create/Task';
 import { TaskCreateComponent } from '../task-create/task-create.component';
-import { TaskFeature } from '../task-feature-create/TaskFeature';
 import { TaskViewComponent } from '../task-view/task-view.component';
 import { TeamMembers } from '../team-members/TeamMembers';
 import { TeamSetting } from '../team-settings/TeamSetting';
@@ -24,6 +23,15 @@ export class TeamDashboardComponent implements OnInit {
 
     this.actRoute.queryParams.subscribe(params => {
       console.log(params);
+      // if (params['action'] && params['action'] == 'view-task') {
+      //   console.log(params);
+      //   if (params['action-id']) {
+      //     console.log(params);
+      //     let task = new Task();
+      //     task.taskId = params['action-id'];
+      //     this.openViewTaskDialog(task);
+      //   }
+      // }
     });
 
   }
@@ -54,10 +62,6 @@ export class TeamDashboardComponent implements OnInit {
     console.log("allAgents Input Received::", allAgents);
     this.agents = allAgents;
   };
-  @Input() set allFeaturesEmitter(features: Array<TaskFeature>) {
-    console.log("features Input Received::", features);
-    this.allFeatures = features;
-  };
 
   handleCreateAccess() {
     if (this.team.leadEmail == this.ts.auth.getLoginEmailId()) {
@@ -84,7 +88,6 @@ export class TeamDashboardComponent implements OnInit {
   allTeamMembers: Array<TeamMembers>;
   setting: TeamSetting;
   agents: Array<Agent>;
-  allFeatures: Array<TaskFeature>;
 
   ngOnInit() {
     if (this.team.workflows != null && this.team.workflows != '') {
@@ -131,12 +134,12 @@ export class TeamDashboardComponent implements OnInit {
       width: window.innerWidth + 'px',
       minHeight: 'calc(100vh - 90px)',
       height: 'auto',
-      data: { member: this.member, setting: this.setting, team: this.team, allTeamMembers: this.allTeamMembers, allFeatures: this.allFeatures }
+      data: { member: this.member, setting: this.setting, team: this.team, allTeamMembers: this.allTeamMembers }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(result);
-      if (result !== undefined && result !== '') {
+      if (result !== undefined) {
         this.tasks.push(result);
         this.openViewTaskDialog(result);
       }
@@ -156,7 +159,7 @@ export class TeamDashboardComponent implements OnInit {
       height: 'auto',
       autoFocus: false,
       disableClose: true,
-      data: { task: task, member: this.member, setting: this.setting, team: this.team, allTeamMembers: this.allTeamMembers, allFeatures: this.allFeatures }
+      data: { task: task, member: this.member, setting: this.setting, team: this.team, allTeamMembers: this.allTeamMembers }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -189,30 +192,6 @@ export class TeamDashboardComponent implements OnInit {
       return emailId;
   }
 
-  getFeatureName(featureId) {
-    if (this.allFeatures === undefined)
-      return " - - ";
-    let feature = this.allFeatures.find(feature => feature.featureId == featureId);
-    if (feature === undefined)
-      return "-";
-    else
-      return this.allFeatures.find(feature => feature.featureId == featureId).name;
-  }
 
-  getFeatureCaseBGColorByPriority(featureId) {
-    if (this.allFeatures === undefined)
-      return "text-light";
-    let feature = this.allFeatures.find(feature => feature.featureId == featureId);
-    if (feature === undefined)
-      return "text-light";
-    else if (feature.priority == 'Not Preferred')
-      return "text-muted";
-    else if (feature.priority == 'High')
-      return "text-danger";
-    else if (feature.priority == 'Medium')
-      return "text-warning";
-    else if (feature.priority == 'Low')
-      return "text-info";
-  }
 
 }

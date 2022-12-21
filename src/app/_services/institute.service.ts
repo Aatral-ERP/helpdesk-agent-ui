@@ -83,15 +83,23 @@ export class InstituteService {
       request);
   }
 
-  getAmcReport(selectedinstitute, product, paymode, validFromDate, validToDate, paidFromDate, paidToDate) {
-    let request = {
-      SearchAmcReport: {
-        "selectedinstitute": selectedinstitute, "product": product, "paymode": paymode, "validFromDate": validFromDate,
-        "validToDate": validToDate, "paidFromDate": paidFromDate, "paidToDate": paidToDate
-      }
-    };
-    return this.http.post(environment.apiUrl + 'institute/amc-report', request);
+  // getAmcReport(selectedinstitute, product, paymode, validFromDate, validToDate, paidFromDate, paidToDate) {
+  //   let request = {
+  //     SearchAmcReport: {
+  //       "selectedinstitute": selectedinstitute, "product": product, "paymode": paymode, "validFromDate": validFromDate,
+  //       "validToDate": validToDate, "paidFromDate": paidFromDate, "paidToDate": paidToDate
+  //     }
+  //   };
+  //   return this.http.post(environment.apiUrl + 'institute/amc-report', request);
+  // }
+
+
+
+  getAmcReport(req) {
+    console.log('=========',req);
+    return this.http.post(environment.apiUrl + 'accounts/amc-report', req);
   }
+
 
   getInstituteProducts(instituteId) {
     console.log(instituteId);

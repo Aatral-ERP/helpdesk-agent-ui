@@ -93,7 +93,8 @@ export class LetterPadComponent implements OnInit {
 
   columnDefs = [
     {
-      headerName: 'Letterpad No', field: 'id', width: 120, cellRenderer: (data) => {
+      headerName: 'Letterpad No', field: 'id', width: 200, sortable: true, filter: true, resizable: true,
+      cellRenderer: (data) => {
         return `<a href="/sales/letterpad/create-letterpad?edit=${data.data.id}" target="_blank"> <i class='fas fa-edit'></i>${data.data.id} </a>`;
       }
     },
@@ -110,13 +111,26 @@ export class LetterPadComponent implements OnInit {
         return this.datePipe.transform(data.value, 'dd/MM/yyyy');
       }
     },
-    { headerName: 'File', field: 'filename', width: 120, sortable: true, filter: true, resizable: true },
+    { 
+      headerName: 'File', field: 'filename', width: 120, sortable: true, filter: true, resizable: true,
+      cellRenderer: (data) => {
+        console.log(data);
+        if (data.value != null && data.value != '')
+          return `<a href='${this.getLetterpadURL('view', data.value)}' target="_blank"> ${data.value} </a>`;
+        else
+          return "--No File--";
+      }
+    
+    },
 
   ];
 
-
- 
-  
+  getLetterpadURL(mode, filename) {
+    if (filename.toLowerCase().endsWith('pdf'))
+      return environment.contentPath + 'download-lettepad-pdf/' + mode + '/'+ filename;
+    else
+      return environment.contentPath + 'download-lettepad-pdf/' + mode + '/'+ filename;
+  }
 
   saveLetterpad()
 {

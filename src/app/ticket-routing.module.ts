@@ -5,7 +5,6 @@ import { AddTicketComponent } from './_tickets/add-ticket/add-ticket.component';
 import { TicketsComponent } from './_tickets/tickets/tickets.component';
 import { ViewTicketComponent } from './_tickets/view-ticket/view-ticket.component';
 
-
 const routes: Routes = [
   { path: '', component: TicketsComponent, canActivate: [AuthGuardService] },
   { path: 'add-ticket', component: AddTicketComponent, canActivate: [AuthGuardService] },

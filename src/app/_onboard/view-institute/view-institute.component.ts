@@ -65,7 +65,7 @@ export class ViewInstituteComponent implements OnInit {
       }
     },
     {
-      headerName: 'Short-Term', field: 'shortTerm', sortable: true, filter: true, minWidth: 80, width: 120
+      hcoleaderName: 'Short-Term', field: 'shortTerm', sortable: true, filter: true, minWidth: 80, width: 120
     },
     {
       headerName: 'Institute Type', field: 'instituteType', sortable: true, filter: true, minWidth: 150, width: 250

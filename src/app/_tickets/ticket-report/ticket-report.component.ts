@@ -265,6 +265,7 @@ export class TicketReportComponent implements OnInit {
       let tickets = [];
       if (res['StatusCode'] == '00') {
         tickets = res['Tickets'];
+        this.loading = false;
       }
       tickets.forEach(ticket => {
         let _rowData: any = {};

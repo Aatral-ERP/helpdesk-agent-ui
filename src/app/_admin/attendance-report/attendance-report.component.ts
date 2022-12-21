@@ -25,6 +25,8 @@ export class AttendanceReportComponent implements OnInit {
   attendances: Array<Attendance> = [];
   agents: Array<Agent> = [];
 
+  workingStatus='';
+
   gridRowData = [];
   columnDefs = [];
   defaultColDef = {
@@ -52,8 +54,8 @@ export class AttendanceReportComponent implements OnInit {
   };
 
   ngOnInit() {
-    this.needed.loadNeeded(['agents_min']).subscribe(resp => {
-      this._agents = resp['agents_min'];
+    this.needed.loadNeeded(['active_agents']).subscribe(resp => {
+      this._agents = resp['active_agents'];
     })
   }
 
@@ -133,6 +135,12 @@ export class AttendanceReportComponent implements OnInit {
 
   onGridReady(params) {
     this.gridApi = params.api;
+  }
+
+  clearFilters(){
+    window.location.href = "./admin/attendance-report";
+  
+
   }
 
 }

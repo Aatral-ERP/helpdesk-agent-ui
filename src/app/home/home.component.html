@@ -135,7 +135,7 @@
                                 *ngIf="ticket.dueDateTime != null" class="chip-pk"
                                 [ngClass]="isCrossedDueDate(ticket.dueDateTime) ? 'bg-warning' : 'bg-danger text-white'">due
                                 {{ticket.dueDateTime | amTimeAgo}} </small>
-                            <i *ngIf="ticket.priority == 'NotPreferred'" class="fas fa-arrows-alt-h text-muted p-1"></i>
+                            <i *ngIf="ticket.priority == 'NotPreferred'" class="fas fa-arrows-alt text-muted p-1"></i>
                             <i *ngIf="ticket.priority == 'High'" class="fas fa-arrow-up text-danger p-1"></i>
                             <i *ngIf="ticket.priority == 'Medium'" class="fas fa-arrow-up text-warning p-1"></i>
                             <i *ngIf="ticket.priority == 'Low'" class="fas fa-arrow-down text-info p-1"></i>

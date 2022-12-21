@@ -127,16 +127,20 @@
         </div>
     </div>
 </div>
-
+<div>
 <div class="row p-2 mb-5" *ngIf="rowData.length > 0">
     <div class="col">
         <ag-grid-angular enableCellTextSelection="true" [rowData]="rowData" style="width: 100%; height: 500px;"
             class="ag-theme-balham p-2" [columnDefs]="columnDefs" [paginationAutoPageSize]="true" [pagination]="true"
             [frameworkComponents]="frameworkComponents" (gridReady)="onGridReady($event)">
         </ag-grid-angular>
+        
     </div>
-</div>
 
+</div>
+<button class="btn btn-sm btn-primary" *ngIf="rowData.length > 0" (click)="onBtnExport()">Export <i
+    class="fas fa-download"></i></button>
 <div class="item" *ngIf="loading">
+    </div>
     <ngx-skeleton-loader count="12"></ngx-skeleton-loader>
 </div>

@@ -29,100 +29,87 @@
         </div>
 
         <div class="col-6 pt-2">
-            <mat-form-field class="w-100">
-                <mat-label class="text-muted small">Assignee</mat-label>
-                <mat-select matNativeControl [disabled]="!canCreateTaskToAnyMembers" [(ngModel)]="task.assignee">
-                    <mat-option value="">--select--</mat-option>
-                    <mat-optgroup label="Administrator(s)">
-                        <mat-option [hidden]="mem.memberRole != 'Administrator'" *ngFor="let mem of allTeamMembers"
-                            [value]="mem.memberEmailId">
-                            {{getMemberName(mem.memberEmailId)}}
-                        </mat-option>
-                    </mat-optgroup>
-                    <mat-optgroup label="Member(s)">
-                        <mat-option [hidden]="mem.memberRole != 'Member'" *ngFor="let mem of allTeamMembers"
-                            [value]="mem.memberEmailId">
-                            {{getMemberName(mem.memberEmailId)}}
-                        </mat-option>
-                    </mat-optgroup>
-                    <mat-optgroup label="Viewer(s)">
-                        <mat-option disabled [hidden]="mem.memberRole != 'Viewer'" *ngFor="let mem of allTeamMembers"
-                            [value]="mem.memberEmailId">
-                            {{getMemberName(mem.memberEmailId)}}
-                        </mat-option>
-                    </mat-optgroup>
-                </mat-select>
-            </mat-form-field>
-        </div>
-
-
-        <div class="col-6 pt-2">
-            <mat-form-field class="w-100">
-                <mat-label class="text-muted small">Feature</mat-label>
-                <mat-select matNativeControl [(ngModel)]="task.featureId">
-                    <mat-option value="0">--select--</mat-option>
-                    <mat-option *ngFor="let feature of allFeatures" [value]="feature.featureId">
-                        {{feature.name}}
+            <mat-label class="text-muted small">Assignee</mat-label>
+            <mat-select matNativeControl [disabled]="!canCreateTaskToAnyMembers" [(ngModel)]="task.assignee">
+                <mat-option value="">--select--</mat-option>
+                <mat-optgroup label="Administrator(s)">
+                    <mat-option [hidden]="mem.memberRole != 'Administrator'" *ngFor="let mem of allTeamMembers"
+                        [value]="mem.memberEmailId">
+                        {{getMemberName(mem.memberEmailId)}}
                     </mat-option>
-                </mat-select>
-            </mat-form-field>
+                </mat-optgroup>
+                <mat-optgroup label="Member(s)">
+                    <mat-option [hidden]="mem.memberRole != 'Member'" *ngFor="let mem of allTeamMembers"
+                        [value]="mem.memberEmailId">
+                        {{getMemberName(mem.memberEmailId)}}
+                    </mat-option>
+                </mat-optgroup>
+                <mat-optgroup label="Viewer(s)">
+                    <mat-option disabled [hidden]="mem.memberRole != 'Viewer'" *ngFor="let mem of allTeamMembers"
+                        [value]="mem.memberEmailId">
+                        {{getMemberName(mem.memberEmailId)}}
+                    </mat-option>
+                </mat-optgroup>
+            </mat-select>
         </div>
 
         <div class="col-6 pt-2">
-            <mat-form-field class="w-100">
-                <mat-label class="required-label text-muted small">Reporter</mat-label>
-                <mat-select matNativeControl [(ngModel)]="task.reporter">
-                    <mat-option value="">--select--</mat-option>
-                    <mat-optgroup label="Administrator(s)">
-                        <mat-option [hidden]="mem.memberRole != 'Administrator'" *ngFor="let mem of allTeamMembers"
-                            [value]="mem.memberEmailId">
-                            {{getMemberName(mem.memberEmailId)}}
-                        </mat-option>
-                    </mat-optgroup>
-                    <mat-optgroup label="Member(s)">
-                        <mat-option disabled [hidden]="mem.memberRole != 'Member'" *ngFor="let mem of allTeamMembers"
-                            [value]="mem.memberEmailId">
-                            {{getMemberName(mem.memberEmailId)}}
-                        </mat-option>
-                    </mat-optgroup>
-                    <mat-optgroup label="Viewer(s)">
-                        <mat-option disabled [hidden]="mem.memberRole != 'Viewer'" *ngFor="let mem of allTeamMembers"
-                            [value]="mem.memberEmailId">
-                            {{getMemberName(mem.memberEmailId)}}
-                        </mat-option>
-                    </mat-optgroup>
-                </mat-select>
-                <small [hidden]="errors.reporter == ''" class="text-danger">{{errors.reporter}}</small>
-            </mat-form-field>
+
+            <mat-label class="required-label text-muted small">Reporter</mat-label>
+            <mat-select matNativeControl [(ngModel)]="task.reporter">
+                <mat-option value="">--select--</mat-option>
+                <mat-optgroup label="Administrator(s)">
+                    <mat-option [hidden]="mem.memberRole != 'Administrator'" *ngFor="let mem of allTeamMembers"
+                        [value]="mem.memberEmailId">
+                        {{getMemberName(mem.memberEmailId)}}
+                    </mat-option>
+                </mat-optgroup>
+                <mat-optgroup label="Member(s)">
+                    <mat-option disabled [hidden]="mem.memberRole != 'Member'" *ngFor="let mem of allTeamMembers"
+                        [value]="mem.memberEmailId">
+                        {{getMemberName(mem.memberEmailId)}}
+                    </mat-option>
+                </mat-optgroup>
+                <mat-optgroup label="Viewer(s)">
+                    <mat-option disabled [hidden]="mem.memberRole != 'Viewer'" *ngFor="let mem of allTeamMembers"
+                        [value]="mem.memberEmailId">
+                        {{getMemberName(mem.memberEmailId)}}
+                    </mat-option>
+                </mat-optgroup>
+            </mat-select>
+            <small [hidden]="errors.reporter == ''" class="text-danger">{{errors.reporter}}</small>
         </div>
 
         <div class="col-6 pt-2">
-            <mat-form-field class="w-100">
-                <mat-label class="text-muted small">Due Date</mat-label>
-                <input hidden matInput [ngxMatDatetimePicker]="picker" placeholder="Choose a date"
-                    [(ngModel)]="task.dueDateTime">
-                <span class="text-muted float-right" (click)="picker.open()" class="pointer">
-                    <i class="fas fa-calendar-alt pr-2"></i>
-                    <span *ngIf="task.dueDateTime !== undefined">
-                        {{task.dueDateTime | date:'MMM dd yyyy, hh:mm a'}}
-                    </span>Set Due Date
+            <mat-label class="text-muted small">Due Date</mat-label>
+            <input hidden matInput [ngxMatDatetimePicker]="picker" placeholder="Choose a date"
+                [(ngModel)]="task.dueDateTime">
+            <br>
+            <span class="text-muted" (click)="picker.open()" class="pointer">
+                <i class="fas fa-calendar-alt pr-2"></i>
+                <span *ngIf="task.dueDateTime !== undefined">
+                    {{task.dueDateTime | date:'MMM dd yyyy, hh:mm a'}}
                 </span>
-                <mat-datepicker-toggle hidden matSuffix [for]="picker"></mat-datepicker-toggle>
-                <ngx-mat-datetime-picker [enableMeridian]="true" [touchUi]="true" #picker>
-                </ngx-mat-datetime-picker>
-            </mat-form-field>
+                <span *ngIf="task.dueDateTime === undefined || task.dueDateTime === null">
+                    Set Due Date
+                </span>
+            </span>
+            <br>
+            <small class="text-muted">Reminder will be sent to assignee before crossing due
+                date. </small>
+            <mat-datepicker-toggle hidden matSuffix [for]="picker"></mat-datepicker-toggle>
+            <ngx-mat-datetime-picker [enableMeridian]="true" [touchUi]="true" #picker>
+            </ngx-mat-datetime-picker>
         </div>
 
         <div class="col-6 pt-2">
-            <mat-form-field class="w-100">
-                <mat-label class="text-muted small">Priority</mat-label>
-                <mat-select [(ngModel)]="task.priority">
-                    <mat-option value="Not Preferred">--Not Preferred--</mat-option>
-                    <mat-option value="High">High</mat-option>
-                    <mat-option value="Medium">Medium</mat-option>
-                    <mat-option value="Low">Low</mat-option>
-                </mat-select>
-            </mat-form-field>
+            <mat-label class="text-muted small">Priority</mat-label>
+            <mat-select [(ngModel)]="task.priority">
+                <mat-option value="Not Preferred">--Not Preferred--</mat-option>
+                <mat-option value="High">High</mat-option>
+                <mat-option value="Medium">Medium</mat-option>
+                <mat-option value="Low">Low</mat-option>
+            </mat-select>
         </div>
 
         <div class="col-6 pt-2">
@@ -152,6 +139,7 @@
                     </mat-option>
                 </mat-autocomplete>
             </mat-form-field>
+            <small class="text-muted pt-0 mt-0">Add Label to Group / Categorize the tasks. </small>
         </div>
 
 

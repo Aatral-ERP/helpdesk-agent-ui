@@ -10,7 +10,6 @@
                 <a *ngIf="team.id > 0" routerLink='/teams/view/{{team.id}}'><u>{{team.name}}</u></a>
                 / <a *ngIf="team.id > 0">
                     <span [hidden]="tab != 'dashboard'">Dashboard</span>
-                    <span [hidden]="tab != 'features'">Features</span>
                     <span [hidden]="tab != 'members'">Team Members</span>
                     <span [hidden]="tab != 'search'">Search Task</span>
                     <span [hidden]="tab != 'workflow'">Manage Workflow</span>
@@ -19,22 +18,20 @@
                     <span [hidden]="tab != 'push-notification-settings'">Push Notification Settings</span>
                 </a>
             </small>
-            <small class="float-right text-danger pointer" (click)="deleteTeam()">Delete team &nbsp; <i
-                    class="fas fa-trash-alt"></i></small>
         </div>
     </div>
 
-    <div class="row pt-1 m-0">
+    <div class="row pt-1">
         <div class="col">
             <span class="h4 text-nowrap-pk">{{team.name}}
                 <i *ngIf="ts.auth.getLoginEmailId() == team.leadEmail" class="fas fa-edit pointer pl-2 text-primary"
                     (click)="openTeamCreateModal()"></i>
             </span>
             <br>
+            <small class="text-muted">{{team.category}}</small>
+            <br>
             <button class="btn btn-sm menu-button" routerLink='/teams/view/{{team.id}}/dashboard'
                 [ngClass]="tab == 'dashboard' ? 'btn-primary' : 'btn-outline-primary'">Task Dashboard</button>
-            <button class="btn btn-sm menu-button" routerLink='/teams/view/{{team.id}}/features'
-                [ngClass]="tab == 'features' ? 'btn-primary' : 'btn-outline-primary'">Task Features</button>
             <button class="btn btn-sm menu-button" routerLink='/teams/view/{{team.id}}/members'
                 [ngClass]="tab == 'members' ? 'btn-primary' : 'btn-outline-primary'">Team Members</button>
             <button class="btn btn-sm menu-button" routerLink='/teams/view/{{team.id}}/search'
@@ -71,15 +68,12 @@
             [allTeamMembersEmitter]="allTeamMembers" [myTeamMembershipEmitter]="myTeamMembership" [team]="team">
         </app-search-tasks>
 
-        <app-workflow *ngIf="tab == 'workflow'" [team]="team"> </app-workflow>
+        <app-workflow *ngIf="tab == 'workflow'" [team]="team">
+        </app-workflow>
 
-        <app-task-features [hidden]="tab != 'features'" [team]="team" [teamMembers]="allTeamMembers"
-            [allAgents]="agents" (featuresEmitter)="featuresLoaded = true;allFeatures = $event">
-        </app-task-features>
-
-        <app-team-dashboard *ngIf="tab == 'dashboard' && featuresLoaded" [teamSetting]="teamSetting"
-            [allAgents]="agents" [allTeamMembersEmitter]="allTeamMembers" [selectedMemberEmitter]="selectedMember"
-            [myTeamMembershipEmitter]="myTeamMembership" [team]="team" [allFeaturesEmitter]="allFeatures">
+        <app-team-dashboard *ngIf="tab == 'dashboard'" [teamSetting]="teamSetting" [allAgents]="agents"
+            [allTeamMembersEmitter]="allTeamMembers" [selectedMemberEmitter]="selectedMember"
+            [myTeamMembershipEmitter]="myTeamMembership" [team]="team">
         </app-team-dashboard>
 
         <app-team-settings *ngIf="tab == 'team-settings'" (teamSettingEmitter)="teamSetting = $event"

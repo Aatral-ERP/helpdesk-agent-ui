@@ -103,6 +103,8 @@ export class LeadCreateComponent implements OnInit {
 
   lead: Lead = new Lead();
 
+  contactList: LeadContact = new LeadContact();
+
   files: Array<fileUpload> = [];
 
   _errors = {
@@ -392,7 +394,15 @@ export class LeadCreateComponent implements OnInit {
       this.lead.state = res['Institute']['state'];
       this.lead.country = res['Institute']['country'];
       this.lead.pincode = res['Institute']['zipcode'];
+      this.leadContacts =res['InstituteContact'];
 
+      this.contactList.active=true;
+      this.contactList.name=res['InstituteContact']['firstName'];
+      this.contactList.designation='';
+      this.contactList.emailId=res['InstituteContact']['emailId'];
+      this.contactList.phoneNo=res['InstituteContact']['phone'];
+      this.leadContacts.push(this.contactList);
+      //this.addContact(this.contactList);
 
     })
   }

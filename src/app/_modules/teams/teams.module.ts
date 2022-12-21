@@ -4,11 +4,7 @@ import { TeamsRoutingModule } from './teams-routing.module';
 import { TeamCreateComponent } from '../../_teams/team-create/team-create.component';
 import { BoardsComponent } from '../../_teams/boards/boards.component';
 import { TeamsComponent } from '../../_teams/teams/teams.component';
-import {
-  MatAutocompleteModule, MatButtonModule, MatButtonToggleModule, MatCheckboxModule, MatChipsModule,
-  MatDatepickerModule, MatDialogModule, MatFormFieldModule, MatIconModule, MatInputModule, MatMenuModule,
-  MatNativeDateModule, MatOptionModule, MatProgressBarModule, MatSelectModule, MatSnackBarModule
-} from '@angular/material';
+import { MatAutocompleteModule, MatButtonModule, MatButtonToggleModule, MatCheckboxModule, MatChipsModule, MatDatepickerModule, MatDialogModule, MatFormFieldModule, MatIconModule, MatInputModule, MatMenuModule, MatNativeDateModule, MatOptionModule, MatProgressBarModule, MatSelectModule, MatSnackBarModule } from '@angular/material';
 import { ColorCompactModule } from 'ngx-color/compact';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ViewTeamComponent } from '../../_teams/view-team/view-team.component';
@@ -38,9 +34,7 @@ import { AGGridButtonRendererComponent } from '../common/ag-grid-button-renderer
 import { CalendarComponent } from '../../_teams/calendar/calendar.component';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin
-import interactionPlugin from '@fullcalendar/interaction';
-import { TaskFeaturesComponent } from 'src/app/_teams/task-features/task-features.component';
-import { TaskFeatureCreateComponent } from '../../_teams/task-feature-create/task-feature-create.component';
+import interactionPlugin from '@fullcalendar/interaction'; // a plugin
 
 
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
@@ -53,7 +47,7 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     ViewTeamComponent, TeamDashboardComponent, TeamSettingsComponent, TeamMembersComponent,
     WorkflowComponent, TeamPushNotificationSettingsComponent, TeamEmailNotificationSettingsComponent,
     TaskCreateComponent, TaskViewComponent, TaskHistoryComponent, TaskCommentsComponent,
-    SearchTasksComponent, CalendarComponent, TaskFeaturesComponent, TaskFeatureCreateComponent],
+    SearchTasksComponent, CalendarComponent],
   imports: [
     CommonModule,
     TeamsRoutingModule,
@@ -74,6 +68,6 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     AgGridButtonRendererModule,
     FullCalendarModule
   ],
-  entryComponents: [TeamCreateComponent, TaskViewComponent, TaskCreateComponent, TaskFeatureCreateComponent]
+  entryComponents: [TeamCreateComponent, TaskViewComponent, TaskCreateComponent]
 })
 export class TeamsModule { }

@@ -65,6 +65,9 @@ export class StaffExpenseLedgerComponent implements OnInit {
   totalCredit = 0;
   totalDebit = 0;
 
+  private gridApi;
+  private gridColumnApi;
+
   public myDatePickerOptions: IAngularMyDpOptions = {
     dateRange: true,
     dateFormat: 'dd/mm/yyyy',
@@ -336,6 +339,15 @@ export class StaffExpenseLedgerComponent implements OnInit {
     a.href = ctx.canvas.toDataURL();
     a.download = _legder.id + '';
     a.click();
+  }
+
+  onBtnExport() {
+    this.gridApi.exportDataAsCsv({ fileName: 'Staff Expenses Legder Report' });
+
+  }
+
+  onGridReady(params) {
+    this.gridApi = params.api;
   }
 
 }

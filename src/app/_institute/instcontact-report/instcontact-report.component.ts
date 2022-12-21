@@ -18,6 +18,8 @@ export class InstcontactReportComponent implements OnInit {
   showGrid = false;
 
   loading = false;
+  private gridApi;
+  private gridColumnApi;
 
   constructor(private ss: SalesService, private is: InstituteService) { }
 
@@ -113,5 +115,21 @@ export class InstcontactReportComponent implements OnInit {
       atlphoneNumber: '',
     }
   }
+
+  //Export CSV 
+
+  onBtnExport() {
+    this.gridApi.exportDataAsCsv({ fileName: 'Institute Contact Report' });
+
+  }
+
+  onGridReady(params) {
+    this.gridApi = params.api;
+  }
+
+
+
+
+
 
 }
