@@ -27,7 +27,6 @@
                         {{getMemberName(member.memberEmailId)}}</small>
                 </figcaption>
             </figure>
-
         </span>
 
         <span class="profile-member-container" *ngFor="let member of members"
@@ -151,7 +150,7 @@
                     [hidden]="agent.workingStatus == 'releived' || agent.isBlocked"
                     *ngFor="let agent of add_agents_show">
                     <div class="col-12 m-2">
-                        <div class="row" *ngIf="agentName == '' 
+                        <div class="row" *ngIf="agentName == ''
                             || agent.firstName.toLowerCase().includes(agentName.toLowerCase())
                             || agent.lastName.toLowerCase().includes(agentName.toLowerCase())
                             || agent.emailId.toLowerCase().includes(agentName.toLowerCase())">

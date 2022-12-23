@@ -1,17 +1,14 @@
 import { HttpEventType } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { MatDialogRef, MatSnackBar, MAT_DIALOG_DATA } from '@angular/material';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
-import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
-import { Institute } from 'src/app/_onboard/inst-registration/institute';
+import { NgxFileDropEntry, FileSystemFileEntry } from 'ngx-file-drop';
 import { Agent } from 'src/app/_profile/agent-profile/Agent';
 import { NeededService } from 'src/app/_services/needed.service';
 import { TeamsService } from 'src/app/_services/teams.service';
-import { TaskFeature } from '../task-feature-create/TaskFeature';
 import { TeamMembers } from '../team-members/TeamMembers';
-import { TeamSetting } from '../team-settings/TeamSetting';
 import { Teams } from '../teams/Teams';
-import { Task } from './Task';
+import { TaskFeature } from './TaskFeature';
 
 interface fileUpload {
   file: any;
@@ -20,34 +17,25 @@ interface fileUpload {
 }
 
 @Component({
-  selector: 'app-task-create',
-  templateUrl: './task-create.component.html',
-  styleUrls: ['./task-create.component.css']
+  selector: 'app-task-feature-create',
+  templateUrl: './task-feature-create.component.html',
+  styleUrls: ['./task-feature-create.component.css']
 })
-export class TaskCreateComponent implements OnInit {
+export class TaskFeatureCreateComponent implements OnInit {
 
-  constructor(private ts: TeamsService, public dialogRef: MatDialogRef<TaskCreateComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any, private needed: NeededService,
-    private snackbar: MatSnackBar) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private needed: NeededService,
+    private snackbar: MatSnackBar, private ts: TeamsService, private dialogRef: MatDialogRef<TaskFeatureCreateComponent>) { }
 
-  canCreateTaskToAnyMembers = false;
   saving = false;
   loading = false;
-  team: Teams;
-  setting: TeamSetting;
-  member: TeamMembers;
-  allTeamMembers: Array<TeamMembers>;
+  team: Teams = new Teams();
+  feature: TaskFeature = new TaskFeature();
+  teamMembers: Array<TeamMembers> = [];
   agents: Array<Agent> = [];
-  institutes: Array<Institute> = [];
-
-  progress = 0;
-
-  task: Task = new Task();
-  directoryName = 'temp-files/' + this.ts.getRandomString(10);
   files: Array<fileUpload> = [];
+  directoryName = 'temp-files/' + this.ts.getRandomString(10);
+  progress = 0;
   filesUploaded = 0;
-  labels: Array<string> = [];
-  allFeatures: Array<TaskFeature> = [];
 
   editorConfig: AngularEditorConfig = {
     editable: true,
@@ -60,7 +48,7 @@ export class TaskCreateComponent implements OnInit {
     translate: 'yes',
     enableToolbar: true,
     showToolbar: true,
-    placeholder: 'Add Description about the task',
+    placeholder: 'Add Description about the feature',
     defaultParagraphSeparator: '',
     defaultFontName: '',
     defaultFontSize: '',
@@ -81,65 +69,33 @@ export class TaskCreateComponent implements OnInit {
         'customClasses', 'link', 'unlink',]
     ]
   };
-
   errors = {
-    subject: '',
+    name: '',
     assignee: '',
     reporter: '',
     dueDate: '',
     institute: ''
   }
-
   ngOnInit() {
+
     this.loadNeeded();
     console.log(this.data);
     if (this.data !== undefined) {
       this.team = this.data.team;
-      this.member = this.data.member;
-      this.setting = this.data.setting;
-      this.allTeamMembers = this.data.allTeamMembers;
-      this.allFeatures = this.data.allFeatures;
-      this.allFeatures = this.allFeatures.sort((a, b) => a.name.localeCompare(b.name));
-
-      this.task.teamId = this.team.id;
-      this.task.createdBy = this.ts.auth.getLoginEmailId();
-      this.task.assignee = this.ts.auth.getLoginEmailId();
-      this.task.reporter = this.ts.auth.getLoginEmailId();
-
-      this.prepareCreateTaskAuthority();
-    }
-  }
-
-  prepareCreateTaskAuthority() {
-    if (this.team.leadEmail == this.ts.auth.getLoginEmailId()) {
-      this.canCreateTaskToAnyMembers = true;
-    } else if (this.member.memberRole == 'Administrator' && this.setting.adminCanCreateTasks) {
-      this.canCreateTaskToAnyMembers = true;
+      this.feature = this.data.feature;
+      this.teamMembers = this.data.teamMembers;
+      // this.prepareCreateTaskAuthority();
     }
   }
 
   loadNeeded() {
     this.loading = true;
-    this.needed.loadNeeded(['agents_min', 'tasks_labels_distinct', 'institutes_min']).subscribe(resp => {
+    this.needed.loadNeeded(['agents_min']).subscribe(resp => {
       this.loading = false;
       if (resp['StatusCode'] == '00') {
         this.agents = resp['agents_min'];
-        this.labels = resp['tasks_labels_distinct'];
-        this.institutes = resp['institutes_min'];
       }
     }, error => this.loading = false);
-  }
-
-  optionSelected(event) {
-    console.log(event);
-  }
-
-  getMemberName(emailId) {
-    let agent: Agent = this.agents.find(agent => agent.emailId == emailId);
-    if (agent !== undefined)
-      return agent.firstName + ' ' + agent.lastName + ' <' + agent.emailId + '>';
-    else
-      return emailId;
   }
 
   public filesDrop: NgxFileDropEntry[] = [];
@@ -168,7 +124,7 @@ export class TaskCreateComponent implements OnInit {
 
             this.files.push(_file_upload);
 
-            this.ts.uploadTaskAttachments(file, this.directoryName)
+            this.ts.uploadTaskFeatureAttachments(file, this.directoryName)
               .subscribe(resp => {
                 if (resp.type == HttpEventType.UploadProgress) {
                   _file_upload.progress = Math.round(100 * resp.loaded / resp.total);
@@ -186,58 +142,52 @@ export class TaskCreateComponent implements OnInit {
     }
   }
 
-  createTask() {
+  createTaskFeature() {
 
-    console.log(this.task);
+    console.log(this.feature);
     let _error = false;
-    if (this.task.subject === undefined || this.task.subject.length < 3) {
-      this.errors.subject = 'Subject sholud not be empty';
+    if (this.feature.name === undefined || this.feature.name.length < 3) {
+      this.errors.name = 'Subject sholud not be empty';
       _error = true;
     } else {
-      this.errors.subject = '';
+      this.errors.name = '';
     }
-    if (this.task.reporter === undefined || this.task.reporter === null || this.task.reporter == '') {
+    if (this.feature.reporter === undefined || this.feature.reporter === null || this.feature.reporter == '') {
       this.errors.reporter = 'Select Reporter';
       _error = true;
     } else {
       this.errors.reporter = '';
     }
-    if (this.task.instituteName !== undefined && this.task.instituteName != null && this.task.instituteName != '') {
-      let _inst = this.institutes.find(inst => inst.instituteName == this.task.instituteName);
-      if (_inst !== undefined) {
-        this.task.instituteId = _inst.instituteId;
-      } else {
-        this.errors.institute = 'Invalid Institute';
-        _error = true;
-      }
-    } else {
-      this.errors.institute = '';
-    }
-
     let fileNames = '';
     if (this.files.length > 0) {
       this.files.forEach(file => {
         fileNames = fileNames + file.file.name + ';';
       });
-      this.task.files = fileNames;
+      this.feature.files = fileNames;
     }
 
     if (_error) {
       this.snackbar.open('Please check the errors.');
       return;
     } else {
-      console.log(this.task);
+      this.feature.teamId = this.team.id;
       this.saving = true;
-      this.ts.createTask(this.task, this.directoryName).subscribe(resp => {
+      this.ts.createTaskFeature(this.feature, this.directoryName).subscribe(resp => {
         this.saving = false;
         if (resp['StatusCode'] == "00") {
-          this.task = resp['Task'];
-          this.dialogRef.close(this.task);
+          this.feature = resp['TaskFeature'];
+          this.dialogRef.close(this.feature);
         }
       }, error => this.saving = false)
     }
+  }
 
-
+  getMemberName(emailId) {
+    let agent: Agent = this.agents.find(agent => agent.emailId == emailId);
+    if (agent !== undefined)
+      return agent.firstName + ' ' + agent.lastName;
+    else
+      return emailId;
   }
 
 }

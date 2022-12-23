@@ -6,6 +6,7 @@ import { TeamsService } from 'src/app/_services/teams.service';
 import { environment } from 'src/environments/environment';
 import { Task } from '../task-create/Task';
 import { TaskCreateComponent } from '../task-create/task-create.component';
+import { TaskFeature } from '../task-feature-create/TaskFeature';
 import { TaskViewComponent } from '../task-view/task-view.component';
 import { TeamMembers } from '../team-members/TeamMembers';
 import { TeamSetting } from '../team-settings/TeamSetting';
@@ -23,15 +24,6 @@ export class TeamDashboardComponent implements OnInit {
 
     this.actRoute.queryParams.subscribe(params => {
       console.log(params);
-      // if (params['action'] && params['action'] == 'view-task') {
-      //   console.log(params);
-      //   if (params['action-id']) {
-      //     console.log(params);
-      //     let task = new Task();
-      //     task.taskId = params['action-id'];
-      //     this.openViewTaskDialog(task);
-      //   }
-      // }
     });
 
   }
@@ -62,6 +54,10 @@ export class TeamDashboardComponent implements OnInit {
     console.log("allAgents Input Received::", allAgents);
     this.agents = allAgents;
   };
+  @Input() set allFeaturesEmitter(features: Array<TaskFeature>) {
+    console.log("features Input Received::", features);
+    this.allFeatures = features;
+  };
 
   handleCreateAccess() {
     if (this.team.leadEmail == this.ts.auth.getLoginEmailId()) {
@@ -81,6 +77,14 @@ export class TeamDashboardComponent implements OnInit {
   canCreateTasks = false;
   workflows = [];
 
+  search = {
+    taskName: '',
+    featureName: '',
+    taskPriority: '',
+    reporter: '',
+    assignee: ''
+  }
+
   tasks: Array<Task> = [];
   tasks_show: Array<Task> = [];
   member: TeamMembers;
@@ -88,6 +92,7 @@ export class TeamDashboardComponent implements OnInit {
   allTeamMembers: Array<TeamMembers>;
   setting: TeamSetting;
   agents: Array<Agent>;
+  allFeatures: Array<TaskFeature>;
 
   ngOnInit() {
     if (this.team.workflows != null && this.team.workflows != '') {
@@ -114,32 +119,37 @@ export class TeamDashboardComponent implements OnInit {
   }
 
   loadTeamTasks() {
-
+    this.loading = true;
     this.ts.loadTeamTasks(this.team, this.member).subscribe(resp => {
+      this.loading = false;
       if (resp['StatusCode'] == '00') {
         this.tasks = resp['Tasks'];
       }
-    })
+    }, error => this.loading = false)
   }
 
   getTaskByStatus(status): Array<Task> {
     return this.tasks
       .filter(task => this._selected_member === undefined || this._selected_member.memberEmailId == task.assignee)
-      .filter(task => task.status.toLowerCase() == status.toLowerCase());
+      .filter(task => task.status.toLowerCase() == status.toLowerCase())
+      .filter(task => (this.search.taskName.length === 0) ? true : task.subject.toLowerCase().includes(this.search.taskName.toLowerCase()))
+      .filter(task => (this.search.featureName.length === 0) ? true : this.getFeatureName(task.featureId).toLowerCase().includes(this.search.featureName.toLowerCase()))
+      .filter(task => (this.search.taskPriority.length === 0) ? true : task.priority.toLowerCase() == (this.search.taskPriority.toLowerCase()))
+      .filter(task => (this.search.assignee.length === 0) ? true : task.assignee.toLowerCase() == (this.search.assignee.toLowerCase()))
+      .filter(task => (this.search.reporter.length === 0) ? true : task.reporter.toLowerCase() == (this.search.reporter.toLowerCase()))
   }
 
   openCreateTaskDialog() {
-    console.log();
     const dialogRef = this.dialog.open(TaskCreateComponent, {
       width: window.innerWidth + 'px',
       minHeight: 'calc(100vh - 90px)',
       height: 'auto',
-      data: { member: this.member, setting: this.setting, team: this.team, allTeamMembers: this.allTeamMembers }
+      data: { member: this.member, setting: this.setting, team: this.team, allTeamMembers: this.allTeamMembers, allFeatures: this.allFeatures }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(result);
-      if (result !== undefined) {
+      if (result !== undefined && result !== '') {
         this.tasks.push(result);
         this.openViewTaskDialog(result);
       }
@@ -147,19 +157,17 @@ export class TeamDashboardComponent implements OnInit {
   }
 
   routeToViewTaskDialog(task: Task) {
-    console.log(task);
     this.router.navigateByUrl('/teams/view/1/dashboard?action=view-task&action-id=' + task.taskId);
   }
 
   openViewTaskDialog(task: Task) {
-    console.log(task);
     const dialogRef = this.dialog.open(TaskViewComponent, {
       width: window.innerWidth + 'px',
       minHeight: 'calc(100vh - 90px)',
       height: 'auto',
       autoFocus: false,
       disableClose: true,
-      data: { task: task, member: this.member, setting: this.setting, team: this.team, allTeamMembers: this.allTeamMembers }
+      data: { task: task, member: this.member, setting: this.setting, team: this.team, allTeamMembers: this.allTeamMembers, allFeatures: this.allFeatures }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -192,6 +200,40 @@ export class TeamDashboardComponent implements OnInit {
       return emailId;
   }
 
+  getFeatureName(featureId) {
+    if (this.allFeatures === undefined)
+      return " - - ";
+    let feature = this.allFeatures.find(feature => feature.featureId == featureId);
+    if (feature === undefined)
+      return "-";
+    else
+      return this.allFeatures.find(feature => feature.featureId == featureId).name;
+  }
 
+  getFeatureCaseBGColorByPriority(featureId) {
+    if (this.allFeatures === undefined)
+      return "text-light";
+    let feature = this.allFeatures.find(feature => feature.featureId == featureId);
+    if (feature === undefined)
+      return "text-light";
+    else if (feature.priority == 'Not Preferred')
+      return "text-muted";
+    else if (feature.priority == 'High')
+      return "text-danger";
+    else if (feature.priority == 'Medium')
+      return "text-warning";
+    else if (feature.priority == 'Low')
+      return "text-info";
+  }
+
+  clearFilters() {
+    this.search = {
+      taskName: '',
+      featureName: '',
+      taskPriority: '',
+      reporter: '',
+      assignee: ''
+    }
+  }
 
 }

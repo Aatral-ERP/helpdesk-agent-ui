@@ -1,5 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IAngularMyDpOptions } from 'angular-mydatepicker';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { RoleMaster } from 'src/app/_admin/role-create/RoleMaster';
@@ -17,7 +18,7 @@ import { Lead } from '../lead-create/Lead';
 export class LeadReportsComponent implements OnInit {
 
   constructor(private lms: LeadManagementService, private needed: NeededService,
-    private datePipe: DatePipe, private util: UtilService) {
+    private datePipe: DatePipe, private util: UtilService, private router: Router, private actRoute: ActivatedRoute) {
     let date = new Date().setMonth(new Date().getMonth() - 1);
 
     this._filters.leadDateFrom = new Date(date);
@@ -28,6 +29,47 @@ export class LeadReportsComponent implements OnInit {
         endJsDate: new Date()
       }
     };
+
+    this.actRoute.queryParams.subscribe(params => {
+      if (!(JSON.stringify(params) === JSON.stringify({}))) {
+        this._filters.leadDateFrom = new Date(params['leadDateFrom']);
+        this._filters.leadDateTo = new Date(params['leadDateTo']);
+
+        this._filters.leadDateObject = {
+          isRange: true, singleDate: null, dateRange: {
+            beginJsDate: new Date(params['leadDateFrom']),
+            endJsDate: new Date(params['leadDateTo'])
+          }
+        };
+
+        if (params['owner'] !== undefined) {
+          this._filters.owners = [
+            {
+              "emailId": params['owner'],
+              "firstName": params['owner']
+            }
+          ];
+        }
+
+        if (params['state'] !== undefined) {
+          this._filters.state = params['state'];
+        }
+
+        if (params['leadSources'] !== undefined) {
+          this._filters.leadSources = [params['leadSources']];
+        }
+
+        if (params['categories'] !== undefined) {
+          this._filters.categories = [params['categories']];
+        }
+
+        if (params['products'] !== undefined) {
+          this._filters.products = [params['products']];
+        }
+
+      }
+
+    });
   }
 
   role: RoleMaster = this.lms.auth.getLoggedInRole();
@@ -201,6 +243,7 @@ export class LeadReportsComponent implements OnInit {
   }
 
   clearFilters() {
+    this.router.navigate(['/lead-management/reports/leads']);
     this._filters = {
       companies: [],
       owners: [],

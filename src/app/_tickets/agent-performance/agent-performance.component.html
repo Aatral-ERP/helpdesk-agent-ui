@@ -68,11 +68,11 @@
                     </div>
                     <div class="flex-grow-1">
                         <div class="row align-items-center" *ngFor="let rating of ticketRatingCounts">
-                            <div class="col-4 text-right">
+                            <div class="col-5 text-right mr-0">
                                 {{rating.rating}}<i class="fas fa-star small text-warning pl-1 pr-1"></i>
-                                <small>({{rating.percent}}%)</small>
+                                <small>({{rating.no_of_ratings}}) ({{rating.percent}}%)</small>
                             </div>
-                            <div class="col-8">
+                            <div class="col-7">
                                 <div class="progress" style="height: 2px;">
                                     <div class="progress-bar " role="progressbar" [style.width]="rating.percent+'%'"
                                         attr.aria-valuenow="{{rating.percent}}" aria-valuemin="0" aria-valuemax="100">

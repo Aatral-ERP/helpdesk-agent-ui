@@ -63,12 +63,12 @@ export class LetterPadComponent implements OnInit {
     closeSelectorOnDateSelect: false
   };
 
- 
+
   constructor(private route: Router, private snackbar: MatSnackBar, private ts: TicketService,
     private actRoute: ActivatedRoute, private auth: AuthService, private datePipe: DatePipe,private ss: SalesService) { }
 
 
-    
+
   ngOnInit() {
     this.loadInstituteDetails();
     this.loadLetterpad();
@@ -77,7 +77,7 @@ export class LetterPadComponent implements OnInit {
   onSelectInstitute(inst) {
    // this.ts.getCallreport(inst.instituteId).subscribe(res => {
     //   console.log(res);
-      
+
     // })
 
   }
@@ -89,7 +89,7 @@ export class LetterPadComponent implements OnInit {
   //_institutes = [];
   _institutes: Array<Institute> = [];
   _selectedInstitute = [];
-  
+
 
   columnDefs = [
     {
@@ -105,13 +105,13 @@ export class LetterPadComponent implements OnInit {
     // },
     { headerName: 'Institute', field: 'institutename',width: 400, sortable: true, filter: true, resizable: true, tooltip: (data) => { return data.value } },
     { headerName: 'Subject', field: 'subject', width: 150, sortable: true, filter: true, resizable: true },
-    
+
     {
       headerName: 'Date', field: 'date', sortable: true, resizable: true, cellRenderer: (data) => {
         return this.datePipe.transform(data.value, 'dd/MM/yyyy');
       }
     },
-    { 
+    {
       headerName: 'File', field: 'filename', width: 120, sortable: true, filter: true, resizable: true,
       cellRenderer: (data) => {
         console.log(data);
@@ -120,7 +120,7 @@ export class LetterPadComponent implements OnInit {
         else
           return "--No File--";
       }
-    
+
     },
 
   ];
@@ -160,18 +160,18 @@ this.ts.saveLetterpad(this.letterpad).subscribe(res=>{
       }
     },
     error=>{
-      
+
 
     })
   }
 
-  
+
 
   viewPDF(id,fileName) {
     let url = environment.apiUrl + 'download/download-lettepad-pdf/view/' + id+ '/' + fileName;
     window.open(url, 'winname', 'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=auto,height=auto');
   }
-  
+
   downloadPDF(id,fileName) {
     let url = environment.apiUrl + 'download/download-lettepad-pdf/download/' + id + '/' + fileName;
     window.open(url, '_blank');
@@ -191,14 +191,14 @@ this.ts.saveLetterpad(this.letterpad).subscribe(res=>{
   }
 
   _search_filters = {
-    
+
     institutes: [],
     id: '',
     subject: '',
     latterpadDateFrom: null,
     latterpadDateTo: null,
     letterpadDateObject: null,
-    
+
   }
 
   loadInstituteDetails() {
@@ -236,7 +236,7 @@ this.ts.saveLetterpad(this.letterpad).subscribe(res=>{
     this.ss.loadDealLetterpadReport(this._search_filters).subscribe(res => {
       this.loading = false;
       this._respsResp = new Array();
-      
+
       this._respsResp =res['letterpadData'];
 
       console.log(this._respsResp);
@@ -248,7 +248,7 @@ this.ts.saveLetterpad(this.letterpad).subscribe(res=>{
         let _rowdata: any = {};
 
         _rowdata.institutename = resp.institute_name;
-        _rowdata.instituteid = resp.institute_id;        
+        _rowdata.instituteid = resp.institute_id;
         _rowdata.subject = resp.SUBJECT;
         _rowdata.content = resp.content;
         _rowdata.date = resp.DATE;
@@ -259,8 +259,8 @@ this.ts.saveLetterpad(this.letterpad).subscribe(res=>{
     }, error => { this.loading = false; });
   }
 
- 
- 
+
+
 
 
 }

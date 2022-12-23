@@ -1,0 +1,76 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate">
+</mat-progress-bar>
+
+<div class="row p-2">
+    <div class="col">
+        <span class="font-weight-bold h6">Task Features</span>
+        <mat-form-field class="ml-5">
+            <mat-label>Search by Feature Name</mat-label>
+            <input matInput placeholder="Search by Feature Name..." [(ngModel)]="_search_feature_name">
+        </mat-form-field>
+    </div>
+    <div class="col-3">
+        <span class="float-right">
+            <button mat-flat-button color="primary" (click)="openCreateTaskFeatureDialog()">Create
+                Feature <i class="fas fa-plus pl-2"></i>
+            </button>
+        </span>
+    </div>
+</div>
+
+<table class="table table-sm table-hover">
+    <thead>
+        <tr>
+            <th style="width: 3%" scope="col"></th>
+            <th style="width: 30%" scope="col">Feature</th>
+            <th style="width: 15%" scope="col">Progress</th>
+            <th scope="col">Total Tasks</th>
+            <th scope="col">Start-End Date</th>
+            <th scope="col">Priority</th>
+            <th scope="col">Assignee</th>
+            <th scope="col">Reporter</th>
+            <th scope="col">Status</th>
+            <th style="width: 3%" scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="m-0 p-0" [hidden]="!feature.name.toLowerCase().includes(_search_feature_name.toLowerCase())"
+            *ngFor="let feature of features">
+            <td><i class="fas fa-edit text-primary pointer" (click)="openCreateTaskFeatureDialog(feature)"></i>
+            </td>
+            <td><span class="text-dark font-weight-bold">{{feature.name}}</span></td>
+            <td>
+                <div class="progress rounded" style="height: 13px; vertical-align: middle;" data-toggle="tooltip"
+                    data-html="true" data-placement="right" title="{{getHTMLToolTipOfProgress(feature.progress)}}">
+                    <div class="progress-bar bg-danger" role="progressbar"
+                        [style.width.%]="getProgressBarPercentage(feature.progress, 0)" aria-valuemin="0"
+                        aria-valuemax="100">{{getProgressBarValue(feature.progress, 0)}}</div>
+                    <div class="progress-bar bg-warning progress-bar-striped progress-bar-animated" role="progressbar"
+                        [style.width.%]="getProgressBarPercentage(feature.progress, 1)" aria-valuemin="0"
+                        aria-valuemax="100">{{getProgressBarValue(feature.progress, 1)}}</div>
+                    <div class="progress-bar" role="progressbar"
+                        [style.width.%]="getProgressBarPercentage(feature.progress, 2)" aria-valuemin="0"
+                        aria-valuemax="100">{{getProgressBarValue(feature.progress, 2)}}</div>
+                </div>
+            </td>
+            <td>{{getTotalTasksMapped(feature.progress)}}</td>
+            <td>{{feature.startDate | date:'d MMM yy'}} - {{feature.endDate | date:'d MMM yy'}}</td>
+            <td><i *ngIf="feature.priority == 'Not Preferred'" class="fas fa-arrows-alt-h text-muted p-1"></i>
+                <i *ngIf="feature.priority == 'High'" class="fas fa-arrow-up text-danger p-1"></i>
+                <i *ngIf="feature.priority == 'Medium'" class="fas fa-arrow-up text-warning p-1"></i>
+                <i *ngIf="feature.priority == 'Low'" class="fas fa-arrow-down text-info p-1"></i>
+                {{feature.priority}}
+            </td>
+            <td>
+                <img class="profile-member" title="{{getMemberName(feature.assignee)}}"
+                    src="{{getMemberImageURL(feature.assignee)}}">
+            </td>
+            <td>
+                <img class="profile-member" title="{{getMemberName(feature.reporter)}}"
+                    src="{{getMemberImageURL(feature.reporter)}}">
+            </td>
+            <td>{{feature.status}}</td>
+            <td><i class="fas fa-trash-alt text-danger pointer" (click)="deleteFeature(feature)"></i></td>
+        </tr>
+    </tbody>
+</table>

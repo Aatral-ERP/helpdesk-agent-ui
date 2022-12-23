@@ -1,4 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { IAngularMyDpOptions } from 'angular-mydatepicker';
 import { LeadManagementService } from 'src/app/_services/lead-management.service';
 
@@ -34,7 +35,7 @@ export class LeadDashboardComponent implements OnInit {
     this.viewHalf = [(event.target.innerWidth / 2) - 25, 200];
   }
 
-  constructor(private ls: LeadManagementService) {
+  constructor(private ls: LeadManagementService, private router: Router) {
     this._search_filters = {
       fromDate: new Date(new Date().setMonth(new Date().getMonth() - 3)),
       toDate: new Date(),
@@ -50,8 +51,8 @@ export class LeadDashboardComponent implements OnInit {
   viewFull200: any[] = [window.innerWidth, 200];
   viewHalf: any[] = [window.innerWidth / 2, 200];
 
-  colorArrayLeadByStates = { domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA', '#b3003b', '#ffbf00', '#00ff40', '#0000ff', '#ff00bf', '#ff0000', '#3399ff', '#336600','#e60000','#cc0066','#e64d00','#669900','#00ff00','#ff00ff','#ff0040'] }
-  colorArrayLeadByOwnerAndStage = { domain: ['#7aa3e5', '#a8385d', '#000033', '#E44D25', '#CFC0BB', '#aae3f5' ,'#ff00ff','#669900','#00ff00','#ff0040','#ffff1a','#9900ff','#b30047','#003300','#001a33','#cc0066','#ff00bf','#990066']  };
+  colorArrayLeadByStates = { domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA', '#b3003b', '#ffbf00', '#00ff40', '#0000ff', '#ff00bf', '#ff0000', '#3399ff', '#336600', '#e60000', '#cc0066', '#e64d00', '#669900', '#00ff00', '#ff00ff', '#ff0040'] }
+  colorArrayLeadByOwnerAndStage = { domain: ['#7aa3e5', '#a8385d', '#000033', '#E44D25', '#CFC0BB', '#aae3f5', '#ff00ff', '#669900', '#00ff00', '#ff0040', '#ffff1a', '#9900ff', '#b30047', '#003300', '#001a33', '#cc0066', '#ff00bf', '#990066'] };
 
   leadOwnerByStatusData: any = [];
   mostLeadsByOwnersData: any = [];
@@ -63,6 +64,45 @@ export class LeadDashboardComponent implements OnInit {
 
   ngOnInit() {
     this.getLeadDashboardDataFromAPI();
+  }
+
+  leadOwnerByStatusSelect(event) {
+    console.log(event);
+    this.routeToReport('owner', event['owner_email_id']);
+  }
+
+  leadByStatesDataSelect(event) {
+    console.log(event);
+    this.routeToReport('state', event['name']);
+  }
+
+  mostLeadsByOwnersDataSelect(event) {
+    console.log(event);
+    this.routeToReport('owner', event['name']);
+  }
+
+  leadBySourceDataSelect(event) {
+    console.log(event);
+    this.routeToReport('leadSources', event['name']);
+  }
+
+  leadByCategoryDataSelect(event) {
+    console.log(event);
+    this.routeToReport('categories', event['name']);
+  }
+
+  leadByProductsDataSelect(event) {
+    console.log(event);
+    this.routeToReport('products', event['name']);
+  }
+
+  routeToReport(_filter: string, value: string) {
+    let filters = {};
+    filters[_filter] = value;
+    filters['leadDateFrom'] = new Date(this._search_filters.fromDate).toISOString().split('T')[0];
+    filters['leadDateTo'] = new Date(this._search_filters.toDate).toISOString().split('T')[0];
+    console.log(filters);
+    this.router.navigate(['/lead-management/reports/leads'], { queryParams: filters });
   }
 
   getLeadDashboardDataFromAPI() {
@@ -78,15 +118,6 @@ export class LeadDashboardComponent implements OnInit {
       // this.prepareLeadByStatusData(resp['LeadByStatus']);
       this.prepareLeadByStatesData(resp['LeadByStates']); // advanced-pie-chart
       this.prepareLeadByProductsData(resp['LeadByProducts']); // horizontal-bar-chart
-
-      console.log(this.leadOwnerByStatusData);
-      console.log(this.mostLeadsByOwnersData);
-      console.log(this.leadBySourceData);
-      console.log(this.leadByStatesData);
-      // console.log(this.leadByCategoryData);
-      // console.log(this.leadByStatusData);
-      console.log(this.leadByProductsData);
-
     })
   }
 
@@ -97,26 +128,28 @@ export class LeadDashboardComponent implements OnInit {
       'name': _data.find(data => data['owner_email_id'] == mailId).owner_name,
       'series': _data
         .filter(data => data['owner_email_id'] == mailId)
-        .map(data => Object.assign({}, { 'name': data.status, 'value': data.cnt }))
+        .map(data => Object.assign({}, { 'name': data.status, 'owner_email_id': data['owner_email_id'], 'value': data.cnt }))
     }));
   }
 
   prepareMostLeadsByOwnerData() {
     this.mostLeadsByOwnersData = this.leadOwnerByStatusData.map(_data => {
       let series = Array.from(_data['series']).find(_series => _series['name'] == 'New Lead');
-      console.log(_data['name'], series);
+      console.log(_data, series);
       return Object.assign({}, {
-        'name': _data['name'],
+        'name': _data['name'], 'owner_email_id': series !== undefined ? series['owner_email_id'] : '',
         'value': series !== undefined ? series['value'] : 0
       })
     })
+    console.log(this.mostLeadsByOwnersData);
   }
 
   prepareLeadBySourcesData(_data: Array<any>) {
     this.leadBySourceData = _data.map(data => {
       return {
         'name': data['lead_source'],
-        'value': data['cnt']
+        'value': data['cnt'],
+        'emailId': data['owner_email_id']
       }
     })
   }

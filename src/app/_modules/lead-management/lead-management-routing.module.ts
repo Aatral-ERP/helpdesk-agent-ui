@@ -10,6 +10,7 @@ const routes: Routes = [
   { path: 'overview', loadChildren: () => import('./lead-overview/lead-overview.module').then(m => m.LeadOverviewModule), canActivate: [RoleGuardService] },
   { path: 'reports', loadChildren: () => import('./lead-management-reports/lead-management-reports.module').then(m => m.LeadManagementReportsModule), canActivate: [RoleGuardService] },
   { path: 'mail', loadChildren: () => import('./lead-mail-templates/lead-mail-templates.module').then(m => m.LeadMailTemplatesModule), canActivate: [RoleGuardService] },
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
 ];
 
 @NgModule({

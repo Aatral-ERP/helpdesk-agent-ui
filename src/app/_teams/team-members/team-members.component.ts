@@ -58,10 +58,10 @@ export class TeamMembersComponent implements OnInit {
     if (this._my_team_membership.memberRole != 'Member') {
       if (this.selectedMember == member.memberEmailId) {
         this.selectedMember = '';
-        this.selectedMemberEmitter.next(undefined);
+        // this.selectedMemberEmitter.next(undefined);
       } else {
         this.selectedMember = member.memberEmailId;
-        this.selectedMemberEmitter.next(member);
+        // this.selectedMemberEmitter.next(member);
       }
     }
   }

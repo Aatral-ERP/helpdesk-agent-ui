@@ -12,7 +12,7 @@ import { ServiceReportComponent } from '../service-report/service-report.compone
 
 
 const routes: Routes = [
-  
+
   { path: 'ticket-report', component: TicketReportComponent, canActivate: [RoleGuardService] },
   { path: 'institute-report', component: ViewInstituteComponent, canActivate: [RoleGuardService] },
   { path: 'agent-report', component: AgentReportComponent, canActivate: [RoleGuardService] },
@@ -20,7 +20,7 @@ const routes: Routes = [
   { path: 'call-report', component: CallReportComponent, canActivate: [RoleGuardService] },
   { path: 'service-report', component: ServiceReportComponent, canActivate: [RoleGuardService] },
   { path: 'amc-report', component: AmcReportComponent, canActivate: [RoleGuardService] },
-  
+
 ];
 
 @NgModule({

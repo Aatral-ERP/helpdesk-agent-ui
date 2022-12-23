@@ -1,9 +1,9 @@
 <mat-progress-bar *ngIf="loading" mode="indeterminate">
 </mat-progress-bar>
 
-<div class="row p-2">
+<div class="row pt-2">
     <div class="col">
-        <h6 class="font-weight-bold pt-2">Tasks Board
+        <h6 class="font-weight-bold">Tasks Board
             <span class="float-right">
                 <button *ngIf="canCreateTasks" mat-flat-button color="primary" (click)="openCreateTaskDialog()">Create
                     Task
@@ -11,6 +11,53 @@
                 </button>
             </span>
         </h6>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <mat-form-field class="mr-2">
+            <mat-label>Subject</mat-label>
+            <input matInput placeholder="Enter Subject Name to filter... " [(ngModel)]="search.taskName">
+        </mat-form-field>
+
+        <mat-form-field class="mr-2">
+            <mat-label>Feature Name</mat-label>
+            <input matInput placeholder="Enter Feature Name to filter... " [(ngModel)]="search.featureName">
+        </mat-form-field>
+
+        <mat-form-field class="mr-2">
+            <mat-label class="text-muted small">Priority</mat-label>
+            <mat-select [(ngModel)]="search.taskPriority">
+                <mat-option value="">All</mat-option>
+                <mat-option value="Not Preferred">Not Preferred</mat-option>
+                <mat-option value="High">High</mat-option>
+                <mat-option value="Medium">Medium</mat-option>
+                <mat-option value="Low">Low</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="mr-2">
+            <mat-label class="required-label text-muted small">Assignee</mat-label>
+            <mat-select matNativeControl [(ngModel)]="search.assignee">
+                <mat-option value="">All</mat-option>
+                <mat-option *ngFor="let mem of allTeamMembers" [value]="mem.memberEmailId">
+                    {{getMemberName(mem.memberEmailId)}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="mr-2">
+            <mat-label class="required-label text-muted small">Reporter</mat-label>
+            <mat-select matNativeControl [(ngModel)]="search.reporter">
+                <mat-option value="">All</mat-option>
+                <mat-option *ngFor="let mem of allTeamMembers" [value]="mem.memberEmailId">
+                    {{getMemberName(mem.memberEmailId)}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <span class="text-primary pointer mt-3" (click)="clearFilters()"><u>Clear Filters</u></span>
     </div>
 </div>
 
@@ -41,14 +88,18 @@
                                         </span>
 
                                         <span class="float-right">
-                                            <small class="badge badge-light pr-1">{{task.lastupdatedatetime |
-                                                amTimeAgo}}</small>
+                                            <span
+                                                class="badge badge-primary mr-2 fond-weight-light">#{{task.taskId}}</span>
+                                            <small
+                                                class="badge badge-light mr-2 font-weight-light">{{task.lastupdatedatetime
+                                                | amTimeAgo}}</small>
+
                                             <i *ngIf="task.priority == 'Not Preferred'"
                                                 class="fas fa-arrows-alt-h text-muted p-1"></i>
                                             <i *ngIf="task.priority == 'High'"
                                                 class="fas fa-arrow-up text-danger p-1"></i>
                                             <i *ngIf="task.priority == 'Medium'"
-                                                class="fas fa-arrows-alt-v text-warning p-1"></i>
+                                                class="fas fa-arrow-up text-warning p-1"></i>
                                             <i *ngIf="task.priority == 'Low'"
                                                 class="fas fa-arrow-down text-info p-1"></i>
 
@@ -60,9 +111,16 @@
                                         </span>
                                     </div>
                                     <div class="col-12">
-                                        <span class="text-muted float-left">#{{task.taskId}}&nbsp;-&nbsp;
+                                        <span class="text-muted float-left">
                                             {{task.subject}}
                                         </span>
+                                    </div>
+                                    <div class="col-12" *ngIf="task.featureId > 0">
+                                        <small class="fond-weight-light">
+                                            <i class="fa fa-briefcase pr-1 {{getFeatureCaseBGColorByPriority(task.featureId)}}"
+                                                aria-hidden="true"></i>
+                                            {{getFeatureName(task.featureId)}}
+                                        </small>
                                     </div>
                                 </div>
                             </div>

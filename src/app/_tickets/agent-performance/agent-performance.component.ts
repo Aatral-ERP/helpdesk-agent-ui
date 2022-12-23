@@ -49,7 +49,7 @@ export class AgentPerformanceComponent implements OnInit {
         this.pendingTicketsPriorityCounts = resp['PendingTicketsPriorityCounts'];
         this.periodicallyClosedCounts = resp['PeriodicallyClosedCounts'];
         this.ticketRatingCounts = resp['TicketRatingCounts'];
-        this.finalRatings = resp['FinalRatings'];
+        this.finalRatings = resp['FinalRatings'].toFixed(2);
         this.totalTicketRatingCounts = resp['TotalTicketRatingCounts'];
 
         this.lastUpdatedDateTime = new Date();
