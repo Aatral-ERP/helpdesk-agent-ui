@@ -25,6 +25,8 @@
         <i class="far fa-trash-alt text-danger float-right" (click)="deleteDC(dc)"></i>
     </div>
 
+    <span class="float-right text-primary pointer" *ngIf="showDCEdit" (click)="showDCEdit = false"><u>Close</u></span>
+
     <app-deals-delivery-challan *ngIf="showDCEdit" [deliveryChallan]="dc" (DeliveryChallanEvent)="dcUpdate($event)"
         [dealId]="dealId" [deal]="deal"></app-deals-delivery-challan>
 </div>

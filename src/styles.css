@@ -78,6 +78,13 @@ label {
     border: 1px solid #adadad;
 }
 
+.form-control:focus {
+    outline: none;
+    outline-color: rgb(7, 86, 170);
+    border-color: rgb(7, 86, 170);
+    box-shadow: 0 0 5px rgb(7, 86, 170);
+}
+
 .required-label:after {
     content: " *";
     color: red;

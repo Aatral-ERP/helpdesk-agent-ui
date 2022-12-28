@@ -64,15 +64,13 @@
                             {{raw.mappedProductName}}
                         </td>
                         <td>
-                            <input type="text" class="form-control editFocus" name="description"
-                                [(ngModel)]="raw.description">
+                            <input type="text" class="form-control" name="description" [(ngModel)]="raw.description">
                         </td>
                         <td align="center">
                             {{getInStock(raw.mappedProductId)}}
                         </td>
                         <td>
-                            <input type="number" class="form-control editFocus" name="quantity"
-                                [(ngModel)]="raw.quantity">
+                            <input type="number" class="form-control" name="quantity" [(ngModel)]="raw.quantity">
                         </td>
                     </tr>
                 </table>

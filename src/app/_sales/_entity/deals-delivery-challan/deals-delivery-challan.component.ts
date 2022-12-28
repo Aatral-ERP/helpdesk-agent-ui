@@ -9,6 +9,7 @@ import { Product } from 'src/app/_product/Product';
 import { DealDCProducts } from './DealDCProducts';
 import { InvoiceService } from 'src/app/_services/invoice.service';
 import { environment } from 'src/environments/environment';
+import { DealDCProductRawMaterial } from './DealDCProductRawMaterial';
 declare var $: any;
 
 @Component({
@@ -46,6 +47,8 @@ export class DealsDeliveryChallanComponent implements OnInit {
   showDCTemplateOptions = false;
   generatingPDF = false;
 
+  _currentProductId: number = 0;
+
   reminingDealProducts: Array<any> = [];
 
   ngOnInit() {
@@ -72,16 +75,19 @@ export class DealsDeliveryChallanComponent implements OnInit {
     }, error => this.loading = false)
   }
 
-  openAddProductModal() {
+  openAddProductRawMaterialModal(productId: number) {
+    this._currentProductId = productId;
 
     this._productsShow = [];
     this._products.filter(prod => {
       let isAdded = true;
 
-      this.dc.products.forEach(pro => {
-        if (prod.id == pro.productId)
-          isAdded = false;
-      })
+      this.dc.products
+        .filter(_dcProduct => _dcProduct.productId == productId)
+        .forEach(pro => {
+          if (prod.id == pro.productId)
+            isAdded = false;
+        })
 
       return isAdded;
     }).forEach(prod => {
@@ -134,29 +140,36 @@ export class DealsDeliveryChallanComponent implements OnInit {
     return desc;
   }
 
-  addProduct(prod) {
+  addProduct(prod: Product) {
     console.log(prod);
-    let is_already_available = false;
-    this.dc.products.forEach(prd => {
-      if (prd.productId == prod.id)
-        is_already_available = true;
-    });
-    console.log(is_already_available);
-    let product: DealDCProducts = {
-      id: 0,
-      dealId: this.deal.id,
-      invoiceNo: '',
-      productId: prod.id,
-      name: prod.name,
-      description: this.getdescription(prod),
-      uom: '',
-      quantity: this.getQuantity(prod),
-    };
-    console.log(product);
-    if (!is_already_available) {
-      this.dc.products.push(product);
-    }
-    console.log(this.dc.products);
+
+    this.dc.products
+      .filter(_dcp => _dcp.productId == this._currentProductId)
+      .forEach(_dcp => {
+
+        let _dcpRM = _dcp.dealDCProductRawMaterials.find(_dcp => _dcp.rawMaterialProductId == prod.id);
+        console.log(_dcp, _dcpRM);
+
+        if (_dcpRM === undefined) {
+
+          let rawMaterial: DealDCProductRawMaterial = new DealDCProductRawMaterial();
+          rawMaterial.dealId = this.dealId;
+          rawMaterial.dcProductId = this._currentProductId;
+          rawMaterial.rawMaterialProductId = prod.id;
+          rawMaterial.description = prod.description;
+          rawMaterial.invoiceNo = this.dc.invoiceNo;
+          rawMaterial.name = prod.name;
+          rawMaterial.quantity = 1;
+          rawMaterial.uom = prod.uom;
+
+          _dcp.dealDCProductRawMaterials.push(rawMaterial);
+
+        } else {
+          this.snackbar.open('Raw Material Already Selected');
+        }
+        console.log(_dcp.dealDCProductRawMaterials);
+
+      });
     $(function () {
       $('#productaddmodal').appendTo("body").modal('hide');
     });
@@ -235,7 +248,6 @@ export class DealsDeliveryChallanComponent implements OnInit {
   }
 
   maxQuantity(productId) {
-    console.log(productId,this.reminingDealProducts);
     let rp = this.reminingDealProducts.find(rp => rp.productId == productId);
     return rp !== undefined ? rp.quantity : 0;
   }

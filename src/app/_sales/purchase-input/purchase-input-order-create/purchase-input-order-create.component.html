@@ -66,14 +66,14 @@
         <div class="col-sm-12 col-md-12 col-lg-6">
             <span class="font-weight-bold h6">Billing Address</span>
             <div class="p-2 border border-light-1">
-                <textarea class="editFocus" cols="60%" id="billingTo" rows="5" placeHolder="Enter Full Billing Address"
-                    name="billingTo" [(ngModel)]="order.billingTo"></textarea>
+                <textarea class="form-control" cols="60%" id="billingTo" rows="5"
+                    placeHolder="Enter Full Billing Address" name="billingTo" [(ngModel)]="order.billingTo"></textarea>
             </div>
         </div>
         <div class="col-sm-12 col-md-12 col-lg-6">
             <span class="font-weight-bold h6">Shipping Address</span>
             <div class="p-2 border border-light-1">
-                <textarea class="editFocus" cols="60%" id="shippingTo" rows="5"
+                <textarea class="form-control" cols="60%" id="shippingTo" rows="5"
                     placeHolder="Enter Full Shipping Address" name="shippingTo"
                     [(ngModel)]="order.shippingTo"></textarea>
             </div>
@@ -126,24 +126,23 @@
                     </th>
                     <td>{{prod.name}}
                         <br>
-                        <textarea class="editFocus" name="prod.description" id="description" cols="60%" rows="3"
+                        <textarea class="form-control" name="prod.description" id="description" cols="60%" rows="3"
                             [(ngModel)]="prod.description"></textarea>
 
                     </td>
                     <td>
-                        <input type="number" class="form-control editFocus" name="editPrice" [(ngModel)]="prod.price">
+                        <input type="number" class="form-control " name="editPrice" [(ngModel)]="prod.price">
                         <small class="text-muted">{{prod.price | currency:'INR'}}</small>
                     </td>
-                    <td><input type="number" class="form-control editFocus" name="editPrice"
-                            [(ngModel)]="prod.discount">
+                    <td><input type="number" class="form-control " name="editPrice" [(ngModel)]="prod.discount">
                         <small class="text-muted">{{prod.discount | currency:'INR'}}</small>
                     </td>
-                    <td><input type="number" class="form-control editFocus" name="editPrice"
-                            [(ngModel)]="prod.quantity">
+                    <td><input type="number" class="form-control " name="editPrice" [(ngModel)]="prod.quantity">
                         <small class="text-muted">{{prod.quantity | number}}</small>
                     </td>
                     <td>
-                        <select name="gstPercentage" id="gstPercentage" [(ngModel)]="prod.gstPercentage">
+                        <select class="form-control" name="gstPercentage" id="gstPercentage"
+                            [(ngModel)]="prod.gstPercentage">
                             <option value="0">0%</option>
                             <option value="5">5%</option>
                             <option value="12">12%</option>
@@ -153,21 +152,25 @@
                         <br>
                         <span *ngIf="order.gstType == 'CGST/SGST'">
                             CGST -
-                            {{su.getGSTAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage) / 2 | currency:'INR'}}
+                            {{su.getGSTAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage) / 2 |
+                            currency:'INR'}}
                             ({{prod.gstPercentage / 2}}%)
                             <br>
                             SGST -
-                            {{su.getGSTAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage) / 2 | currency:'INR'}}
+                            {{su.getGSTAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage) / 2 |
+                            currency:'INR'}}
                             ({{prod.gstPercentage / 2}}%)
                         </span>
                         <span *ngIf="order.gstType == 'IGST'">
                             IGST -
-                            {{su.getGSTAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage) | currency:'INR'}}
+                            {{su.getGSTAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage) |
+                            currency:'INR'}}
                             ({{prod.gstPercentage}})%
                         </span>
                     </td>
                     <td align="right">
-                        {{su.getTotalAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage) | currency:'INR'}}
+                        {{su.getTotalAmount(prod.price,prod.discount,prod.quantity,prod.gstPercentage) |
+                        currency:'INR'}}
                     </td>
                 </tr>
                 <tr>
@@ -227,7 +230,7 @@
         <div class="col-12">
             <span class="font-weight-bold h6">Terms/Notes</span>
             <div class="p-2 border border-light-1">
-                <textarea class="editFocus" cols="100%" id="terms" rows="5" name="terms"
+                <textarea class="form-control" cols="100%" id="terms" rows="5" name="terms"
                     [(ngModel)]="order.terms"></textarea>
             </div>
         </div>

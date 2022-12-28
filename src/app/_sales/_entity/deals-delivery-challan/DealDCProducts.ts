@@ -1,4 +1,6 @@
-export class  DealDCProducts {
+import { DealDCProductRawMaterial } from "./DealDCProductRawMaterial";
+
+export class DealDCProducts {
     public id: number;
     public dealId: number;
     public invoiceNo: string;
@@ -7,4 +9,6 @@ export class  DealDCProducts {
     public description: string;
     public uom: string;
     public quantity: number;
+
+    public dealDCProductRawMaterials: Array<DealDCProductRawMaterial> = [];
 }

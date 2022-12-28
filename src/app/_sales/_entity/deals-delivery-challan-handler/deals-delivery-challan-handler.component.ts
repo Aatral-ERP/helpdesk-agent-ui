@@ -66,6 +66,7 @@ export class DealsDeliveryChallanHandlerComponent implements OnInit {
       this.loading = false;
       if (resp['StatusCode'] == '00') {
         this.getDealDeliveryChallans();
+        this.showDCEdit = false;
       } else {
         this.snackbar.open('Something went wrong, Try later');
       }
