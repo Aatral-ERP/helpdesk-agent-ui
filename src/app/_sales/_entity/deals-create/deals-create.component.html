@@ -227,33 +227,34 @@
                     </td>
                     <td>{{prod.name}}
                         <br>
-                        <textarea class="editFocus" name="prod.description" id="description" cols="60%" rows="3"
+                        <textarea class="" name="prod.description" id="description" cols="60%" rows="3"
                             [(ngModel)]="prod.description"></textarea>
 
                     </td>
                     <td>
                         <!-- {{prod.price | currency:'INR'}} -->
-                        <input type="number" class="form-control editFocus" name="price" [(ngModel)]="prod.price">
+                        <input type="number" class="form-control " name="price" [(ngModel)]="prod.price">
                         <small class="text-muted">{{prod.price | currency:'INR'}}</small>
                     </td>
-                    <td><input type="number" class="form-control editFocus" *ngIf="deal.discountType == 'Amount'"
+                    <td><input type="number" class="form-control " *ngIf="deal.discountType == 'Amount'"
                             (ngModelChange)="prod.discountPercent = onChangeDiscountAmount($event,prod.price)"
                             name="discount" [(ngModel)]="prod.discount">
-                        <input type="number" class="form-control editFocus" *ngIf="deal.discountType == 'Percent'" min=1
-                            max=100 (ngModelChange)="prod.discount = onChangeDiscountPercent($event,prod.price)"
-                            name="discount" [(ngModel)]="prod.discountPercent">
+                        <input type="number" class="form-control " *ngIf="deal.discountType == 'Percent'" min=1 max=100
+                            (ngModelChange)="prod.discount = onChangeDiscountPercent($event,prod.price)" name="discount"
+                            [(ngModel)]="prod.discountPercent">
                         <small class="text-muted">{{prod.discount | currency:'INR'}}</small>
                         <small class="text-muted">({{prod.discountPercent | number}}%)</small>
 
                         {{prod.discountType}}
                     </td>
-                    <td><input type="number" class="form-control editFocus" name="quantity" [(ngModel)]="prod.quantity">
+                    <td><input type="number" class="form-control " name="quantity" [(ngModel)]="prod.quantity">
                         <small class="text-muted">{{prod.quantity | number}}
                             <small *ngIf="prod.uom != null">({{prod.uom}})</small>
                         </small>
                     </td>
                     <td>
-                        <select name="gstPercentage" id="gstPercentage" [(ngModel)]="prod.gstPercentage">
+                        <select class="form-control" name="gstPercentage" id="gstPercentage"
+                            [(ngModel)]="prod.gstPercentage">
                             <option value="0">0%</option>
                             <option value="5">5%</option>
                             <option value="12">12%</option>

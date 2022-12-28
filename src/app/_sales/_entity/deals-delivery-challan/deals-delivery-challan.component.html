@@ -56,11 +56,39 @@
                     </th>
                     <td>{{prod.name}}
                         <br>
-                        <textarea class="editFocus" name="prod.description" id="description" cols="60%" rows="3"
+                        <textarea class="form-control" name="prod.description" id="description" cols="60%" rows="3"
                             [(ngModel)]="prod.description"></textarea>
-
+                        <br>
+                        <span class="chip-pk pointer" (click)="openAddProductRawMaterialModal(prod.productId)">Add Raw
+                            Materials
+                            <i class="fa fa-sitemap ml-2" aria-hidden="true"></i>
+                        </span>
+                        <table class="table table-bordered" *ngIf="prod.dealDCProductRawMaterials.length > 0">
+                            <thead>
+                                <tr>
+                                    <th style="width: 5%" scope="col">#</th>
+                                    <th style="width: 75%" scope="col">Product</th>
+                                    <th style="width: 20%" scope="col">Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let rawMaterials of prod.dealDCProductRawMaterials;let rm_i = index;">
+                                    <td>{{rm_i + 1}}
+                                        <i (click)="prod.dealDCProductRawMaterials.splice(rm_i, 1);"
+                                            class="far fa-trash-alt text-danger pointer"></i>
+                                    </td>
+                                    <td>
+                                        {{rawMaterials.name}}
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control" name="rawMaterialsquantity"
+                                            [(ngModel)]="rawMaterials.quantity">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </td>
-                    <td><input type="number" class="form-control editFocus" name="quantity" [(ngModel)]="prod.quantity"
+                    <td><input type="number" class="form-control" name="quantity" [(ngModel)]="prod.quantity"
                             (change)="onChangeQuantity(prod)">
                         <small class="text-muted">Pending Quantity : {{maxQuantity(prod.productId) | number}}
                             <small *ngIf="prod.uom != null && prod.uom != ''">({{prod.uom}})</small>

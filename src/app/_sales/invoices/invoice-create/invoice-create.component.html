@@ -181,7 +181,7 @@
                 </span>
                 <div class="row">
                     <div class="col-12">
-                        <textarea class="editFocus" cols="60%" id="billingTo" rows="5"
+                        <textarea class="form-control" cols="60%" id="billingTo" rows="5"
                             placeHolder="Enter Full Billing Address" name="billingTo"
                             [(ngModel)]="invoice.billingTo"></textarea>
                     </div>
@@ -197,7 +197,7 @@
                 </span>
                 <div class="row">
                     <div class="col-12">
-                        <textarea class="editFocus" cols="60%" id="shippingTo" rows="5"
+                        <textarea class="form-control" cols="60%" id="shippingTo" rows="5"
                             placeHolder="Enter Full Shipping Address" name="shippingTo"
                             [(ngModel)]="invoice.shippingTo"></textarea>
                     </div>
@@ -309,29 +309,30 @@
 
                     <td>{{prod.name}}
                         <br>
-                        <textarea class="editFocus" name="prod.description" id="description" cols="60%" rows="3"
+                        <textarea class="form-control" name="prod.description" id="description" cols="60%" rows="3"
                             [(ngModel)]="prod.description"></textarea>
                     </td>
                     <td>
-                        <input type="number" class="form-control editFocus" name="price" [(ngModel)]="prod.price">
+                        <input type="number" class="form-control " name="price" [(ngModel)]="prod.price">
                         <small class="text-muted">{{prod.price | currency:'INR'}}</small>
                     </td>
-                    <td><input type="number" class="form-control editFocus" *ngIf="invoice.discountType == 'Amount'"
+                    <td><input type="number" class="form-control " *ngIf="invoice.discountType == 'Amount'"
                             (ngModelChange)="prod.discountPercent = onChangeDiscountAmount($event,prod.price)"
                             name="discount" [(ngModel)]="prod.discount">
-                        <input type="number" class="form-control editFocus" *ngIf="invoice.discountType == 'Percent'"
-                            min=1 max=100 (ngModelChange)="prod.discount = onChangeDiscountPercent($event,prod.price)"
+                        <input type="number" class="form-control " *ngIf="invoice.discountType == 'Percent'" min=1
+                            max=100 (ngModelChange)="prod.discount = onChangeDiscountPercent($event,prod.price)"
                             name="discount" [(ngModel)]="prod.discountPercent">
                         <small class="text-muted">{{prod.discount | currency:'INR'}}</small>
                         <small class="text-muted">({{prod.discountPercent | number}}%)</small> {{prod.discountType}}
                     </td>
-                    <td><input type="number" class="form-control editFocus" name="quantity" [(ngModel)]="prod.quantity">
+                    <td><input type="number" class="form-control " name="quantity" [(ngModel)]="prod.quantity">
                         <small class="text-muted">{{prod.quantity | number}}
                             <small *ngIf="prod.uom != null">({{prod.uom}})</small>
                         </small>
                     </td>
                     <td>
-                        <select name="gstPercentage" id="gstPercentage" [(ngModel)]="prod.gstPercentage">
+                        <select class="form-control" name=" gstPercentage" id="gstPercentage"
+                            [(ngModel)]="prod.gstPercentage">
                             <option value="0">0%</option>
                             <option value="5">5%</option>
                             <option value="12">12%</option>
