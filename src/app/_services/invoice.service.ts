@@ -41,8 +41,8 @@ export class InvoiceService {
     return this.http.post(environment.apiUrl + 'invoice/get-deal-invoices-report/', req);
   }
 
-  generateDCPDF(deliveryChallan, template) {
-    let req = { deliveryChallan: deliveryChallan, templateName: template };
+  generateDCPDF(deliveryChallan, template, addRawMaterials: boolean) {
+    let req = { deliveryChallan: deliveryChallan, templateName: template, addRawMaterials: addRawMaterials };
     return this.http.post(environment.apiUrl + 'invoice/generate-delivery-challan', req);
   }
 

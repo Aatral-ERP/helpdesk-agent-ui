@@ -158,7 +158,7 @@ export class InvoiceOverviewComponent implements OnInit, OnDestroy {
   generateDCPDF(TemplateName) {
     this.generatingPDF = true;
 
-    this.invServ.generateDCPDF(this.invoice, TemplateName).subscribe(res => {
+    this.invServ.generateDCPDF(this.invoice, TemplateName, true).subscribe(res => {
 
       this.generatingPDF = false;
       if (res['StatusCode'] == '00') {
