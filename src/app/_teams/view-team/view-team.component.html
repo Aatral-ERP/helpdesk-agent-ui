@@ -74,12 +74,14 @@
         <app-workflow *ngIf="tab == 'workflow'" [team]="team"> </app-workflow>
 
         <app-task-features [hidden]="tab != 'features'" [team]="team" [teamMembers]="allTeamMembers"
-            [allAgents]="agents" (featuresEmitter)="featuresLoaded = true;allFeatures = $event">
+            [triggerFeatureReload]="updatedTask" [allAgents]="agents"
+            (featuresEmitter)="featuresLoaded = true;allFeatures = $event">
         </app-task-features>
 
         <app-team-dashboard *ngIf="tab == 'dashboard' && featuresLoaded" [teamSetting]="teamSetting"
             [allAgents]="agents" [allTeamMembersEmitter]="allTeamMembers" [selectedMemberEmitter]="selectedMember"
-            [myTeamMembershipEmitter]="myTeamMembership" [team]="team" [allFeaturesEmitter]="allFeatures">
+            [myTeamMembershipEmitter]="myTeamMembership" [team]="team" [allFeaturesEmitter]="allFeatures"
+            (triggerFeatureReload)="updatedTask = $event">
         </app-team-dashboard>
 
         <app-team-settings *ngIf="tab == 'team-settings'" (teamSettingEmitter)="teamSetting = $event"

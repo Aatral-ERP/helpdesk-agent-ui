@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -6,6 +6,7 @@ import { Agent } from 'src/app/_profile/agent-profile/Agent';
 import { TeamsService } from 'src/app/_services/teams.service';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
+import { Task } from '../task-create/Task';
 import { TaskFeature } from '../task-feature-create/TaskFeature';
 import { TeamCreateComponent } from '../team-create/team-create.component';
 import { TeamMembers } from '../team-members/TeamMembers';
@@ -36,6 +37,10 @@ export class ViewTeamComponent implements OnInit, OnDestroy {
   selectedMember: TeamMembers;
   allFeatures: Array<TaskFeature>;
   agents: Array<Agent> = [];
+
+  @Output() triggerFeatureReload: EventEmitter<Task> = new EventEmitter();
+
+  updatedTask: Task = new Task();
 
   ngOnDestroy(): void {
     console.log('onDestroy')
