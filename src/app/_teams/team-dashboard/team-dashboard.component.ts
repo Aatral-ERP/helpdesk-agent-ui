@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Agent } from 'src/app/_profile/agent-profile/Agent';
@@ -58,6 +58,8 @@ export class TeamDashboardComponent implements OnInit {
     console.log("features Input Received::", features);
     this.allFeatures = features;
   };
+
+  @Output() triggerFeatureReload: EventEmitter<Task> = new EventEmitter();
 
   handleCreateAccess() {
     if (this.team.leadEmail == this.ts.auth.getLoginEmailId()) {
@@ -152,6 +154,7 @@ export class TeamDashboardComponent implements OnInit {
       if (result !== undefined && result !== '') {
         this.tasks.push(result);
         this.openViewTaskDialog(result);
+        this.triggerFeatureReload.next(result);
       }
     });
   }
@@ -180,6 +183,7 @@ export class TeamDashboardComponent implements OnInit {
           this.tasks[index] = result['task'];
         }
       }
+      this.triggerFeatureReload.next(task);
     });
   }
 

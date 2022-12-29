@@ -5,6 +5,7 @@ import { Agent } from 'src/app/_profile/agent-profile/Agent';
 import { TeamsService } from 'src/app/_services/teams.service';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
+import { Task } from '../task-create/Task';
 import { TaskFeatureCreateComponent } from '../task-feature-create/task-feature-create.component';
 import { TaskFeature } from '../task-feature-create/TaskFeature';
 import { TeamMembers } from '../team-members/TeamMembers';
@@ -22,6 +23,10 @@ export class TaskFeaturesComponent implements OnInit {
   @Input() team: Teams = new Teams();
   @Input() teamMembers: Array<TeamMembers> = [];
   @Input() allAgents: Array<Agent> = [];
+  @Input() set triggerFeatureReload(task: Task) {
+    console.log('triggerFeatureReload');
+    this.loadTaskFeatures();
+  };
   @Output() featuresEmitter: EventEmitter<Array<TaskFeature>> = new EventEmitter();
 
   loading = false;
