@@ -46,6 +46,7 @@ export class DealsDeliveryChallanComponent implements OnInit {
   _saving = false;
   showDCTemplateOptions = false;
   generatingPDF = false;
+  addRawMaterials = true;
 
   _currentProductId: number = 0;
 
@@ -275,7 +276,7 @@ export class DealsDeliveryChallanComponent implements OnInit {
   generateDCPDF(TemplateName) {
     this.generatingPDF = true;
 
-    this.invServ.generateDCPDF(this.dc, TemplateName).subscribe(res => {
+    this.invServ.generateDCPDF(this.dc, TemplateName, this.addRawMaterials).subscribe(res => {
 
       this.generatingPDF = false;
       if (res['StatusCode'] == '00') {

@@ -135,6 +135,9 @@
             <h6 class="text-muted text-center">Choose a Template</h6>
             <div class="row">
                 <div class="col-12">
+                    <mat-checkbox [(ngModel)]="addRawMaterials">Add Raw Materials in PDF</mat-checkbox>
+                </div>
+                <div class="col-12">
                     <button class="text-center m-1" (click)="generateDCPDF('DC_Template_1')" mat-flat-button
                         color="primary">DC_Template_1</button>
                     <button class="text-center m-1" (click)="generateDCPDF('DC_Template_2')" mat-flat-button
