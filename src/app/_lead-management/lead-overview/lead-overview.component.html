@@ -26,14 +26,17 @@
 
                         <mat-menu #statusMenu="matMenu" xPosition="before">
                             <button mat-menu-item (click)="changeStatus('New Lead')">New Lead</button>
-                            <button mat-menu-item (click)="changeStatus('Attempted to Contact')">Attempted to
-                                Contact</button>
+                            <button mat-menu-item (click)="changeStatus('Attempted to Contact')">Attempted to Contact</button>
+                            <button mat-menu-item (click)="changeStatus('Already Purchased')">Already Purchased</button>
+                            <button mat-menu-item (click)="changeStatus('Not Required')">Not Required</button>
+                            <button mat-menu-item (click)="changeStatus('Intrested')">Intrested</button>
+                            <button mat-menu-item (click)="changeStatus('Under Processing')">Under Processing</button>
+                            <button mat-menu-item (click)="changeStatus('Imediate Requirement')">Imediate Requirement</button>
                             <button mat-menu-item (click)="changeStatus('Contact in Future')">Contact in Future</button>
                             <button mat-menu-item (click)="changeStatus('Junk Lead')">Junk Lead</button>
                             <button mat-menu-item (click)="changeStatus('Lost Lead')">Lost Lead</button>
                             <button mat-menu-item (click)="changeStatus('Not Qualified')">Not Qualified</button>
-                            <button mat-menu-item (click)="changeStatus('Converted to Sales')">Converted to
-                                Sales</button>
+                            <button mat-menu-item (click)="changeStatus('Converted to Sales')">Converted to Sales</button>
                         </mat-menu>
                     </div>
 

@@ -11,7 +11,22 @@ import { DealInvoiceReminder } from './DealInvoiceReminder';
 })
 export class DealsInvoiceReminderComponent implements OnInit {
 
-  constructor(private ss: SalesService) { }
+  constructor(private ss: SalesService) {
+
+  let fdate = new Date().setMonth(new Date().getMonth() - 1);
+  let tdate = new Date().setMonth(new Date().getMonth() + 1);
+
+    this._filters.fromDate = new Date(fdate);
+    this._filters.toDate = new Date(tdate);
+
+    this._filters.dateObject = {
+      isRange: true, singleDate: null, dateRange: {
+        beginJsDate: new Date(fdate),
+        endJsDate: new Date(tdate)
+      }
+    };
+
+   }
 
   loading = false;
 

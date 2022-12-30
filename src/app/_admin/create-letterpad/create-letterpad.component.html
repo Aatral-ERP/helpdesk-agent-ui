@@ -136,19 +136,19 @@
                                 <h6 class="text-primary pointer">
 
                                     <span *ngIf="letterpad.fileName !=''"
-                                        (click)="viewPDF(letterpad.id,letterpad.fileName)">
+                                        (click)="viewPDF(letterpad.fileName)">
                                         {{letterpad.fileName}}
                                     </span>
                                     &nbsp;&nbsp;&nbsp;
                                     <i class="fas fa-download"
                                         *ngIf="letterpad.fileName != null && letterpad.fileName != ''"
-                                        (click)="downloadPDF(letterpad.id,letterpad.fileName)"></i>
+                                        (click)="downloadPDF(letterpad.fileName)"></i>
 
                                 </h6><br>
 
                                 <span *ngIf="letterpad.fileName == ''" (click)="generateLetterpad(letterpad)"
                                     class="pointer text-primary">Generate
-                                    Latterpad PDF &nbsp;
+                                    Letterpad PDF &nbsp;
                                     <i class="fas fa-file-pdf"></i></span><br>
 
                                 <span (click)="showAddNewEmail = !showAddNewEmail" class="pointer text-primary">Send

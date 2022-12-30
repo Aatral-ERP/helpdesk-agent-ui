@@ -1,0 +1,92 @@
+<div class="container-fluid">
+    <p class="h4 text-center mt-4"> Leads Activity Report
+    </p>
+<div class="row">
+    
+    <div class="col-sm-12 col-md-12 col-lg-6">
+        <label class="small">Company/Institute</label>
+        <ng-multiselect-dropdown [placeholder]="'Select Company/Institutes'" [data]="_companies"
+            [(ngModel)]="_filters.companies" [settings]="_commonDropdownSettings">
+        </ng-multiselect-dropdown>
+    </div>
+
+    <div class="col-sm-12 col-md-12 col-lg-6">
+        <label class="small">Products</label>
+        <ng-multiselect-dropdown [placeholder]="'Select Products'" [data]="_products"
+            [(ngModel)]="_filters.products" [settings]="_commonDropdownSettings">
+        </ng-multiselect-dropdown>
+    </div>
+
+    <div class="col-sm-12 col-md-12 col-lg-6">
+        <label class="small">Lead Owner</label>
+        <ng-multiselect-dropdown [placeholder]="'Lead Owner'" [data]="_agents"
+            [(ngModel)]="_filters.agent"
+            [settings]="_AgentsDropdownSettings">
+        </ng-multiselect-dropdown>
+    </div>
+
+    
+
+    <div class="col-sm-6 col-md-6 col-lg-3">
+        <label for="leadDateObject" style="margin-bottom: 5px;"> Lead Date </label>
+        <div class="input-group">
+            <input class="form-control" (focus)="LDdp.toggleCalendar()" placeholder="choose Lead from - to date"
+                angular-mydatepicker name="leadDateObject" [(ngModel)]="_filters.leadDateObject"
+                [options]="myDatePickerOptions"
+                (dateChanged)="_filters.leadDateFrom = $event.dateRange.beginJsDate;_filters.leadDateTo = $event.dateRange.endJsDate;"
+                #LDdp="angular-mydatepicker" autocomplete="off" />
+            <div class="input-group-append">
+                <span class="input-group-text">
+                    <i (click)="LDdp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-md-6 col-lg-3">
+        <label for="lastUpdatedDateObject" style="margin-bottom: 5px;"> Last Updated Date </label>
+        <div class="input-group">
+            <input class="form-control" (focus)="LUdp.toggleCalendar()"
+                placeholder="choose Last Updated from - to date" angular-mydatepicker
+                name="lastUpdatedDateObject" [(ngModel)]="_filters.lastUpdatedDateObject"
+                [options]="myDatePickerOptions"
+                (dateChanged)="_filters.lastUpdateFromDate = $event.dateRange.beginJsDate;_filters.lastUpdateToDate = $event.dateRange.endJsDate;"
+                #LUdp="angular-mydatepicker" autocomplete="off" />
+            <div class="input-group-append">
+                <span class="input-group-text">
+                    <i (click)="LUdp.toggleCalendar()" class="fas fa-calendar-alt pointer"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+
+        <div class="col-12 text-center mt-2">
+            <button class="btn btn-md btn-primary" (click)="getActivityReport()">Submit</button>
+            <button class="btn btn-sm btn-outline-primary" (click)="clearFilters()">Clear</button>
+        </div>
+    
+
+</div>
+
+
+    
+    <div>
+        <div class="row mb-5">
+            <div class="col">
+                <ag-grid-angular enableCellTextSelection="true" [rowData]="rowData"
+                    style="width: 100%; height: 500px;" class="ag-theme-balham p-2" [columnDefs]="columnDefs"
+                    [paginationAutoPageSize]="true" [pagination]="true">
+
+                    {{rowData|json}}
+                </ag-grid-angular>
+                <div class="item" *ngIf="loading">
+                    
+                    <ngx-skeleton-loader count="8"></ngx-skeleton-loader>
+                </div>
+                <button class="btn btn-sm btn-primary" *ngIf="rowData.length > 0" (click)="onBtnExport()">Export <i
+                        class="fas fa-download"></i></button>
+            </div>
+        </div>
+    </div>
+
+</div>
