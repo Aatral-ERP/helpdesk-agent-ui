@@ -186,13 +186,13 @@ this.ts.saveLetterpad(this.letterpad).subscribe(res=>{
 })
 }
 
-viewPDF(id,fileName) {
-    let url = environment.apiUrl + 'download/download-lettepad-pdf/view/' + id+ '/' + fileName;
+viewPDF(fileName) {
+    let url = environment.apiUrl + 'download/download-lettepad-pdf/view/'+ fileName;
     window.open(url, 'winname', 'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=auto,height=auto');
   }
   
-  downloadPDF(id,fileName) {
-    let url = environment.apiUrl + 'download/download-lettepad-pdf/download/' + id + '/' + fileName;
+  downloadPDF(fileName) {
+    let url = environment.apiUrl + 'download/download-lettepad-pdf/download/' + fileName;
     window.open(url, '_blank');
   }
 
@@ -323,7 +323,7 @@ letterpadFileUploadChange(file: File) {
           this.letterpad.fileName = res['Letterpad']['fileName'];
           this.snackbar.open('Uploaded Successfully', 'OK');
           if (this.letterpad.fileName.endsWith(".pdf"))
-            this.viewPDF(this.letterpad.id,this.letterpad.fileName);
+            this.viewPDF(this.letterpad.fileName);
         } else {
           this.snackbar.open('Something went wrong! Try again later', 'OK');
         }

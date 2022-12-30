@@ -43,7 +43,9 @@
             <label for=""></label>
             <button class="btn btn-sm btn-primary" style="margin-top: 25px;" (click)="clearFilters()">Clear</button>
         </div>
-    </div>
+</div>
+<div class="item" *ngIf="loading">
+    <ngx-skeleton-loader count="12"></ngx-skeleton-loader>
 </div>
 
 <div class="container p-2" *ngIf="showGrid">
@@ -55,7 +57,5 @@
     <button class="btn btn-sm btn-primary" (click)="onBtnExport()" *ngIf="gridRowData.length > 0">Export
         <i class="fas fa-download"></i></button>
 
-    <div class="item" *ngIf="loading">
-        <ngx-skeleton-loader count="12"></ngx-skeleton-loader>
-    </div>
+    
 </div>
