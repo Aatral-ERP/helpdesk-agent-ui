@@ -1,8 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SalesService } from 'src/app/_services/sales.service';
-import { Router } from '@angular/router';
-import { DeliveryChallan } from './deliverychallan';
+import { DeliveryChallan } from './DeliveryChallan';
 import { Deal } from '../deals-create/Deal';
 import { DealInvoice } from '../../invoices/invoice-create/DealInvoice';
 import { Product } from 'src/app/_product/Product';

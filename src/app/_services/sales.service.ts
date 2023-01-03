@@ -9,7 +9,7 @@ import { DealQuotation } from '../_sales/_entity/deals-quotation/DealQuotation';
 import { DealInvoice } from '../_sales/invoices/invoice-create/DealInvoice';
 import { DealPurchaseOrder } from '../_sales/_entity/deals-purchase-order/DealPurchaseOrder';
 import { DealSalesOrder } from '../_sales/_entity/deals-sales-order/DealSalesOrder';
-import { DeliveryChallan } from '../_sales/_entity/deals-delivery-challan/deliverychallan';
+import { DeliveryChallan } from '../_sales/_entity/deals-delivery-challan/DeliveryChallan';
 import { DealProformaInvoice } from '../_sales/_entity/deals-proforma-invoice/DealProformaInvoice';
 import { DealProjectImplementation } from '../_sales/_entity/deals-project-implementation/DealProjectImplementation';
 import { DealProjectImplementationComment } from '../_sales/_entity/deals-project-implementation-comment/DealProjectImplementationComment';
@@ -316,7 +316,7 @@ export class SalesService {
   deleteDealDeliveryChallan(dc: DeliveryChallan) {
     return this.http.post(environment.apiUrl + 'deals/delete-deal-delivery-challan', dc);
   }
-  
+
   getDealDeliveryChallan(dealId) {
     return this.http.get(environment.apiUrl + 'deals/get-deal-delivery-challan/' + dealId);
   }
