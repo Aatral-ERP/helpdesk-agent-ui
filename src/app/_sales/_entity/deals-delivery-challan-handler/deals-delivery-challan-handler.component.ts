@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 import { SalesService } from 'src/app/_services/sales.service';
 import { Deal } from '../deals-create/Deal';
-import { DeliveryChallan } from '../deals-delivery-challan/deliverychallan';
+import { DeliveryChallan } from '../deals-delivery-challan/DeliveryChallan';
 
 @Component({
   selector: 'app-deals-delivery-challan-handler',
