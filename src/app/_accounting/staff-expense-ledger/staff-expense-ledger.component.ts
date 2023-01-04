@@ -80,6 +80,8 @@ export class StaffExpenseLedgerComponent implements OnInit {
   };
 
   frameworkComponents: any;
+  _sort_type = 'Balance';
+  _sorted_in_desc = true;
 
   columnDefs = [
     {
@@ -152,8 +154,26 @@ export class StaffExpenseLedgerComponent implements OnInit {
       if (resp['StatusCode'] == '00') {
         this._agents = resp['Agents'];
         this._recentLegderPerAgent = resp['RecentLegderPerAgent'];
+        this._agents.forEach(agent => {
+          if (this._recentLegderPerAgent.find(ledger => ledger.agentEmailId == agent.emailId) === undefined) {
+            let dummyLedger: AgentLedger = new AgentLedger();
+            dummyLedger.agentEmailId = agent.emailId;
+            dummyLedger.balance = 0;
+            this._recentLegderPerAgent.push(dummyLedger);
+          }
+        })
+        this.sortRecentLedger();
       }
     })
+  }
+
+  sortRecentLedger() {
+    if (this._sort_type == 'Name') {
+      this._sorted_in_desc ? this._recentLegderPerAgent.sort((a, b) => this.getMemberName(b.agentEmailId).localeCompare(this.getMemberName(a.agentEmailId))) : this._recentLegderPerAgent.sort((a, b) => this.getMemberName(a.agentEmailId).localeCompare(this.getMemberName(b.agentEmailId)))
+    } else if (this._sort_type == 'Balance') {
+      this._sorted_in_desc ? this._recentLegderPerAgent.sort((a, b) => a.balance - b.balance) : this._recentLegderPerAgent.sort((a, b) => b.balance - a.balance);
+    }
+
   }
 
   onAgentDeSelect() {

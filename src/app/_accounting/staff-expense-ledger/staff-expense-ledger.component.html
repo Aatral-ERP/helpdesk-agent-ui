@@ -2,7 +2,16 @@
     <h5 class="text-primary text-center">My Office Expenses Legder</h5>
 
     <div class="row">
-        <div class="col-3">
+        <div class="col-lg-3 col-md-4 col-sm-12">
+            <small class="text-muted pointer"
+                (click)="_sort_type = 'Name';_sorted_in_desc = !_sorted_in_desc;sortRecentLedger()">Name
+                <i class="fa fa-sort-alpha-asc" *ngIf="_sort_type == 'Name' && !_sorted_in_desc"></i>
+                <i class="fa fa-sort-alpha-desc" *ngIf="_sort_type == 'Name' && _sorted_in_desc"></i>
+            </small>
+            <small class="text-muted pointer float-right"
+                (click)="_sort_type = 'Balance';_sorted_in_desc = !_sorted_in_desc;sortRecentLedger()">Balance
+                <i class="fa fa-sort-amount-desc" *ngIf="_sort_type == 'Balance' && !_sorted_in_desc"></i>
+                <i class="fa fa-sort-amount-asc" *ngIf="_sort_type == 'Balance' && _sorted_in_desc"></i></small>
             <ul class="list-group">
                 <li *ngFor=" let recentLegder of _recentLegderPerAgent"
                     (click)="showAgentLegder(recentLegder.agentEmailId)"
@@ -17,7 +26,10 @@
                 </li>
             </ul>
         </div>
-        <div class="col-9" *ngIf="selectedAgent !== undefined">
+        <span class="col-lg-9 col-md-8 col-sm-12 text-muted float-center" *ngIf="selectedAgent === undefined">Select an
+            Agent to see the
+            ledger</span>
+        <div class="col-lg-9 col-md-8 col-sm-12" *ngIf="selectedAgent !== undefined">
             <h4 class="text-dark">{{selectedAgent.firstName}}&nbsp;{{selectedAgent.lastName}}</h4>
             <p class="text-muted">{{selectedAgent.emailId}}</p>
             <div class="alert alert-info text-center m-2" role="alert" [hidden]="ledger.length > 0">
