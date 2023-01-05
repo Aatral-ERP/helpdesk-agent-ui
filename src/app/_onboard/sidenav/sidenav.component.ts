@@ -89,6 +89,7 @@ export class SidenavComponent implements OnInit, OnDestroy {
           { name: 'Leads', url: '/lead-management/reports/leads', icon: '<i class="fas fa-filter text-muted"></i>' },
           { name: 'Create Lead', url: '/lead-management/create', icon: '<i class="fas fa-filter text-muted"></i>' },
           { name: 'Upload Lead Details', url: '/lead-management/create/upload', icon: '<i class="fas fa-filter text-muted"></i>' },
+          { name: 'Activity-report', url: '/lead-management/reports/activities', icon: '<i class="fas fa-filter text-muted"></i>' },
           {
             name: 'Mails', url: '', icon: '<i class="fas fa-envelope text-muted"></i>',
             children: [

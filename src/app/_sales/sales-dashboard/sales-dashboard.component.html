@@ -27,6 +27,7 @@
                     <div class="col">
                         <h6 class="text-primary">QUOTATION(s)</h6>
                         <h5 class="text-dark font-weight-bold">{{Stats.quotationCount}}</h5>
+                        <a href="./sales/deals"><h6 class="text-success font-weight-bold" *ngFor="let quote of quoteState">{{quote.quote_stage}}-{{quote.count}}</h6></a>
                     </div>
                 </div>
             </div>

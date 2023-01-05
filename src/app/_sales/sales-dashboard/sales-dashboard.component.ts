@@ -60,6 +60,7 @@ export class SalesDashboardComponent implements OnInit {
   };
   Payments = [];
   lastLoadedDate = null;
+  quoteState=[];
 
   ngOnInit() {
     this.loadSalesDashboardData();
@@ -113,6 +114,7 @@ export class SalesDashboardComponent implements OnInit {
     this.Payments = resp['Payments'];
     this._dealTypeDatasGraph = resp['last10MonthsSalesData'];
     this.productwiseSalesReport = resp['productwiseSalesReport'];
+    this.quoteState = resp['quoatationStats'];
 
     this.prepareDealTypeData();
     this.preparePaymentTypeData();
