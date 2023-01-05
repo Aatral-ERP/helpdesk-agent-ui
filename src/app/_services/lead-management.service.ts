@@ -112,4 +112,10 @@ export class LeadManagementService {
     return this.http.post(environment.apiUrl + 'lead-management/dashboard-data', _filters);
   }
 
+  loadLeadActivityReport(_filter){
+
+    return this.http.post(environment.apiUrl + 'lead-management/lead-activities-report',_filter);
+
+  }
+
 }

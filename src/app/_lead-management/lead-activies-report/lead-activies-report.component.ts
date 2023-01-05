@@ -108,13 +108,21 @@ export class LeadActiviesReportComponent implements OnInit {
     { headerName: 'Agent', field: 'ownerEmailId', width: 200, sortable: true, filter: true, resizable: true },
     { headerName: 'Subject', field: 'subject', width: 200, sortable: true, filter: true, resizable: true },
     { headerName: 'Location', field: 'location', width: 200, sortable: true, filter: true, resizable: true },
-    { headerName: 'From Date', field: 'fromDateTime', width: 200, sortable: true, filter: true, resizable: true },
-    { headerName: 'To date', field: 'toDateTime', width: 200, sortable: true, filter: true, resizable: true },
-    { headerName: 'LastUpdated Date', field: 'lastupdatedatetime', width: 200, sortable: true, filter: true, resizable: true },
+    { headerName: 'From Date', field: 'fromDateTime', width: 200, sortable: true, filter: true, resizable: true,cellRenderer: (data) => {
+      return this.datePipe.transform(data.value, 'dd/MM/yyyy'); 
+    }
+   },
+    { headerName: 'To date', field: 'toDateTime', width: 200, sortable: true, filter: true, resizable: true,cellRenderer:(data)=>{
+      return this.datePipe.transform(data.value, 'dd/MM/yyyy'); 
+    } 
+  },
+    { headerName: 'LastUpdated Date', field: 'lastupdatedatetime', width: 200, sortable: true, filter: true, resizable: true,cellRenderer:(data)=>{
+  return this.datePipe.transform(data.value,'dd/mm/yyyy hh:mm');
+    } },
   ];
 
   getActivityReport(){
-
+    this.loading = true;
     this.ls.loadLeadActivityReport(this._filters).subscribe(res=>{
       console.log(res);
       this.rowData = [];

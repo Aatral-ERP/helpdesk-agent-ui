@@ -9,10 +9,11 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { AgGridModule } from 'ag-grid-angular';
 import { FormsModule } from '@angular/forms';
 import { MatButtonToggleModule, MatProgressBarModule } from '@angular/material';
+import { LeadActiviesReportComponent } from 'src/app/_lead-management/lead-activies-report/lead-activies-report.component';
 
 
 @NgModule({
-  declarations: [LeadReportsComponent],
+  declarations: [LeadReportsComponent,LeadActiviesReportComponent],
   imports: [
     CommonModule,
     LeadManagementReportsRoutingModule,
