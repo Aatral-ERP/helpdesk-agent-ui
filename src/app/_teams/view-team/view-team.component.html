@@ -68,7 +68,8 @@
         <hr class="m-0">
 
         <app-search-tasks *ngIf="tab == 'search'" [teamSetting]="teamSetting" [allAgents]="agents"
-            [allTeamMembersEmitter]="allTeamMembers" [myTeamMembershipEmitter]="myTeamMembership" [team]="team">
+            [allFeaturesEmitter]="allFeatures" [allTeamMembersEmitter]="allTeamMembers"
+            [myTeamMembershipEmitter]="myTeamMembership" [team]="team">
         </app-search-tasks>
 
         <app-workflow *ngIf="tab == 'workflow'" [team]="team"> </app-workflow>
