@@ -9,7 +9,7 @@
             <input matInput placeholder="Search by Feature Name..." [(ngModel)]="_search_feature_name">
         </mat-form-field>
     </div>
-    <div class="col-3">
+    <div class="col-3" *ngIf="canModifyFeatures">
         <span class="float-right">
             <button mat-flat-button color="primary" (click)="openCreateTaskFeatureDialog()">Create
                 Feature <i class="fas fa-plus pl-2"></i>
@@ -21,7 +21,7 @@
 <table class="table table-sm table-hover">
     <thead>
         <tr>
-            <th style="width: 3%" scope="col"></th>
+            <th style="width: 3%" scope="col" *ngIf="canModifyFeatures"></th>
             <th style="width: 30%" scope="col">Feature</th>
             <th style="width: 15%" scope="col">Progress</th>
             <th scope="col">Total Tasks</th>
@@ -30,13 +30,14 @@
             <th scope="col">Assignee</th>
             <th scope="col">Reporter</th>
             <th scope="col">Status</th>
-            <th style="width: 3%" scope="col"></th>
+            <th style="width: 3%" scope="col" *ngIf="canModifyFeatures"></th>
         </tr>
     </thead>
     <tbody>
         <tr class="m-0 p-0" [hidden]="!feature.name.toLowerCase().includes(_search_feature_name.toLowerCase())"
             *ngFor="let feature of features">
-            <td><i class="fas fa-edit text-primary pointer" (click)="openCreateTaskFeatureDialog(feature)"></i>
+            <td *ngIf="canModifyFeatures"><i class="fas fa-edit text-primary pointer"
+                    (click)="openCreateTaskFeatureDialog(feature)"></i>
             </td>
             <td><span class="text-dark font-weight-bold">{{feature.name}}</span></td>
             <td>
@@ -70,7 +71,8 @@
                     src="{{getMemberImageURL(feature.reporter)}}">
             </td>
             <td>{{feature.status}}</td>
-            <td><i class="fas fa-trash-alt text-danger pointer" (click)="deleteFeature(feature)"></i></td>
+            <td *ngIf="canModifyFeatures"><i class="fas fa-trash-alt text-danger pointer"
+                    (click)="deleteFeature(feature)"></i></td>
         </tr>
     </tbody>
 </table>

@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { Agent } from 'src/app/_profile/agent-profile/Agent';
+import { AuthService } from 'src/app/_services/auth.service';
 import { TeamsService } from 'src/app/_services/teams.service';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
@@ -18,7 +19,7 @@ import { Teams } from '../teams/Teams';
 })
 export class TaskFeaturesComponent implements OnInit {
 
-  constructor(private dialog: MatDialog, private ts: TeamsService, private snackbar: MatSnackBar) { }
+  constructor(private dialog: MatDialog, private ts: TeamsService, private snackbar: MatSnackBar, private auth: AuthService) { }
 
   @Input() team: Teams = new Teams();
   @Input() teamMembers: Array<TeamMembers> = [];
@@ -28,6 +29,7 @@ export class TaskFeaturesComponent implements OnInit {
     this.loadTaskFeatures();
   };
   @Output() featuresEmitter: EventEmitter<Array<TaskFeature>> = new EventEmitter();
+  canModifyFeatures = false;
 
   loading = false;
   features: Array<TaskFeature> = [];
@@ -76,6 +78,12 @@ export class TaskFeaturesComponent implements OnInit {
 
   ngOnInit() {
     this.loadTaskFeatures();
+    let myMembership = this.teamMembers.find(members => members.memberEmailId == this.auth.getLoginEmailId());
+    if (myMembership !== undefined) {
+      if (myMembership.memberRole == 'Administrator') {
+        this.canModifyFeatures = true;
+      }
+    }
   }
 
   loadTaskFeatures() {
