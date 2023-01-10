@@ -85,11 +85,11 @@
                                         <span class="float-left" *ngIf="task.reporter != null && task.reporter != ''">
                                             <img title="{{getMemberName(task.reporter)}}" class="pointer avator-thumb"
                                                 src="{{getMemberImageURL(task.reporter)}}">
+                                            <span
+                                                class="badge badge-primary ml-2 fond-weight-light">#{{task.taskId}}</span>
                                         </span>
 
                                         <span class="float-right">
-                                            <span
-                                                class="badge badge-primary mr-2 fond-weight-light">#{{task.taskId}}</span>
                                             <small
                                                 class="badge badge-light mr-2 font-weight-light">{{task.lastupdatedatetime
                                                 | amTimeAgo}}</small>

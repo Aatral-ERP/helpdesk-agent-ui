@@ -65,6 +65,7 @@ export class AgentProfileComponent implements OnInit {
 
       if (res['StatusCode'] == '00') {
         let profile = res['agent'];
+        this.agent.photo = null;
         this.agent.photo = profile.photo;
         this.agent.photoFileName = null;
         this.agent.photoFileName = profile.photoFileName;
@@ -79,7 +80,7 @@ export class AgentProfileComponent implements OnInit {
 
         this.snackbar.open('Profile Photo Updated Successfully');
 
-        window.location.reload();
+        // window.location.reload();
       } else {
         this.snackbar.open('Something went wrong');
       }
