@@ -23,7 +23,15 @@
 
         <mat-form-field class="mr-2">
             <mat-label>Feature Name</mat-label>
-            <input matInput placeholder="Enter Feature Name to filter... " [(ngModel)]="search.featureName">
+            <input matInput placeholder="Enter Feature Name to filter... " [(ngModel)]="search.featureName"
+                [matAutocomplete]="autoFeatures">
+            <mat-autocomplete #autoFeatures="matAutocomplete">
+                <mat-option
+                    [hidden]="search.featureName === undefined || !feature.name.toLowerCase().includes(search.featureName.toLowerCase())"
+                    *ngFor="let feature of allFeatures" [value]="feature.name">
+                    {{feature.name}}
+                </mat-option>
+            </mat-autocomplete>
         </mat-form-field>
 
         <mat-form-field class="mr-2">
@@ -85,11 +93,11 @@
                                         <span class="float-left" *ngIf="task.reporter != null && task.reporter != ''">
                                             <img title="{{getMemberName(task.reporter)}}" class="pointer avator-thumb"
                                                 src="{{getMemberImageURL(task.reporter)}}">
+                                            <span
+                                                class="badge badge-primary ml-2 fond-weight-light">#{{task.taskId}}</span>
                                         </span>
 
                                         <span class="float-right">
-                                            <span
-                                                class="badge badge-primary mr-2 fond-weight-light">#{{task.taskId}}</span>
                                             <small
                                                 class="badge badge-light mr-2 font-weight-light">{{task.lastupdatedatetime
                                                 | amTimeAgo}}</small>

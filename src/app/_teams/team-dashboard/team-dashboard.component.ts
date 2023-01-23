@@ -49,6 +49,7 @@ export class TeamDashboardComponent implements OnInit {
   @Input() set allTeamMembersEmitter(allTeamMembers: Array<TeamMembers>) {
     console.log("allTeamMembersEmitter Input Received::", allTeamMembers);
     this.allTeamMembers = allTeamMembers;
+    this.allTeamMembers.sort((a, b) => a.memberEmailId.localeCompare(b.memberEmailId))
   };
   @Input() set allAgents(allAgents: Array<Agent>) {
     console.log("allAgents Input Received::", allAgents);
@@ -57,6 +58,7 @@ export class TeamDashboardComponent implements OnInit {
   @Input() set allFeaturesEmitter(features: Array<TaskFeature>) {
     console.log("features Input Received::", features);
     this.allFeatures = features;
+    this.allFeatures.sort((a, b) => a.name.localeCompare(b.name))
   };
 
   @Output() triggerFeatureReload: EventEmitter<Task> = new EventEmitter();

@@ -19,7 +19,7 @@
             <input matInput placeholder="Enter Subject... " [(ngModel)]="_filter.subject">
         </mat-form-field>
     </div>
-    <div class="col-4">
+    <div class="col-2">
         <mat-form-field class="ml-1 w-100">
             <mat-label class="text-muted small">Institute Name</mat-label>
             <input type="text" placeholder="Enter Institute Name... " matInput class="pb-0 mb-0"
@@ -36,6 +36,15 @@
         <mat-form-field class="ml-1 w-100">
             <mat-label class="text-muted small">Task Id</mat-label>
             <input matInput placeholder="Enter Task Id... " [(ngModel)]="_filter.taskId">
+        </mat-form-field>
+    </div>
+    <div class="col-2">
+        <mat-form-field class="ml-1 w-100">
+            <mat-label>Features</mat-label>
+            <mat-select class="ml-1" [(ngModel)]="_filter.featureId" multiple>
+                <mat-option *ngFor="let feature of allFeatures"
+                    [value]="feature.featureId">{{feature.name}}</mat-option>
+            </mat-select>
         </mat-form-field>
     </div>
     <div class="col-2">
@@ -59,7 +68,8 @@
     <div class="col-2">
         <mat-form-field class="ml-1 w-100">
             <mat-label>Assignee</mat-label>
-            <mat-select [disabled]="member !== undefined && member.memberRole == 'Member'" class="ml-1" [(ngModel)]="_filter.assignee" multiple>
+            <mat-select [disabled]="member !== undefined && member.memberRole == 'Member'" class="ml-1"
+                [(ngModel)]="_filter.assignee" multiple>
                 <mat-option *ngFor="let mem of allTeamMembers" [value]="mem.memberEmailId">
                     {{getMemberName(mem.memberEmailId)}}
                 </mat-option>

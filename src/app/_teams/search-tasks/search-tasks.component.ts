@@ -7,6 +7,7 @@ import { Agent } from 'src/app/_profile/agent-profile/Agent';
 import { NeededService } from 'src/app/_services/needed.service';
 import { TeamsService } from 'src/app/_services/teams.service';
 import { Task } from '../task-create/Task';
+import { TaskFeature } from '../task-feature-create/TaskFeature';
 import { TaskViewComponent } from '../task-view/task-view.component';
 import { TeamMembers } from '../team-members/TeamMembers';
 import { TeamSetting } from '../team-settings/TeamSetting';
@@ -48,12 +49,17 @@ export class SearchTasksComponent implements OnInit {
     console.log("teamSetting Input Received::", allAgents);
     this.agents = allAgents;
   };
+  @Input() set allFeaturesEmitter(features: Array<TaskFeature>) {
+    console.log("features Input Received::", features);
+    this.allFeatures = features;
+  };
 
   tasks: Array<Task> = [];
   member: TeamMembers;
   allTeamMembers: Array<TeamMembers>;
   setting: TeamSetting;
   agents: Array<Agent>;
+  allFeatures: Array<TaskFeature>;
 
   _workflows = [];
   _labels = [];
@@ -82,6 +88,12 @@ export class SearchTasksComponent implements OnInit {
     },
     { headerName: 'Subject', field: 'subject', width: 100, sortable: true, filter: true, resizable: true },
     {
+      headerName: 'Feature', field: 'featureId', sortable: true, width: 100, filter: true, resizable: true, cellRenderer: (data) => {
+        console.log(data);
+        return this.getFeatureName(data.value);
+      }
+    },
+    {
       headerName: 'Institute', field: 'instituteName', sortable: true, filter: true, resizable: true,
       tooltip: (data) => { return data.value }, cellRenderer: (data) => {
         return `<a href="/institute/institute-detail?iid=${data.data.instituteId}" target="_blank"> ${this.getInstituteName(data.value)} </a>`;
@@ -105,6 +117,7 @@ export class SearchTasksComponent implements OnInit {
     instituteId: 0,
     instituteName: '',
     subject: '',
+    featureId: [],
     status: [],
     assignee: [],
     reporter: [],
@@ -182,6 +195,7 @@ export class SearchTasksComponent implements OnInit {
         instituteId: 0,
         instituteName: '',
         subject: '',
+        featureId: [],
         status: _workflow,
         assignee: [this.ts.auth.getLoginEmailId()],
         reporter: [],
@@ -205,6 +219,7 @@ export class SearchTasksComponent implements OnInit {
         instituteId: 0,
         instituteName: '',
         subject: '',
+        featureId: [],
         status: ['Done'],
         assignee: [this.ts.auth.getLoginEmailId()],
         reporter: [],
@@ -227,6 +242,7 @@ export class SearchTasksComponent implements OnInit {
         instituteId: 0,
         instituteName: '',
         subject: '',
+        featureId: [],
         status: [],
         assignee: [this.ts.auth.getLoginEmailId()],
         reporter: [],
@@ -255,6 +271,7 @@ export class SearchTasksComponent implements OnInit {
         instituteName: '',
         subject: '',
         status: _workflow,
+        featureId: [],
         assignee: [],
         reporter: [this.ts.auth.getLoginEmailId()],
         priority: [],
@@ -282,6 +299,7 @@ export class SearchTasksComponent implements OnInit {
         instituteName: '',
         subject: '',
         status: _workflow,
+        featureId: [],
         assignee: [],
         reporter: [],
         priority: [],
@@ -304,6 +322,7 @@ export class SearchTasksComponent implements OnInit {
         instituteName: '',
         subject: '',
         status: ['Done'],
+        featureId: [],
         assignee: [],
         reporter: [],
         priority: [],
@@ -329,6 +348,7 @@ export class SearchTasksComponent implements OnInit {
       instituteName: '',
       subject: '',
       status: [],
+      featureId: [],
       assignee: [],
       reporter: [],
       priority: [],
@@ -380,12 +400,23 @@ export class SearchTasksComponent implements OnInit {
       minHeight: 'calc(100vh - 90px)',
       height: 'auto',
       autoFocus: false,
-      data: { task: task, member: this.member, setting: this.setting, team: this.team, allTeamMembers: this.allTeamMembers }
+      data: { task: task, member: this.member, setting: this.setting, team: this.team, allTeamMembers: this.allTeamMembers, allFeatures: this.allFeatures }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(result);
     });
+  }
+
+  getFeatureName(featureId) {
+    console.log(featureId, this.allFeatures);
+    if (this.allFeatures === undefined)
+      return " - - ";
+    let feature = this.allFeatures.find(feature => feature.featureId == featureId);
+    if (feature === undefined)
+      return "-";
+    else
+      return this.allFeatures.find(feature => feature.featureId == featureId).name;
   }
 
 }
