@@ -22,7 +22,21 @@ export class TaskFeaturesComponent implements OnInit {
   constructor(private dialog: MatDialog, private ts: TeamsService, private snackbar: MatSnackBar, private auth: AuthService) { }
 
   @Input() team: Teams = new Teams();
-  @Input() teamMembers: Array<TeamMembers> = [];
+  @Input() set allTeamMembersEmitter(allTeamMembers: Array<TeamMembers>) {
+    console.log("allTeamMembersEmitter Input Received::", allTeamMembers);
+    if (allTeamMembers !== undefined) {
+      this.teamMembers = allTeamMembers;
+
+      let myMembership = this.teamMembers.find(members => members.memberEmailId == this.auth.getLoginEmailId());
+      if (myMembership !== undefined) {
+        if (myMembership.memberRole == 'Administrator') {
+          this.canModifyFeatures = true;
+        }
+      }
+
+      this.teamMembers.sort((a, b) => a.memberEmailId.localeCompare(b.memberEmailId));
+    }
+  };
   @Input() allAgents: Array<Agent> = [];
   @Input() set triggerFeatureReload(task: Task) {
     console.log('triggerFeatureReload');
@@ -33,6 +47,7 @@ export class TaskFeaturesComponent implements OnInit {
 
   loading = false;
   features: Array<TaskFeature> = [];
+  teamMembers: Array<TeamMembers> = [];
   _search_feature_name: string = '';
 
   editorConfig: AngularEditorConfig = {
@@ -78,12 +93,6 @@ export class TaskFeaturesComponent implements OnInit {
 
   ngOnInit() {
     this.loadTaskFeatures();
-    let myMembership = this.teamMembers.find(members => members.memberEmailId == this.auth.getLoginEmailId());
-    if (myMembership !== undefined) {
-      if (myMembership.memberRole == 'Administrator') {
-        this.canModifyFeatures = true;
-      }
-    }
   }
 
   loadTaskFeatures() {
