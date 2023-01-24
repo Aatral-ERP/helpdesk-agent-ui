@@ -20,27 +20,26 @@ declare var $: any;
 })
 export class CreateLetterpadComponent implements OnInit {
 
-  constructor(private ss: SalesService,private ts: TicketService, private snackbar: MatSnackBar, private auth: AuthService, private is: InstituteService,private actRoute: ActivatedRoute)
-   {
+  constructor(private ss: SalesService, private ts: TicketService, private snackbar: MatSnackBar, private auth: AuthService, private is: InstituteService, private actRoute: ActivatedRoute) {
     this.actRoute.queryParams.subscribe(params => {
       console.log(params);
 
       if (params['edit']) {
-       // if (params['edit'] == 1 && params['did']) {
+        // if (params['edit'] == 1 && params['did']) {
         //  this._mode = 'Edit';
-          this.editLetterPad(params['edit']);
-      //  }
+        this.editLetterPad(params['edit']);
+        //  }
       }
 
       if (params['copy']) {
         // if (params['edit'] == 1 && params['did']) {
-         //  this._mode = 'Edit';
-           this.copyLetterpad(params['copy']);
-       //  }
-       }
+        //  this._mode = 'Edit';
+        this.copyLetterpad(params['copy']);
+        //  }
+      }
     })
 
-   }
+  }
 
   _institutes: Array<Institute> = [];
   _selectedInstitute = [];
@@ -60,7 +59,7 @@ export class CreateLetterpadComponent implements OnInit {
   shareWhatsappText = '';
   shareWhatsappTo = '+91';
   showAddNewEmail = false;
-  
+
 
 
   exportType = "PDF";
@@ -84,9 +83,9 @@ export class CreateLetterpadComponent implements OnInit {
   letterpad: LatterpadDeal = new LatterpadDeal();
 
 
- 
 
-  
+
+
   _instituteDropdownSettings: IDropdownSettings = {
     singleSelection: true,
     idField: 'instituteId',
@@ -101,28 +100,28 @@ export class CreateLetterpadComponent implements OnInit {
       this._institutes = res['Institutes'];
 
 
-     console.log( this._institutes);
+      console.log(this._institutes);
 
 
       //this.filterProduct('');
 
-      console.log('Institute:::::::',this._selectedInstitute[0]);
+      console.log('Institute:::::::', this._selectedInstitute[0]);
 
-      console.log('Length:::::::',this._selectedInstitute.length);
-      
+      console.log('Length:::::::', this._selectedInstitute.length);
+
 
       if (this._selectedInstitute.length > 0) {
         this._institutes
           .filter(inst => inst.instituteId == this._selectedInstitute[0].instituteId)
           .forEach(inst => {
             this.letterpad.institute = inst;
-           console.log(inst);
-           console.log(this.letterpad.institute);
-            
+            console.log(inst);
+            console.log(this.letterpad.institute);
+
             this._selectedInstitute = [];
             this._selectedInstitute.push(inst);
 
-            console.log('===========' ,this._selectedInstitute.push(inst));
+            console.log('===========', this._selectedInstitute.push(inst));
             this.copyBillingAddressFromInstitute();
             this.copyShippingAddressFromBillingAddress();
             console.log(inst, this._selectedInstitute);
@@ -135,29 +134,29 @@ export class CreateLetterpadComponent implements OnInit {
   loadAllInstituteContacts(inst) {
 
     console.log('loadAllInstituteContacts');
-    }
+  }
 
   copyBillingAddressFromInstitute() {
-    console.log('-----------',this.letterpad.institute);
+    console.log('-----------', this.letterpad.institute);
     this.is.getInstituteDetails({ instituteId: this.letterpad.institute.instituteId }).subscribe(res => {
 
-    console.log(res['Institute']);
-    this.letterpad.billingTo = '';
-    this.letterpad.billingStreet1 = res['Institute']['street1'];
-    this.letterpad.billingStreet2 = res['Institute']['street2'];
-    this.letterpad.billingCity = res['Institute']['city'];
-    this.letterpad.billingState = res['Institute']['state'];
-    this.letterpad.billingCountry = res['Institute']['country'];
-    this.letterpad.billingZIPCode = res['Institute']['zipcode'];
+      console.log(res['Institute']);
+      this.letterpad.billingTo = '';
+      this.letterpad.billingStreet1 = res['Institute']['street1'];
+      this.letterpad.billingStreet2 = res['Institute']['street2'];
+      this.letterpad.billingCity = res['Institute']['city'];
+      this.letterpad.billingState = res['Institute']['state'];
+      this.letterpad.billingCountry = res['Institute']['country'];
+      this.letterpad.billingZIPCode = res['Institute']['zipcode'];
 
     })
-    
+
   }
 
   copyShippingAddressFromBillingAddress() {
 
     console.log('copyShippingAddressFromBillingAddress');
-   
+
   }
 
   decideGSTType() {
@@ -166,71 +165,67 @@ export class CreateLetterpadComponent implements OnInit {
 
 
 
-  clearFilters()
-  {
-    
+  clearFilters() {
+
   }
 
 
-  saveLetterpad()
-{
-this.ts.saveLetterpad(this.letterpad).subscribe(res=>{
-  if(res['StatusCode']=='00')
-  {
-    this.letterpad = res['letterpad'];
-    this.snackbar.open('Saved Successfully', 'OK');
-    this.generatingLetterpadPDF=true;
+  saveLetterpad() {
+    this.ts.saveLetterpad(this.letterpad).subscribe(res => {
+      if (res['StatusCode'] == '00') {
+        this.letterpad = res['letterpad'];
+        this.snackbar.open('Saved Successfully', 'OK');
+        this.generatingLetterpadPDF = true;
+      }
+    }, error => {
+
+    })
   }
-},error=>{
 
-})
-}
-
-viewPDF(fileName) {
-    let url = environment.apiUrl + 'download/download-lettepad-pdf/view/'+ fileName;
+  viewPDF(fileName) {
+    let url = environment.apiUrl + 'download/download-lettepad-pdf/view/' + this.letterpad + '/' + fileName;
     window.open(url, 'winname', 'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=auto,height=auto');
   }
-  
+
   downloadPDF(fileName) {
-    let url = environment.apiUrl + 'download/download-lettepad-pdf/download/' + fileName;
+    let url = environment.apiUrl + 'download/download-lettepad-pdf/download/' + this.letterpad + '/' + fileName;
     window.open(url, '_blank');
   }
 
   deleteLetterpad(id) {
     this.ts.deleteLetterpad(id).subscribe(res => {
       if (res['StatusCode'] == '00') {
-       this. generatingLetterpadPDF1 = true
-              this.snackbar.open('Deleted');
-              window.location.href = "./sales/letterpad";
+        this.generatingLetterpadPDF1 = true
+        this.snackbar.open('Deleted');
+        window.location.href = "./sales/letterpad";
       }
     },
-    error=>{
-      
+      error => {
 
-    })
+
+      })
   }
 
-  
+
   generateLetterpad(letterpadAll) {
-    this. generatingLetterpadPDF1 = true;
-    this.ts.generateLetterPad(letterpadAll.id, this.addSign,this.addRoundSeal,this.addFullSeal,this.addLetterHead,this.addLogo,this.designation).subscribe(res => {
+    this.generatingLetterpadPDF1 = true;
+    this.ts.generateLetterPad(letterpadAll.id, this.addSign, this.addRoundSeal, this.addFullSeal, this.addLetterHead, this.addLogo, this.designation).subscribe(res => {
       console.log(res);
       if (res['StatusCode'] == '00') {
-        this. generatingLetterpadPDF1 = false;
+        this.generatingLetterpadPDF1 = false;
         this.letterpad = res['Letterpad'];
         this.snackbar.open('Generated Successfully', 'OK');
-       // window.location.href = "./reports/letterpad";
+        // window.location.href = "./reports/letterpad";
       }
     },
-    error=>{
-      this.generatingPDF =false;
-    })
+      error => {
+        this.generatingPDF = false;
+      })
   }
 
- 
 
-  editLetterPad(id)
-  {
+
+  editLetterPad(id) {
     this.ts.getLetterpad(id).subscribe(res => {
       console.log(res);
       if (res['StatusCode'] == '00') {
@@ -240,96 +235,95 @@ viewPDF(fileName) {
         this._selectedInstitute = [{ instituteId: this.letterpad.institute.instituteId, instituteName: this.letterpad.institute.instituteName }];
 
         console.log(this._selectedInstitute);
-        this.showDelete =true;
+        this.showDelete = true;
 
       }
 
-  })
-}
-
-copyLetterpad(id)
-{
-
-  this.ts.getLetterpad(id).subscribe(res => {
-    console.log(res);
-    if (res['StatusCode'] == '00') {
-
-      this._selectedInstitute =[];
-      this.letterpad = res['letterpad'];
-      this.letterpad.id= 0;
-      this.generatingLetterpadPDF=false;
-      this.showDelete=false;
-      this.snackbar.open('Copied Successfully', 'OK');
-    
-    }
-
-})
-
-}  
-
-shareWhatsApp() {
-  let url = `https://wa.me/${this.shareWhatsappTo}?text=${encodeURI(this.shareWhatsappText)}`;
-  window.open(url, '_blank');
-}
-
-resp(event) {
-  console.log(event);
-  if (event == 'close' || event == 'success') {
-    this.showAddNewEmail = false;
-  }
-}
-
-openShareWhatsAppModal() {
-
-  let url = environment.apiUrl + 'download/download-lettepad-pdf/view/' + this.letterpad.id + '/' + this.letterpad.fileName;
-
-  this.shareWhatsappText = this.letterpad.subject + '\n' +
-    'Letterpad No : ' + this.letterpad.id + '\n\n' +
-    'View Letterpad by below url : \n\n ' +
-    url + ' \n\n'
-    + 'Thanks\n' + this.auth.getLoginAgentFullName();
-
-  console.log(this.shareWhatsappText);
-
-  $(function () {
-    $('#whatsappShareModal').appendTo("body").modal('show');
-  });
-}
-
-
-letterpadFileUploadChange(file: File) {
-  console.log(file);
-
-  if (file.type.toLowerCase() != 'application/pdf') {
-    this.snackbar.open('Only PDF file type is valid');
-    return false;
+    })
   }
 
-  Swal.fire({
-    title: 'Are you sure?',
-    text: "You want to Upload.",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Yes, Upload!'
-  }).then((result) => {
-    if (result.value) {
-      this.generatingLetterpadPDF = true;
-      this.ss.UploadGeneratedLetterPDF(this.letterpad.id, file).subscribe(res => {
+  copyLetterpad(id) {
 
+    this.ts.getLetterpad(id).subscribe(res => {
+      console.log(res);
+      if (res['StatusCode'] == '00') {
+
+        this._selectedInstitute = [];
+        this.letterpad = res['letterpad'];
+        this.letterpad.id = 0;
         this.generatingLetterpadPDF = false;
-        if (res['StatusCode'] == '00') {
-          this.letterpad.fileName = res['Letterpad']['fileName'];
-          this.snackbar.open('Uploaded Successfully', 'OK');
-          if (this.letterpad.fileName.endsWith(".pdf"))
-            this.viewPDF(this.letterpad.fileName);
-        } else {
-          this.snackbar.open('Something went wrong! Try again later', 'OK');
-        }
-      })
+        this.showDelete = false;
+        this.snackbar.open('Copied Successfully', 'OK');
+
+      }
+
+    })
+
+  }
+
+  shareWhatsApp() {
+    let url = `https://wa.me/${this.shareWhatsappTo}?text=${encodeURI(this.shareWhatsappText)}`;
+    window.open(url, '_blank');
+  }
+
+  resp(event) {
+    console.log(event);
+    if (event == 'close' || event == 'success') {
+      this.showAddNewEmail = false;
     }
-  })
-}
+  }
+
+  openShareWhatsAppModal() {
+
+    let url = environment.apiUrl + 'download/download-lettepad-pdf/view/' + this.letterpad.id + '/' + this.letterpad.fileName;
+
+    this.shareWhatsappText = this.letterpad.subject + '\n' +
+      'Letterpad No : ' + this.letterpad.id + '\n\n' +
+      'View Letterpad by below url : \n\n ' +
+      url + ' \n\n'
+      + 'Thanks\n' + this.auth.getLoginAgentFullName();
+
+    console.log(this.shareWhatsappText);
+
+    $(function () {
+      $('#whatsappShareModal').appendTo("body").modal('show');
+    });
+  }
+
+
+  letterpadFileUploadChange(file: File) {
+    console.log(file);
+
+    if (file.type.toLowerCase() != 'application/pdf') {
+      this.snackbar.open('Only PDF file type is valid');
+      return false;
+    }
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You want to Upload.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Upload!'
+    }).then((result) => {
+      if (result.value) {
+        this.generatingLetterpadPDF = true;
+        this.ss.UploadGeneratedLetterPDF(this.letterpad.id, file).subscribe(res => {
+
+          this.generatingLetterpadPDF = false;
+          if (res['StatusCode'] == '00') {
+            this.letterpad.fileName = res['Letterpad']['fileName'];
+            this.snackbar.open('Uploaded Successfully', 'OK');
+            if (this.letterpad.fileName.endsWith(".pdf"))
+              this.viewPDF(this.letterpad.fileName);
+          } else {
+            this.snackbar.open('Something went wrong! Try again later', 'OK');
+          }
+        })
+      }
+    })
+  }
 
 }                               
