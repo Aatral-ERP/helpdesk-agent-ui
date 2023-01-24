@@ -4,8 +4,10 @@ import { MatDialogRef, MatSnackBar, MAT_DIALOG_DATA } from '@angular/material';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { NgxFileDropEntry, FileSystemFileEntry } from 'ngx-file-drop';
 import { Agent } from 'src/app/_profile/agent-profile/Agent';
+import { AuthService } from 'src/app/_services/auth.service';
 import { NeededService } from 'src/app/_services/needed.service';
 import { TeamsService } from 'src/app/_services/teams.service';
+import { environment } from 'src/environments/environment';
 import { TeamMembers } from '../team-members/TeamMembers';
 import { Teams } from '../teams/Teams';
 import { TaskFeature } from './TaskFeature';
@@ -23,7 +25,7 @@ interface fileUpload {
 })
 export class TaskFeatureCreateComponent implements OnInit {
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private needed: NeededService,
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private needed: NeededService, private auth: AuthService,
     private snackbar: MatSnackBar, private ts: TeamsService, private dialogRef: MatDialogRef<TaskFeatureCreateComponent>) { }
 
   saving = false;
@@ -85,6 +87,13 @@ export class TaskFeatureCreateComponent implements OnInit {
       this.feature = this.data.feature;
       this.teamMembers = this.data.teamMembers;
       // this.prepareCreateTaskAuthority();
+      if (this.feature.featureId > 0) {
+        this.directoryName = this.feature.featureId + '';
+      } else if (this.feature.featureId == 0) {
+        this.feature.reporter = this.auth.getLoginEmailId();
+        this.feature.assignee = this.auth.getLoginEmailId();
+      }
+      this.prepare_Attachments();
     }
   }
 
@@ -159,12 +168,19 @@ export class TaskFeatureCreateComponent implements OnInit {
       this.errors.reporter = '';
     }
     let fileNames = '';
+
+    if (this.attachments.length > 0) {
+      this.attachments.forEach(attach => {
+        fileNames = fileNames + attach + ';';
+      });
+    }
     if (this.files.length > 0) {
       this.files.forEach(file => {
         fileNames = fileNames + file.file.name + ';';
       });
-      this.feature.files = fileNames;
     }
+
+    this.feature.files = fileNames;
 
     if (_error) {
       this.snackbar.open('Please check the errors.');
@@ -188,6 +204,25 @@ export class TaskFeatureCreateComponent implements OnInit {
       return agent.firstName + ' ' + agent.lastName;
     else
       return emailId;
+  }
+
+  attachments = [];
+
+  prepare_Attachments() {
+    this.attachments = [];
+    if (this.feature.files != null && this.feature.files != '') {
+      console.log(this.feature.files);
+      let files = Array.from(this.feature.files.split(';'));
+
+      files.filter(file => file.length > 0).forEach(file => {
+        this.attachments.push(file);
+      })
+    }
+  }
+
+  downloadTaskAttachmnet(attachment) {
+    console.log(attachment);
+    window.open(environment.contentPath + 'task-feature-attachments/download/' + this.feature.featureId + '/' + attachment, '_blank');
   }
 
 }

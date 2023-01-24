@@ -1,12 +1,12 @@
 export class TaskFeature {
-    featureId: number;
+    featureId: number = 0;
     teamId: number;
     name: string = '';
     description: string = '';
     startDate: Date;
     endDate: Date;
     progress: string = '0-0-0';
-    priority: string = '';
+    priority: string = 'Not Preferred';
     assignee: string = '';
     status: string = 'To Do';
     reporter: string = '';

@@ -1,4 +1,5 @@
-<h4 mat-dialog-title class="indigo-text" mat-dialog-title>Create Feature</h4>
+<h4 mat-dialog-title class="indigo-text" *ngIf="feature.featureId == 0" mat-dialog-title>Create Feature</h4>
+<h4 mat-dialog-title class="indigo-text" *ngIf="feature.featureId > 0" mat-dialog-title>Edit Feature</h4>
 
 <mat-dialog-content class="mat-typography">
     <mat-progress-bar *ngIf="loading" mode="indeterminate">
@@ -137,6 +138,22 @@
                 </div>
             </div>
 
+            <div class="row">
+                <div class="col-12">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item list-group-item-action"
+                            *ngFor="let attach of attachments;let i=index">
+                            <small class="badge badge-light text-muted mr-2">
+                                <i (click)="downloadTaskAttachmnet(attach)" class="fa fa-download pointer"></i>
+                            </small>
+                            <small>{{attach}}</small>
+                            <small class="float-right"><i (click)="attachments.splice(i,1)"
+                                    class="fas fa-trash-alt text-danger pointer"></i></small>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
             <ngx-file-drop multiple="true" [showBrowseBtn]="false" dropZoneLabel="Drop files here."
                 (onFileDrop)="dropped($event)">
                 <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
@@ -154,10 +171,13 @@
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Cancel</button>
     <button color="primary" mat-stroked-button cdkFocusInitial (click)="createTaskFeature()"
-        [disabled]="saving || (files.length > filesUploaded)">Create&nbsp;
+        [disabled]="saving || (files.length > filesUploaded)">
+        <span *ngIf="feature.featureId == 0">Create</span>
+        <span *ngIf="feature.featureId > 0">Edit</span>
+        &nbsp;
         <i class="fa fa-save"></i>
         <div *ngIf="saving" class="spinner-border spinner-border-sm pl-1" role="status">
-            &nbsp;<span class="sr-only"> Creating...</span>
+            &nbsp;<span class="sr-only"> saving...</span>
         </div>
     </button>
 
