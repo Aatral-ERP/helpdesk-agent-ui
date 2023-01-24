@@ -74,7 +74,7 @@
 
         <app-workflow *ngIf="tab == 'workflow'" [team]="team"> </app-workflow>
 
-        <app-task-features [hidden]="tab != 'features'" [team]="team" [teamMembers]="allTeamMembers"
+        <app-task-features [hidden]="tab != 'features'" [team]="team" [allTeamMembersEmitter]="allTeamMembers"
             [triggerFeatureReload]="updatedTask" [allAgents]="agents"
             (featuresEmitter)="featuresLoaded = true;allFeatures = $event">
         </app-task-features>
