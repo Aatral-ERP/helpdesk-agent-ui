@@ -6,6 +6,7 @@ import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { Agent } from 'src/app/_profile/agent-profile/Agent';
 import { NeededService } from 'src/app/_services/needed.service';
 import { IAngularMyDpOptions } from 'angular-mydatepicker';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-lead-activies-report',
@@ -16,13 +17,13 @@ export class LeadActiviesReportComponent implements OnInit {
 
 
   loading = false;
-  _respsResp=[];
+  _respsResp = [];
   //leadActivity :Array<LeadActivity>=[];
 
   private gridApi;
   private gridColumnApi;
 
-  leadAct:LeadActivity = new LeadActivity();
+  leadAct: LeadActivity = new LeadActivity();
 
   _companies: Array<string> = [];
   _products: Array<string> = [];
@@ -33,21 +34,21 @@ export class LeadActiviesReportComponent implements OnInit {
   _industry_types: Array<string> = [];
   rowData = [];
 
-  _filters={
-    lead : [],
-    agent : [],
-    products:[],
-    companies:[],
-    fromDateTime :null,
-    toDateTime : null,
-    createdFromDate:null,
-    createdToDate:null,
+  _filters = {
+    lead: [],
+    agent: [],
+    products: [],
+    companies: [],
+    fromDateTime: null,
+    toDateTime: null,
+    createdFromDate: null,
+    createdToDate: null,
     leadDateObject: null,
-    leadDateFrom:null,
-    leadDateTo:null,
+    leadDateFrom: null,
+    leadDateTo: null,
     lastUpdatedDateObject: null,
     lastUpdateFromDate: null,
-    lastUpdateToDate:null,
+    lastUpdateToDate: null,
 
 
   };
@@ -75,7 +76,7 @@ export class LeadActiviesReportComponent implements OnInit {
     dateFormat: 'dd/mm/yyyy',
     closeSelectorOnDateSelect: false
   };
-  constructor(private ls:LeadManagementService,private needed: NeededService) { 
+  constructor(private ls: LeadManagementService, private needed: NeededService, private datePipe: DatePipe) {
     let date = new Date().setMonth(new Date().getMonth() - 1);
 
     this._filters.leadDateFrom = new Date(date);
@@ -89,14 +90,12 @@ export class LeadActiviesReportComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getActivityReport(); 
+    this.getActivityReport();
     this.loadNeeded();
-    
-  
   }
 
 
-  columnDefs=[
+  columnDefs = [
 
     { headerName: 'id', field: 'id', width: 70, sortable: true, filter: true, resizable: true },
     { headerName: 'Institute', field: 'company', width: 400, sortable: true, filter: true, resizable: true },
@@ -108,50 +107,54 @@ export class LeadActiviesReportComponent implements OnInit {
     { headerName: 'Agent', field: 'ownerEmailId', width: 200, sortable: true, filter: true, resizable: true },
     { headerName: 'Subject', field: 'subject', width: 200, sortable: true, filter: true, resizable: true },
     { headerName: 'Location', field: 'location', width: 200, sortable: true, filter: true, resizable: true },
-    { headerName: 'From Date', field: 'fromDateTime', width: 200, sortable: true, filter: true, resizable: true,cellRenderer: (data) => {
-      return this.datePipe.transform(data.value, 'dd/MM/yyyy'); 
-    }
-   },
-    { headerName: 'To date', field: 'toDateTime', width: 200, sortable: true, filter: true, resizable: true,cellRenderer:(data)=>{
-      return this.datePipe.transform(data.value, 'dd/MM/yyyy'); 
-    } 
-  },
-    { headerName: 'LastUpdated Date', field: 'lastupdatedatetime', width: 200, sortable: true, filter: true, resizable: true,cellRenderer:(data)=>{
-  return this.datePipe.transform(data.value,'dd/mm/yyyy hh:mm');
-    } },
+    {
+      headerName: 'From Date', field: 'fromDateTime', width: 200, sortable: true, filter: true, resizable: true, cellRenderer: (data) => {
+        return this.datePipe.transform(data.value, 'dd/MM/yyyy');
+      }
+    },
+    {
+      headerName: 'To date', field: 'toDateTime', width: 200, sortable: true, filter: true, resizable: true, cellRenderer: (data) => {
+        return this.datePipe.transform(data.value, 'dd/MM/yyyy');
+      }
+    },
+    {
+      headerName: 'LastUpdated Date', field: 'lastupdatedatetime', width: 200, sortable: true, filter: true, resizable: true, cellRenderer: (data) => {
+        return this.datePipe.transform(data.value, 'dd/mm/yyyy hh:mm');
+      }
+    },
   ];
 
-  getActivityReport(){
+  getActivityReport() {
     this.loading = true;
-    this.ls.loadLeadActivityReport(this._filters).subscribe(res=>{
+    this.ls.loadLeadActivityReport(this._filters).subscribe(res => {
       console.log(res);
       this.rowData = [];
-      this.loading=false;
+      this.loading = false;
       this._respsResp = new Array();
       this._respsResp = res['leadActivities'];
-      this._respsResp.filter(resp=>resp.leadMeeting!=null).forEach(resp=>{
-      
-        let _rowdata:any ={};
-       _rowdata.id=resp.lead.id;
-       _rowdata.company=resp.lead.company;
-       _rowdata.title=resp.lead.title;
-       _rowdata.category=resp.lead.category;
-       _rowdata.industryType=resp.lead.industryType;
-       _rowdata.products=resp.lead.products;
-       _rowdata.leadDate=resp.lead.leadDate;
+      this._respsResp.filter(resp => resp.leadMeeting != null).forEach(resp => {
 
-       _rowdata.ownerEmailId=resp.lead.ownerEmailId;
-       _rowdata.location=resp.leadMeeting.location;
-       _rowdata.subject=resp.leadMeeting.subject;
-       _rowdata.description=resp.leadMeeting.description;
-       _rowdata.participants=resp.leadMeeting.participants;
-       _rowdata.fromDateTime=resp.leadMeeting.fromDateTime;
-       _rowdata.toDateTime=resp.leadMeeting.toDateTime;
-       _rowdata.lastupdatedatetime=resp.leadMeeting.lastupdatedatetime;
+        let _rowdata: any = {};
+        _rowdata.id = resp.lead.id;
+        _rowdata.company = resp.lead.company;
+        _rowdata.title = resp.lead.title;
+        _rowdata.category = resp.lead.category;
+        _rowdata.industryType = resp.lead.industryType;
+        _rowdata.products = resp.lead.products;
+        _rowdata.leadDate = resp.lead.leadDate;
+
+        _rowdata.ownerEmailId = resp.lead.ownerEmailId;
+        _rowdata.location = resp.leadMeeting.location;
+        _rowdata.subject = resp.leadMeeting.subject;
+        _rowdata.description = resp.leadMeeting.description;
+        _rowdata.participants = resp.leadMeeting.participants;
+        _rowdata.fromDateTime = resp.leadMeeting.fromDateTime;
+        _rowdata.toDateTime = resp.leadMeeting.toDateTime;
+        _rowdata.lastupdatedatetime = resp.leadMeeting.lastupdatedatetime;
 
 
         this.rowData.push(_rowdata);
-        
+
       })
       console.log(this.rowData);
 
@@ -167,25 +170,25 @@ export class LeadActiviesReportComponent implements OnInit {
     this.gridApi = params.api;
   }
 
- 
+
   clearFilters() {
-    this._filters={
-      lead : [],
-      agent : [],
-      products:[],
-      companies:[],
-      fromDateTime :null,
-      toDateTime : null,
-      createdFromDate:null,
-      createdToDate:null,
+    this._filters = {
+      lead: [],
+      agent: [],
+      products: [],
+      companies: [],
+      fromDateTime: null,
+      toDateTime: null,
+      createdFromDate: null,
+      createdToDate: null,
       leadDateObject: null,
-      leadDateFrom:null,
-      leadDateTo:null,
+      leadDateFrom: null,
+      leadDateTo: null,
       lastUpdatedDateObject: null,
       lastUpdateFromDate: null,
-      lastUpdateToDate:null,
-  
-  
+      lastUpdateToDate: null,
+
+
     };
   }
 
@@ -221,5 +224,5 @@ export class LeadActiviesReportComponent implements OnInit {
         }
       })
   }
-  
+
 }
