@@ -159,7 +159,7 @@ export class DealsProformaInvoiceComponent implements OnInit {
     }).then((result) => {
       if (result.value) {
         this.generatingPDF = true;
-        this.ss.UploadGeneratedInvoicePDF(this.dpi.id, file).subscribe(res => {
+        this.ss.UploadGeneratedProformaInvoicePDF(this.dpi.id, file).subscribe(res => {
 
           this.generatingPDF = false;
           if (res['StatusCode'] == '00') {

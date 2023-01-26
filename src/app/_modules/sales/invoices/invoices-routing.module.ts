@@ -8,8 +8,8 @@ import { DealsInvoiceReminderReportsComponent } from 'src/app/_sales/_reports/de
 const routes: Routes = [
   { path: '', component: InvoicesReportComponent },
   { path: 'create', component: InvoiceCreateComponent },
-  { path: 'overview/:id', redirectTo: 'overview/:id/invoice' },
   { path: 'overview/:id/:tab', component: InvoiceOverviewComponent },
+  { path: 'overview/:id', redirectTo: 'overview/:id/invoice' },
   { path: 'reminders', component: DealsInvoiceReminderReportsComponent },
   { path: '**', component: InvoicesReportComponent },
 ];
