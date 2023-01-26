@@ -132,7 +132,7 @@ export class DealsPaymentsComponent implements OnInit {
   }
 
   viewPDF(payment) {
-    this.ss.viewPDF(payment.dealId, payment.receiptfilename);
+    this.ss.viewReceiptPDF(payment.receiptfilename);
   }
 
   generateReceipt(payment_template, payment: DealPayment) {
