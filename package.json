@@ -8,6 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "build-autolib-dev": "ng build --prod --aot --c=autolib-dev",
     "build-autolib": "ng build --prod --aot --c=autolib",
     "build-2cqr": "ng build --prod --aot --c=2cqr"
   },
